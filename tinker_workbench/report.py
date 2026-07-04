@@ -34,6 +34,8 @@ def write_report(artifacts: RunArtifacts, out_path: Path | None = None) -> Path:
         report_dir = Path("reports")
         report_dir.mkdir(exist_ok=True)
         out_path = report_dir / f"{artifacts.run_dir.name}.md"
+    else:
+        out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(render_report(artifacts), encoding="utf-8")
     return out_path
 

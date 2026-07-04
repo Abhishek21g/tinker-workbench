@@ -69,7 +69,7 @@ def execute_run(
     )
     say(f"run {run_id}: {training.method} on {config.model.base_model} ({training.steps} steps)")
 
-    backend.start(run_id)
+    backend.start(run_id, run_dir)
     try:
         for step in range(training.steps):
             learning_rate = _scheduled_lr(training.learning_rate, training.lr_schedule, step,

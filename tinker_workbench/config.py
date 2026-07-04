@@ -7,7 +7,7 @@ from typing import Any
 
 from tinker_workbench.errors import ConfigError
 
-VALID_MODES = ("mock", "tinker")
+VALID_MODES = ("mock", "local", "tinker")
 VALID_METHODS = ("sft", "rl_terminal_reward", "rl_dense_reward")
 VALID_SCHEDULES = ("constant", "linear", "cosine")
 VALID_GRADERS = ("exact_match", "contains", "regex", "bits_recovered")
@@ -139,6 +139,21 @@ class MockConfig:
 
 
 @dataclass
+class LocalConfig:
+    """Architecture of the tiny char-level LM trained by the local backend."""
+
+    context_window: int = 12
+    embedding_dim: int = 16
+    hidden_dim: int = 64
+
+    def validate(self) -> None:
+        if self.context_window <= 0:
+            raise ConfigError("local.context_window must be positive.")
+        if self.embedding_dim <= 0 or self.hidden_dim <= 0:
+            raise ConfigError("local.embedding_dim and local.hidden_dim must be positive.")
+
+
+@dataclass
 class ExperimentConfig:
     name: str
     description: str = ""
@@ -150,6 +165,7 @@ class ExperimentConfig:
     evals: list[EvalConfig] = field(default_factory=list)
     budget: BudgetConfig = field(default_factory=BudgetConfig)
     mock: MockConfig = field(default_factory=MockConfig)
+    local: LocalConfig = field(default_factory=LocalConfig)
 
     def validate(self) -> None:
         if not self.name:
@@ -162,6 +178,7 @@ class ExperimentConfig:
         self.checkpoints.validate()
         self.budget.validate()
         self.mock.validate()
+        self.local.validate()
         for eval_config in self.evals:
             eval_config.validate()
 
@@ -199,6 +216,7 @@ def parse_config(raw: dict[str, Any]) -> ExperimentConfig:
         "evals",
         "budget",
         "mock",
+        "local",
     }
     unknown = set(raw) - known_top_level
     if unknown:
@@ -230,6 +248,7 @@ def parse_config(raw: dict[str, Any]) -> ExperimentConfig:
         evals=evals,
         budget=_build_section(BudgetConfig, raw.get("budget", {}), "budget"),
         mock=_build_section(MockConfig, raw.get("mock", {}), "mock"),
+        local=_build_section(LocalConfig, raw.get("local", {}), "local"),
     )
     config.validate()
     return config

@@ -37,7 +37,7 @@ class MockBackend:
         self.run_id = "unbound"
         self.last_trained_step = -1
 
-    def start(self, run_id: str) -> None:
+    def start(self, run_id: str, run_dir=None) -> None:
         self.run_id = run_id
 
     def train_step(self, step: int, batch: list[Example], learning_rate: float) -> StepResult:

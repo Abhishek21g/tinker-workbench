@@ -107,8 +107,16 @@ def _check_loss_curve(losses: list[tuple[int, float]]) -> list[Finding]:
     last_window = sum(values[-3:]) / 3
     prev_window = sum(values[-6:-3]) / 3
 
-    # Diverging = the tail sits well above the best loss AND is still rising.
-    if last_window > max(2.0 * best, best + 0.1) and last_window > prev_window * 1.05:
+    # Diverging = the tail sits well above the best loss AND either is still
+    # rising (smooth blow-up) or never recovered below the starting loss
+    # (immediate blow-up followed by chaotic thrashing, the usual Adam
+    # too-high-LR signature).
+    tail_elevated = last_window > max(2.0 * best, best + 0.1)
+    rising_tail = last_window > prev_window * 1.05
+    # Compare against the step-0 loss, not the first window: an immediate
+    # blow-up pollutes the first window and would mask itself otherwise.
+    ended_above_start = last_window > values[0] * 1.5
+    if tail_elevated and (rising_tail or ended_above_start):
         step_at_best = min(finite, key=lambda pair: pair[1])[0]
         findings.append(
             Finding(

@@ -31,7 +31,7 @@ class TinkerBackend:
         self._tokenizer = None
         self._sampler_paths: dict[int, str] = {}
 
-    def start(self, run_id: str) -> None:
+    def start(self, run_id: str, run_dir=None) -> None:
         if not os.environ.get("TINKER_API_KEY"):
             raise BackendError(
                 "TINKER_API_KEY is not set. Export it (or run with --backend mock) "

@@ -17,8 +17,12 @@ def create_backend(config: ExperimentConfig, backend_name: str | None = None) ->
         from tinker_workbench.backends.mock import MockBackend
 
         return MockBackend(config)
+    if name == "local":
+        from tinker_workbench.backends.local import LocalBackend
+
+        return LocalBackend(config)
     if name == "tinker":
         from tinker_workbench.backends.tinker_api import TinkerBackend
 
         return TinkerBackend(config)
-    raise BackendError(f"Unknown backend: {name!r}. Expected 'mock' or 'tinker'.")
+    raise BackendError(f"Unknown backend: {name!r}. Expected 'mock', 'local', or 'tinker'.")

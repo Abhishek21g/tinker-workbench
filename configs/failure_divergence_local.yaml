@@ -1,0 +1,28 @@
+# REAL divergence, not simulated: the learning rate is genuinely too high for
+# this model, so the loss actually climbs. Run it, then `doctor latest`.
+name: failure-divergence-local
+description: Genuine LR-too-high divergence on the local backend.
+mode: local
+training:
+  method: sft
+  steps: 60
+  batch_size: 8
+  learning_rate: 5.0
+  seed: 7
+data:
+  source: builtin:memorization
+  train_examples: 32
+  eval_examples: 16
+  latent_bits: 8
+checkpoints:
+  every_steps: 20
+  estimated_gb_each: 0.001
+local:
+  context_window: 16
+  embedding_dim: 24
+  hidden_dim: 128
+evals:
+  - name: bits_recovered
+    grader: bits_recovered
+    num_examples: 16
+    max_sample_tokens: 16

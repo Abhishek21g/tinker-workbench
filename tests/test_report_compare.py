@@ -42,6 +42,13 @@ def test_write_report_default_location(workdir) -> None:
     assert report_path.exists()
 
 
+def test_write_report_creates_custom_parent(workdir) -> None:
+    run_dir = execute_run(make_config())
+    report_path = write_report(RunStore().load(run_dir), workdir / "nested" / "report.md")
+    assert report_path.exists()
+    assert report_path.read_text(encoding="utf-8").startswith("# test-run")
+
+
 def test_sparkline() -> None:
     assert sparkline([]) == ""
     assert sparkline([1.0, 1.0]) == "▁▁"

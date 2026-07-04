@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Protocol
 
 from tinker_workbench.datasets import Example
@@ -31,8 +32,12 @@ class TrainingBackend(Protocol):
 
     name: str
 
-    def start(self, run_id: str) -> None:
-        """Acquire clients/state. Called once before the first step."""
+    def start(self, run_id: str, run_dir: Path | None = None) -> None:
+        """Acquire clients/state. Called once before the first step.
+
+        `run_dir` is the run's artifact directory; backends that persist
+        real state (e.g. local checkpoints) write beneath it.
+        """
         ...
 
     def train_step(self, step: int, batch: list[Example], learning_rate: float) -> StepResult:

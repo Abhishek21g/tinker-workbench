@@ -17,9 +17,9 @@ tokens & cost      artifact trail       post-hoc, re-run nothing
 - **`doctor` finds the failure.** NaN losses, divergence, stalls, checkpoint
   gaps, budget overruns, and eval regressions, each with a suggested action
   and a CI-friendly exit code.
-- **Deterministic mock backend.** Develop and test the whole workflow (with
-  injectable failure modes) without spending Tinker credits; the real SDK
-  adapter implements the same five-method protocol.
+- **Two free backends.** Develop and test the whole workflow with the
+  deterministic mock backend, or run a real tiny neural LM locally with
+  `mode: local`; the real SDK adapter implements the same protocol.
 - **Reliability layer.** Pin a blessed run as a `baseline`, re-run it later,
   and `drift` flags regressions (loss, evals, cost) with CI exit codes —
   recipe-regression testing for post-training. `conformance` catches silent
@@ -29,7 +29,7 @@ tokens & cost      artifact trail       post-hoc, re-run nothing
 ## Quick start
 
 ```bash
-python3 -m venv .venv && .venv/bin/pip install -e . pyyaml
+python3 -m venv .venv && .venv/bin/pip install -e ".[local]" pyyaml
 source .venv/bin/activate
 
 # 1. Plan: tokens, storage, cost, risks — nothing runs yet
@@ -43,7 +43,10 @@ tinker-workbench run configs/memorization_sft.yaml \
 # 3. Compare the arms
 tinker-workbench compare runs/*memorization*
 
-# 4. Full report for one run
+# 4. Run the no-credit local neural LM version
+tinker-workbench run configs/memorization_local.yaml
+
+# 5. Full report for one run
 tinker-workbench report latest
 ```
 
@@ -57,7 +60,8 @@ tinker-workbench doctor latest
 ```
 
 Real Tinker runs use the same configs with `mode: tinker` (or `--backend
-tinker`) and require the `tinker` SDK plus `TINKER_API_KEY`.
+tinker`) and require the `tinker` SDK plus `TINKER_API_KEY`. Local neural runs
+use `mode: local` and require the `local` extra (`pip install -e ".[local]"`).
 
 ## The memorization study
 
@@ -72,12 +76,13 @@ evals at every checkpoint and `compare` as the study readout.
 - [docs/commands.md](docs/commands.md) — full command reference
 - [docs/architecture.md](docs/architecture.md) — design and rationale
 - [docs/upstream-collab.md](docs/upstream-collab.md) — Tinker upstream collaboration targets
+- [docs/progress-report-2026-07-04.md](docs/progress-report-2026-07-04.md) — current outreach and build report
 
 ## Development
 
 ```bash
-.venv/bin/pip install -e . pytest ruff pyyaml
-pytest tests/ -q       # 61 tests
+.venv/bin/pip install -e ".[local]" pytest ruff pyyaml
+pytest tests/ -q       # 76 tests
 ruff check tinker_workbench/ tests/
 ```
 

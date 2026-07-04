@@ -29,6 +29,12 @@ def test_cost_estimate_requires_rates() -> None:
     assert plan["budget"]["estimated_usd"] == expected
 
 
+def test_local_mode_has_no_tinker_spend_risk() -> None:
+    plan = build_plan(make_config(mode="local"))
+    assert not any("Tinker API" in risk for risk in plan["risks"])
+    assert not any("pricing rates" in risk for risk in plan["risks"])
+
+
 def test_budget_overrun_risk_flagged() -> None:
     config = make_config(budget=BudgetConfig(max_train_tokens=100))
     plan = build_plan(config)
@@ -43,10 +49,14 @@ def test_max_usd_risk_flagged() -> None:
     assert any("max_usd" in risk for risk in plan["risks"])
 
 
-def test_high_lr_risk_flagged() -> None:
-    config = make_config(training=TrainingConfig(steps=12, learning_rate=0.01))
+def test_high_lr_risk_flagged_for_tinker_mode() -> None:
+    config = make_config(mode="tinker", training=TrainingConfig(steps=12, learning_rate=0.01))
     plan = build_plan(config)
     assert any("unusually high" in risk for risk in plan["risks"])
+
+    # The same LR is normal for the tiny local model; no risk there.
+    local = make_config(mode="local", training=TrainingConfig(steps=12, learning_rate=0.01))
+    assert not any("unusually high" in risk for risk in build_plan(local)["risks"])
 
 
 def test_no_evals_risk_flagged() -> None:

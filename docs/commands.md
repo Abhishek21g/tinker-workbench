@@ -9,7 +9,7 @@ Validates the config and prints the pre-run plan as JSON: planned train/sample
 tokens, checkpoint count and storage estimate, cost estimate (when pricing
 rates are supplied in `budget`), and a list of risks. Nothing is executed.
 
-## `run <config.yaml> [more configs...] [--backend mock|tinker] [--quiet]`
+## `run <config.yaml> [more configs...] [--backend mock|local|tinker] [--quiet]`
 
 Executes each config in order and records the full artifact trail per run:
 
@@ -27,8 +27,8 @@ The run stops early with status `failed` on non-finite loss, or
 `stopped_budget` when `budget.max_train_tokens` is hit. Exit code is 2 if any
 run failed.
 
-`--backend` overrides the config's `mode`. The `tinker` backend requires the
-`tinker` SDK and `TINKER_API_KEY`.
+`--backend` overrides the config's `mode`. The `local` backend requires
+`numpy`; the `tinker` backend requires the `tinker` SDK and `TINKER_API_KEY`.
 
 ## `runs [--limit N]`
 

@@ -26,7 +26,7 @@ def build_plan(config: ExperimentConfig) -> dict[str, Any]:
     estimated_usd = _estimate_cost(budget, train_tokens, sample_tokens)
 
     risks: list[str] = []
-    if config.mode != "mock":
+    if config.mode == "tinker":
         risks.append("Real Tinker API usage requires explicit user approval before launch.")
     if budget.max_train_tokens and train_tokens > budget.max_train_tokens:
         risks.append(
@@ -38,7 +38,7 @@ def build_plan(config: ExperimentConfig) -> dict[str, Any]:
             f"Planned sample tokens ({sample_tokens}) exceed budget.max_sample_tokens "
             f"({budget.max_sample_tokens})."
         )
-    if estimated_usd is None and config.mode != "mock":
+    if estimated_usd is None and config.mode == "tinker":
         risks.append(
             "No pricing rates provided (budget.usd_per_1m_train_tokens / "
             "usd_per_1m_sample_tokens), so cost cannot be estimated before launch."
@@ -54,10 +54,10 @@ def build_plan(config: ExperimentConfig) -> dict[str, Any]:
         )
     if not config.evals:
         risks.append("No evals configured; the run will produce loss curves but no task scores.")
-    if training.learning_rate > 50 * 1e-4:
+    if config.mode == "tinker" and training.learning_rate > 50 * 1e-4:
         risks.append(
-            f"learning_rate={training.learning_rate} is unusually high; "
-            "check for divergence early with `doctor`."
+            f"learning_rate={training.learning_rate} is unusually high for LoRA "
+            "fine-tuning; check for divergence early with `doctor`."
         )
 
     return {

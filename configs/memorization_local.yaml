@@ -1,0 +1,35 @@
+# Memorization study on the LOCAL backend: a real neural LM trained on your
+# machine, free. Same pipeline, same artifacts, same doctor/drift — swap
+# mode to `tinker` to run it against the real API instead.
+name: memorization-local
+description: Real (tiny) neural LM genuinely memorizing bitstrings, trained locally.
+mode: local
+training:
+  method: sft
+  steps: 200
+  batch_size: 8
+  learning_rate: 0.03
+  lr_schedule: constant
+  seed: 7
+data:
+  source: builtin:memorization
+  train_examples: 32
+  eval_examples: 16
+  latent_bits: 8
+  avg_tokens_per_example: 48
+checkpoints:
+  every_steps: 50
+  estimated_gb_each: 0.001
+local:
+  context_window: 16
+  embedding_dim: 24
+  hidden_dim: 128
+evals:
+  - name: exact_match
+    grader: exact_match
+    num_examples: 16
+    max_sample_tokens: 16
+  - name: bits_recovered
+    grader: bits_recovered
+    num_examples: 16
+    max_sample_tokens: 16
