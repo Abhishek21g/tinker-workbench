@@ -6,6 +6,7 @@ import shutil
 from pathlib import Path
 
 from tinker_workbench.config import load_config
+from tinker_workbench.collab import build_collab_proposal
 from tinker_workbench.planner import build_plan
 from tinker_workbench.report import write_report
 from tinker_workbench.runner import run_mock_experiment
@@ -24,6 +25,16 @@ def main() -> None:
 
     report_parser = subparsers.add_parser("report", help="Generate a markdown report for a run.")
     report_parser.add_argument("run_dir", type=Path)
+
+    collab_parser = subparsers.add_parser(
+        "collab", help="Export an upstream-facing collaboration proposal."
+    )
+    collab_parser.add_argument(
+        "--target",
+        choices=["tinker-cookbook-cost", "tinker-checkpoint-probe"],
+        required=True,
+    )
+    collab_parser.add_argument("--run-dir", type=Path, default=None)
 
     args = parser.parse_args()
 
@@ -50,7 +61,11 @@ def main() -> None:
         print(str(report_path))
         return
 
+    if args.command == "collab":
+        proposal = build_collab_proposal(args.target, args.run_dir)
+        print(json.dumps(proposal, indent=2))
+        return
+
 
 if __name__ == "__main__":
     main()
-
