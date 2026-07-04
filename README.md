@@ -73,6 +73,7 @@ evals at every checkpoint and `compare` as the study readout.
 
 ## Docs
 
+- [site/index.html](site/index.html) — static launch/product page
 - [docs/commands.md](docs/commands.md) — full command reference
 - [docs/architecture.md](docs/architecture.md) — design and rationale
 - [docs/upstream-collab.md](docs/upstream-collab.md) — Tinker upstream collaboration targets

@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Tinker Workbench is an open-source experiment layer for observable, reproducible post-training with Tinker."
+    />
+    <title>Tinker Workbench</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Tinker Workbench home">
+        <span class="brand-mark" aria-hidden="true">TW</span>
+        <span>Tinker Workbench</span>
+      </a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="#product">Product</a>
+        <a href="#research">Research</a>
+        <a href="#contributions">Contributions</a>
+        <a href="https://github.com/Abhishek21g/tinker-workbench">GitHub</a>
+      </nav>
+      <a class="header-action" href="https://github.com/Abhishek21g/tinker-workbench">
+        View GitHub
+      </a>
+    </header>
+
+    <main id="top">
+      <section class="hero section-shell" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <h1 id="hero-title">Observable post-training for Tinker experiments.</h1>
+          <p>
+            Plan runs before credits are spent. Track artifacts. Diagnose failures.
+            Compare methods. Ship reproducible reports.
+          </p>
+          <div class="hero-actions" aria-label="Primary actions">
+            <a class="button primary" href="https://github.com/Abhishek21g/tinker-workbench">
+              View GitHub
+            </a>
+            <a class="button secondary" href="../docs/progress-report-2026-07-04.md">
+              Read Progress Report
+            </a>
+          </div>
+          <dl class="proof-grid" aria-label="Project proof points">
+            <div>
+              <dt>76</dt>
+              <dd>passing tests</dd>
+            </div>
+            <div>
+              <dt>4</dt>
+              <dd>upstream PRs</dd>
+            </div>
+            <div>
+              <dt>1.0000</dt>
+              <dd>bits recovered</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="hero-panel" aria-label="Tinker Workbench dashboard preview">
+          <div class="panel-topline">
+            <div>
+              <span class="status-dot"></span>
+              memorization-local
+            </div>
+            <span>completed</span>
+          </div>
+
+          <div class="terminal">
+            <span>$</span>
+            <code>tinker-workbench run configs/memorization_local.yaml</code>
+          </div>
+
+          <div class="metric-row">
+            <article>
+              <span>final loss</span>
+              <strong>0.0026</strong>
+            </article>
+            <article>
+              <span>bits recovered</span>
+              <strong>1.0000</strong>
+            </article>
+            <article>
+              <span>exact match</span>
+              <strong>1.0000</strong>
+            </article>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-head">
+              <span>loss curve</span>
+              <span>step 0 -> 199</span>
+            </div>
+            <svg viewBox="0 0 580 180" role="img" aria-label="Loss curve dropping to near zero">
+              <path class="grid-line" d="M0 44H580M0 92H580M0 140H580" />
+              <path
+                class="loss-fill"
+                d="M0 24 C52 60 74 118 116 126 C168 138 208 142 258 147 C344 154 438 158 580 160 L580 180 L0 180 Z"
+              />
+              <path
+                class="loss-line"
+                d="M0 24 C52 60 74 118 116 126 C168 138 208 142 258 147 C344 154 438 158 580 160"
+              />
+            </svg>
+          </div>
+
+          <div class="eval-table" role="table" aria-label="Evaluation checkpoints">
+            <div role="row" class="table-head">
+              <span role="columnheader">step</span>
+              <span role="columnheader">bits</span>
+              <span role="columnheader">exact</span>
+            </div>
+            <div role="row">
+              <span role="cell">49</span>
+              <span role="cell">0.7031</span>
+              <span role="cell">0.0000</span>
+            </div>
+            <div role="row">
+              <span role="cell">99</span>
+              <span role="cell">0.9844</span>
+              <span role="cell">0.9375</span>
+            </div>
+            <div role="row">
+              <span role="cell">149</span>
+              <span role="cell">1.0000</span>
+              <span role="cell">1.0000</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="product-strip" id="product" aria-label="Experiment loop">
+        <div class="section-shell loop-shell">
+          <div class="section-heading">
+            <h2>One loop for the whole experiment.</h2>
+            <p>
+              Workbench turns a training run into a sequence of inspectable artifacts,
+              so researchers can debug results after the job finishes without rerunning it.
+            </p>
+          </div>
+          <ol class="loop-grid">
+            <li>
+              <span>01</span>
+              <strong>Plan</strong>
+              <p>Estimate tokens, checkpoints, storage, cost, and risky settings before launch.</p>
+            </li>
+            <li>
+              <span>02</span>
+              <strong>Run</strong>
+              <p>Record configs, metrics, events, evals, checkpoints, and summaries.</p>
+            </li>
+            <li>
+              <span>03</span>
+              <strong>Doctor</strong>
+              <p>Catch NaNs, divergence, stalls, missing checkpoints, and eval regressions.</p>
+            </li>
+            <li>
+              <span>04</span>
+              <strong>Compare</strong>
+              <p>Rank SFT and RL-style arms by loss, exact match, and bits recovered.</p>
+            </li>
+            <li>
+              <span>05</span>
+              <strong>Report</strong>
+              <p>Generate a markdown experiment report with reproduction commands.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section-shell study-section" id="research" aria-labelledby="study-title">
+        <div class="study-copy">
+          <h2 id="study-title">A real memorization study, not just a mock dashboard.</h2>
+          <p>
+            The local backend trains a tiny neural LM with Adam, writes real NumPy
+            checkpoints, and exposes genuine loss and eval dynamics before any Tinker
+            credits are spent.
+          </p>
+          <a class="text-link" href="../reports/memorization-local-2026-07-04.md">
+            Open generated experiment report
+          </a>
+        </div>
+        <div class="study-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Arm</th>
+                <th>Backend</th>
+                <th>Steps</th>
+                <th>Final loss</th>
+                <th>Bits</th>
+                <th>Exact</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Local SFT</td>
+                <td>local</td>
+                <td>200/200</td>
+                <td>0.0026</td>
+                <td>1.0000</td>
+                <td>1.0000</td>
+              </tr>
+              <tr>
+                <td>Mock SFT</td>
+                <td>mock</td>
+                <td>40/40</td>
+                <td>0.3819</td>
+                <td>0.9812</td>
+                <td>0.8438</td>
+              </tr>
+              <tr>
+                <td>Dense reward RL</td>
+                <td>mock</td>
+                <td>40/40</td>
+                <td>0.7330</td>
+                <td>0.9281</td>
+                <td>0.5000</td>
+              </tr>
+              <tr>
+                <td>Terminal reward RL</td>
+                <td>mock</td>
+                <td>40/40</td>
+                <td>1.2702</td>
+                <td>0.8719</td>
+                <td>0.2812</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="contribution-band" id="contributions">
+        <div class="section-shell">
+          <div class="section-heading compact">
+            <h2>Built in public, near the Tinker ecosystem.</h2>
+            <p>
+              The project is paired with small upstream contributions, so the workbench
+              grows from real API, recipe, and reliability surfaces.
+            </p>
+          </div>
+          <div class="pr-grid">
+            <a href="https://github.com/thinking-machines-lab/tinker-cookbook/pull/798">
+              <span>tinker-cookbook #798</span>
+              <strong>Add training run artifact summary</strong>
+              <em>CI green, review required</em>
+            </a>
+            <a href="https://github.com/thinking-machines-lab/tinker-cookbook/pull/799">
+              <span>tinker-cookbook #799</span>
+              <strong>Skip blank lines when reading JSONL</strong>
+              <em>CI green, review required</em>
+            </a>
+            <a href="https://github.com/thinking-machines-lab/tinker/pull/48">
+              <span>tinker #48</span>
+              <strong>Return JSON for empty checkpoint deletes</strong>
+              <em>Open and clean</em>
+            </a>
+            <a href="https://github.com/thinking-machines-lab/batch_invariant_ops/pull/25">
+              <span>batch_invariant_ops #25</span>
+              <strong>Correct Python version metadata</strong>
+              <em>Open and clean</em>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-shell proof-section" aria-label="Launch artifact preview">
+        <div>
+          <h2>Launch-ready artifact trail.</h2>
+          <p>
+            The static site is backed by the same repository artifacts: configs, run
+            summaries, reports, tests, and public PR links. The story is not "trust the
+            demo"; it is "inspect the trail."
+          </p>
+        </div>
+        <figure class="concept-frame">
+          <img src="./assets/launch-concept.png" alt="Product launch concept for Tinker Workbench" />
+          <figcaption>Design concept used to shape the launch page.</figcaption>
+        </figure>
+      </section>
+
+      <section class="cta-section section-shell">
+        <h2>For researchers who want less mystery between launch and result.</h2>
+        <div class="cta-actions">
+          <a class="button primary" href="https://github.com/Abhishek21g/tinker-workbench">
+            View GitHub
+          </a>
+          <a class="button secondary" href="../README.md">
+            Read the README
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Tinker Workbench</span>
+      <span>Open-source research tooling by Abhishek Enaguthi</span>
+    </footer>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

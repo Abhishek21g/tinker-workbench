@@ -9,6 +9,7 @@ dist/
 *.egg-info/
 runs/
 reports/
+site/qa-*.png
 
 # Upstream reference clones are useful locally but should not become this product's source.
 upstream/
