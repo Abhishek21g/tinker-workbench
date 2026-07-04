@@ -24,7 +24,10 @@ def _cost_visibility_proposal(run_snapshot: dict[str, Any] | None) -> dict[str, 
         ],
         "proposal": {
             "name": "run cost and usage report JSON",
-            "goal": "Give local tools a stable shape for pre-run estimates and post-run reconciliation.",
+            "goal": (
+                "Give local tools a stable shape for pre-run estimates and "
+                "post-run reconciliation."
+            ),
             "why_now": (
                 "Tinker users are already asking for cost, usage, balance, and checkpoint storage "
                 "visibility. Tinker Workbench can prototype the client-side report shape before "
@@ -81,7 +84,10 @@ def _checkpoint_probe_proposal(run_snapshot: dict[str, Any] | None) -> dict[str,
         ],
         "proposal": {
             "name": "tinker checkpoint probe <path> --json",
-            "goal": "Verify that a saved checkpoint can serve through a sampler before using it in evals.",
+            "goal": (
+                "Verify that a saved checkpoint can serve through a sampler "
+                "before using it in evals."
+            ),
             "use_cases": [
                 "CI smoke tests for training scripts",
                 "pre-eval readiness checks",

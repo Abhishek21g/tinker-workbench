@@ -1,0 +1,21 @@
+# Demo config: loss goes NaN mid-run; the runner stops and marks the run failed.
+# Run it, then `tinker-workbench doctor latest`.
+name: failure-nan
+description: Simulated NaN loss for exercising failure handling and the doctor.
+mode: mock
+training:
+  method: sft
+  steps: 30
+  batch_size: 8
+  learning_rate: 0.0001
+  seed: 3
+data:
+  source: builtin:memorization
+  train_examples: 64
+  eval_examples: 32
+  latent_bits: 10
+checkpoints:
+  every_steps: 10
+mock:
+  inject:
+    nan_at_step: 17

@@ -1,10 +1,14 @@
 [project]
 name = "tinker-workbench"
-version = "0.1.0"
-description = "Local workbench for planning, observing, and reporting Tinker-style post-training experiments."
+version = "0.2.0"
+description = "Plan, run, observe, debug, and evaluate Tinker post-training experiments."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = []
+
+[project.optional-dependencies]
+yaml = ["pyyaml>=6.0"]
+tinker = ["tinker"]
 
 [project.scripts]
 tinker-workbench = "tinker_workbench.cli:main"

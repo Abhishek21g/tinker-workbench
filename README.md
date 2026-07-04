@@ -1,28 +1,82 @@
 # Tinker Workbench
 
-Tinker Workbench is a local-first lab assistant for Thinking Machines-style post-training experiments. It plans runs, estimates cost/storage risk, executes mock or real integrations, records structured artifacts, and generates reproducible reports.
+A local-first lab assistant for [Tinker](https://github.com/thinking-machines-lab/tinker)
+post-training experiments: it **plans** a run before any tokens are spent,
+**runs** it with a complete artifact trail, then **observes**, **debugs**, and
+**evaluates** entirely from those artifacts.
 
-The first target is a clean mock implementation of the `tinker-project-ideas` memorization empirical study, then a path toward real Tinker Cookbook integration.
-
-GitHub: https://github.com/Abhishek21g/tinker-workbench
-
-## Quick Start
-
-```bash
-python3 -m tinker_workbench.cli plan configs/memorization_mock.yaml
-python3 -m tinker_workbench.cli run configs/memorization_mock.yaml --mock
-python3 -m tinker_workbench.cli report runs/latest
+```
+plan ──► run ──► status / doctor / compare / report
+tokens & cost      artifact trail       post-hoc, re-run nothing
 ```
 
-Read the active coordination docs:
+- **Plan before you pay.** Token, checkpoint-storage, and cost estimates plus
+  a risk list, from the same config that runs the experiment.
+- **Every run leaves a trail.** Ordered events, per-step metrics, checkpoints,
+  eval scores, and a final summary — enough to debug or reproduce any run.
+- **`doctor` finds the failure.** NaN losses, divergence, stalls, checkpoint
+  gaps, budget overruns, and eval regressions, each with a suggested action
+  and a CI-friendly exit code.
+- **Deterministic mock backend.** Develop and test the whole workflow (with
+  injectable failure modes) without spending Tinker credits; the real SDK
+  adapter implements the same five-method protocol.
 
-- `agent/PROJECT_CONTEXT.md`
-- `agent/EXECUTION_BOARD.md`
-- `agent/GITHUB_CONTRIBUTION_TARGETS.md`
-- `CURSOR.md`
+## Quick start
 
-Current task board:
+```bash
+python3 -m venv .venv && .venv/bin/pip install -e . pyyaml
+source .venv/bin/activate
 
-- https://github.com/Abhishek21g/tinker-workbench/issues/1
-- https://github.com/Abhishek21g/tinker-workbench/issues/2
-- https://github.com/Abhishek21g/tinker-workbench/issues/3
+# 1. Plan: tokens, storage, cost, risks — nothing runs yet
+tinker-workbench plan configs/memorization_sft.yaml
+
+# 2. Run the three-arm memorization study (mock backend, deterministic)
+tinker-workbench run configs/memorization_sft.yaml \
+                     configs/memorization_rl_dense.yaml \
+                     configs/memorization_rl_terminal.yaml
+
+# 3. Compare the arms
+tinker-workbench compare runs/*memorization*
+
+# 4. Full report for one run
+tinker-workbench report latest
+```
+
+Debugging workflow:
+
+```bash
+tinker-workbench run configs/failure_divergence.yaml
+tinker-workbench doctor latest
+# [CRITICAL] loss_divergence: Loss is diverging: best 1.2743 around step 15, ...
+#     -> Lower training.learning_rate or switch lr_schedule to cosine/linear decay ...
+```
+
+Real Tinker runs use the same configs with `mode: tinker` (or `--backend
+tinker`) and require the `tinker` SDK plus `TINKER_API_KEY`.
+
+## The memorization study
+
+The shipped configs implement the workflow for the
+[tinker-project-ideas](https://github.com/thinking-machines-lab/tinker-project-ideas)
+memorization empirical study: identical data and budget across SFT, dense-reward
+RL, and terminal-reward RL arms, with `bits_recovered` and `exact_match`
+evals at every checkpoint and `compare` as the study readout.
+
+## Docs
+
+- [docs/commands.md](docs/commands.md) — full command reference
+- [docs/architecture.md](docs/architecture.md) — design and rationale
+- [docs/upstream-collab.md](docs/upstream-collab.md) — Tinker upstream collaboration targets
+
+## Development
+
+```bash
+.venv/bin/pip install -e . pytest ruff pyyaml
+pytest tests/ -q       # 61 tests
+ruff check tinker_workbench/ tests/
+```
+
+CI runs lint, tests, and a CLI smoke test on Python 3.11–3.13.
+
+Project coordination lives in `agent/EXECUTION_BOARD.md` and the
+[issue tracker](https://github.com/Abhishek21g/tinker-workbench/issues).

@@ -1,0 +1,36 @@
+# Memorization empirical study (tinker-project-ideas), SFT arm.
+# Run all three arms, then: tinker-workbench compare <run> <run> <run>
+name: memorization-sft
+description: How many latent bits does SFT store per training token?
+mode: mock
+model:
+  base_model: meta-llama/Llama-3.2-1B
+  lora_rank: 32
+training:
+  method: sft
+  steps: 40
+  batch_size: 8
+  learning_rate: 0.0001
+  lr_schedule: constant
+  seed: 7
+data:
+  source: builtin:memorization
+  train_examples: 128
+  eval_examples: 64
+  latent_bits: 10
+  avg_tokens_per_example: 48
+checkpoints:
+  every_steps: 10
+  estimated_gb_each: 0.5
+evals:
+  - name: exact_match
+    grader: exact_match
+    num_examples: 32
+    max_sample_tokens: 16
+  - name: bits_recovered
+    grader: bits_recovered
+    num_examples: 32
+    max_sample_tokens: 16
+budget:
+  max_train_tokens: 250000
+  max_sample_tokens: 50000
