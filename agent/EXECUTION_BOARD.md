@@ -16,6 +16,18 @@ Use this folder as the single shared place:
 
 Open this exact folder in Cursor. Codex is already operating here.
 
+GitHub source of truth:
+
+```text
+https://github.com/Abhishek21g/tinker-workbench
+```
+
+Shared issue board:
+
+- `#1` Build plan/run/report CLI into real Workbench core.
+- `#2` Prepare upstream collaboration path for Tinker checkpoint/cost tooling.
+- `#3` Implement memorization empirical study simulator.
+
 ## Agent Ownership
 
 ### Codex Lane
@@ -72,4 +84,3 @@ Required output artifacts:
 ## Current Product Thesis
 
 Tinker Workbench should make post-training runs observable, reproducible, and debuggable. It should look like something a Tinker research infrastructure or developer experience engineer would want internally.
-
