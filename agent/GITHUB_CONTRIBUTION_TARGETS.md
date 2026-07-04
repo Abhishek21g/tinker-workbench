@@ -11,6 +11,8 @@ Updated: 2026-07-04
 - `thinking-machines-lab/tinker-feedback`
 - `thinking-machines-lab/batch_invariant_ops`
 
+Current priority: start with `tinker-cookbook`. It has the most active public surface, the most community PRs, and the closest overlap with Tinker Workbench.
+
 ### Lower Direct PR Value
 
 - `thinking-machines-lab/tinker-project-ideas`
@@ -21,6 +23,8 @@ That repo currently has no open issues. The best way to engage is to implement o
 
 ### Product/DX Fit
 
+- `tinker-cookbook#551` - expose per-run cost via API and CLI.
+- `tinker-cookbook#298` - pricing estimator and granular API-key permissions.
 - `tinker#44` - `tinker checkpoint probe <path>` to verify a sampler actually serves.
 - `tinker#7` - rate limit transparency.
 - `tinker-cookbook#781` - account-level usage and balance query via API/CLI.
@@ -29,6 +33,13 @@ That repo currently has no open issues. The best way to engage is to implement o
 - `tinker-feedback#91` - better way to delete checkpoints.
 
 These map directly to Tinker Workbench: planning, cost visibility, checkpoint health, and operational trust.
+
+Important adjacent projects already mentioned in `tinker-cookbook#551` and `#298`:
+
+- `tinkpad` - terminal UI for managing Tinker runs and checkpoints.
+- `tinker-cost` - package for pre-run pricing estimation from Tinker datums.
+
+Do not position Workbench as if these do not exist. Position it as the experiment/research reporting layer that can interoperate with cost/checkpoint tools.
 
 ### Systems/GPU Fit
 
@@ -50,11 +61,12 @@ Best first research choice: memorization empirical study.
 ## Recommended Public Sequence
 
 1. Build local Tinker Workbench mock mode.
-2. Use it to run the memorization empirical study locally or with a small model.
-3. Produce a report with clear metrics and limitations.
-4. Open a polished issue/comment in `tinker-project-ideas` linking the implementation and asking whether this result format would be useful for featured projects.
-5. Open a small PR to `tinker-cookbook` if we can extract a reusable helper, doc improvement, or report utility.
-6. Comment on `tinker#44` or `tinker-feedback#119` with a concrete design sketch backed by our workbench prototype.
+2. Add a `tinker-cookbook` compatibility/export path: config in, structured report out.
+3. Use it to run the memorization empirical study locally or with a small model.
+4. Produce a report with clear metrics and limitations.
+5. Open a polished issue/comment in `tinker-project-ideas` linking the implementation and asking whether this result format would be useful for featured projects.
+6. Open a small PR to `tinker-cookbook` if we can extract a reusable helper, doc improvement, report utility, or checkpoint probe UX.
+7. Comment on `tinker#44`, `tinker-cookbook#551`, or `tinker-feedback#119` with a concrete design sketch backed by our workbench prototype.
 
 ## Candidate Comment For `tinker#44`
 
@@ -89,4 +101,3 @@ Even a minimal read-only endpoint plus CLI JSON output would unlock:
 
 If useful, I can share a concrete JSON shape from the prototype.
 ```
-
