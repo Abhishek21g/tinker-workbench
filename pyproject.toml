@@ -1,0 +1,27 @@
+[project]
+name = "tinker-workbench"
+version = "0.1.0"
+description = "Local workbench for planning, observing, and reporting Tinker-style post-training experiments."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+tinker-workbench = "tinker_workbench.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.8.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

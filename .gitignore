@@ -1,0 +1,21 @@
+.DS_Store
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+dist/
+*.egg-info/
+runs/
+reports/
+
+# Upstream reference clones are useful locally but should not become this product's source.
+upstream/
+
+# Agent template extras copied for local context; keep only active project docs tracked.
+.claude/
+.codex/
+agent/*
+!agent/PROJECT_CONTEXT.md
+!agent/EXECUTION_BOARD.md
+!agent/GITHUB_CONTRIBUTION_TARGETS.md
