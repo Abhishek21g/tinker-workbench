@@ -20,3 +20,4 @@ agent/*
 !agent/PROJECT_CONTEXT.md
 !agent/EXECUTION_BOARD.md
 !agent/GITHUB_CONTRIBUTION_TARGETS.md
+.env
