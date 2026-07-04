@@ -15,6 +15,8 @@ runner.execute_run()                      ← owns the loop, LR schedule,
     │                                        budget stops, artifact writing
     ├─► backends/  (TrainingBackend protocol)
     │     ├─ mock.py        deterministic simulator + failure injection
+    │     ├─ local.py       REAL training: tiny char-level neural LM (numpy),
+    │     │                 hand-derived gradients + Adam, real .npz checkpoints
     │     └─ tinker_api.py  real Tinker SDK adapter (LoRA client)
     │
     ├─► datasets.py   builtin:memorization or JSONL prompt/completion
@@ -52,6 +54,14 @@ Identical config in, identical artifacts out; the test suite asserts this.
 divergence, stalls, and spikes at chosen steps. That is what lets `doctor`'s
 rules be developed and regression-tested honestly instead of being untested
 heuristics.
+
+**The local backend is real training, not simulation.** A character-level MLP
+language model (embedding → tanh → softmax, hand-derived gradients, Adam)
+genuinely memorizes the study's bitstrings on your machine in under a second,
+saves real weight files as checkpoints, and genuinely diverges when the
+learning rate is too high (`configs/failure_divergence_local.yaml`). The
+doctor and drift rules are therefore validated against true optimization
+dynamics — chaotic Adam blow-ups included — before ever touching a paid run.
 
 **Costs are planned, never invented.** The planner only computes dollar
 estimates from rates the config owner supplies (`budget.usd_per_1m_*`);

@@ -19,7 +19,7 @@ jobs:
       - name: Install
         run: |
           python -m pip install --upgrade pip
-          pip install -e . pytest ruff pyyaml
+          pip install -e ".[local]" pytest ruff pyyaml
       - name: Lint
         run: ruff check tinker_workbench/ tests/
       - name: Test
@@ -30,3 +30,8 @@ jobs:
           tinker-workbench run configs/memorization_sft.yaml --quiet
           tinker-workbench doctor latest
           tinker-workbench report latest
+          # Real local neural-LM training, end to end
+          tinker-workbench run configs/memorization_local.yaml --quiet
+          tinker-workbench baseline latest --name local-ref
+          tinker-workbench run configs/memorization_local.yaml --quiet
+          tinker-workbench drift latest --baseline local-ref
