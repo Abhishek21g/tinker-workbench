@@ -72,6 +72,38 @@ Full markdown experiment report: summary, loss sparkline, eval table,
 checkpoints, plan-vs-actual budget reconciliation, doctor diagnostics, and a
 reproduce section.
 
+## `baseline <run> [--name NAME]`
+
+Pins a completed run as a reference baseline (`baselines/<name>.json`): config
+fingerprint, full loss curve, best eval scores, token usage. This is the
+"blessed run" for a recipe.
+
+## `drift <run> --baseline <name|path> [--json]`
+
+Compares a run against a pinned baseline and reports regressions:
+
+- `final_loss_regression` / `loss_curve_shape_drift` — training dynamics changed
+- `eval_regression` / `eval_missing` — task performance dropped
+- `loss_non_finite` / `run_not_completed` — the rerun broke outright
+- `base_model_changed` / `config_changed` / `step_count_changed` — intentional-change markers
+- `token_usage_increase` — cost drift
+- `final_loss_improved` — suggests re-pinning the baseline
+
+Exit code 2 on critical findings, so a scheduled rerun + `drift` is a
+recipe-regression CI: model deprecations, SDK drift, and renderer changes
+surface as findings instead of user bug reports.
+
+## `conformance <spec-a> <spec-b> [--json]`
+
+Token-exact renderer comparison over a probe corpus of adversarial
+conversations (role markers inside content, control-token strings, unicode,
+whitespace). Specs: `hf:MODEL` (transformers chat template) or
+`cookbook:RENDERER@MODEL` (tinker-cookbook renderer). Exit code 2 when not
+conformant.
+
+Use it as a distillation preflight: a student/teacher renderer mismatch is the
+tinker-cookbook#796 failure class — plausible-looking loss, garbage results.
+
 ## `collab --target tinker-cookbook-cost|tinker-checkpoint-probe [--run-dir RUN]`
 
 Exports the upstream-facing proposal JSON shapes used in our collaboration

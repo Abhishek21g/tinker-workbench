@@ -8,9 +8,11 @@ from pathlib import Path
 from tinker_workbench.collab import build_collab_proposal
 from tinker_workbench.compare import build_comparison
 from tinker_workbench.config import load_config
+from tinker_workbench.conformance import compare_renderers
 from tinker_workbench.doctor import diagnose
 from tinker_workbench.errors import WorkbenchError
 from tinker_workbench.planner import build_plan
+from tinker_workbench.reference import detect_drift, load_baseline, save_baseline
 from tinker_workbench.report import write_report
 from tinker_workbench.runner import execute_run
 from tinker_workbench.store import RunStore
@@ -83,6 +85,32 @@ def build_parser() -> argparse.ArgumentParser:
     report_parser.add_argument("run", help="Run directory, run id, or 'latest'.")
     report_parser.add_argument("--out", type=Path, default=None)
     report_parser.set_defaults(handler=_cmd_report)
+
+    baseline_parser = subparsers.add_parser(
+        "baseline", help="Pin a completed run as the reference baseline for drift checks."
+    )
+    baseline_parser.add_argument("run", help="Run directory, run id, or 'latest'.")
+    baseline_parser.add_argument("--name", default=None, help="Baseline name (default: run name).")
+    baseline_parser.set_defaults(handler=_cmd_baseline)
+
+    drift_parser = subparsers.add_parser(
+        "drift",
+        help="Compare a run against a pinned baseline; exit 2 on critical regressions.",
+    )
+    drift_parser.add_argument("run", help="Run directory, run id, or 'latest'.")
+    drift_parser.add_argument("--baseline", required=True, help="Baseline name or path.")
+    drift_parser.add_argument("--json", action="store_true", dest="as_json")
+    drift_parser.set_defaults(handler=_cmd_drift)
+
+    conformance_parser = subparsers.add_parser(
+        "conformance",
+        help="Token-exact renderer comparison (e.g. hf:MODEL vs cookbook:RENDERER@MODEL).",
+    )
+    conformance_parser.add_argument("renderer_a", help="Renderer spec: hf:MODEL or "
+                                    "cookbook:RENDERER@MODEL")
+    conformance_parser.add_argument("renderer_b", help="Renderer spec to compare against.")
+    conformance_parser.add_argument("--json", action="store_true", dest="as_json")
+    conformance_parser.set_defaults(handler=_cmd_conformance)
 
     collab_parser = subparsers.add_parser(
         "collab", help="Export an upstream-facing collaboration proposal."
@@ -189,6 +217,67 @@ def _cmd_report(args) -> int:
     report_path = write_report(artifacts, args.out)
     print(report_path)
     return 0
+
+
+def _cmd_baseline(args) -> int:
+    artifacts = RunStore().load(args.run)
+    path = save_baseline(artifacts, args.name)
+    print(path)
+    return 0
+
+
+def _cmd_drift(args) -> int:
+    artifacts = RunStore().load(args.run)
+    baseline = load_baseline(args.baseline)
+    findings = detect_drift(artifacts, baseline)
+    if args.as_json:
+        print(json.dumps([finding.to_dict() for finding in findings], indent=2))
+    elif not findings:
+        print(f"No drift vs baseline {baseline['name']!r}.")
+    else:
+        for finding in findings:
+            print(f"[{finding.severity.upper()}] {finding.code}: {finding.message}")
+    has_critical = any(finding.severity == "critical" for finding in findings)
+    return 2 if has_critical else 0
+
+
+def _cmd_conformance(args) -> int:
+    renderer_a = _build_renderer(args.renderer_a)
+    renderer_b = _build_renderer(args.renderer_b)
+    report = compare_renderers(renderer_a, renderer_b)
+    if args.as_json:
+        print(json.dumps(report.to_dict(), indent=2))
+    else:
+        for case in report.cases:
+            marker = "ok  " if case.match else "FAIL"
+            line = f"{marker} {case.case}"
+            if not case.match:
+                line += f"  (diverges at token {case.first_divergence}: {case.detail})"
+            print(line)
+        print(f"match rate: {report.match_rate * 100:.0f}%"
+              f" — {'CONFORMANT' if report.conformant else 'NOT CONFORMANT'}")
+    return 0 if report.conformant else 2
+
+
+def _build_renderer(spec: str):
+    if spec.startswith("hf:"):
+        from tinker_workbench.conformance import HFChatTemplateRenderer
+
+        return HFChatTemplateRenderer(spec[3:])
+    if spec.startswith("cookbook:"):
+        from tinker_workbench.conformance import CookbookRenderer
+
+        rest = spec[len("cookbook:") :]
+        renderer_name, separator, model_name = rest.partition("@")
+        if not separator:
+            raise WorkbenchError(
+                "cookbook renderer spec must be cookbook:RENDERER@MODEL, "
+                f"got {spec!r}."
+            )
+        return CookbookRenderer(renderer_name, model_name)
+    raise WorkbenchError(
+        f"Unknown renderer spec {spec!r}. Use hf:MODEL or cookbook:RENDERER@MODEL."
+    )
 
 
 def _cmd_collab(args) -> int:

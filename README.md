@@ -20,6 +20,11 @@ tokens & cost      artifact trail       post-hoc, re-run nothing
 - **Deterministic mock backend.** Develop and test the whole workflow (with
   injectable failure modes) without spending Tinker credits; the real SDK
   adapter implements the same five-method protocol.
+- **Reliability layer.** Pin a blessed run as a `baseline`, re-run it later,
+  and `drift` flags regressions (loss, evals, cost) with CI exit codes —
+  recipe-regression testing for post-training. `conformance` catches silent
+  renderer mismatches (token-exact, adversarial probe corpus) before a
+  distillation run wastes money.
 
 ## Quick start
 

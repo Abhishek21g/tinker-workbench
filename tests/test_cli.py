@@ -62,6 +62,29 @@ def test_compare_command(workdir, capsys) -> None:
     assert "Run Comparison" in capsys.readouterr().out
 
 
+def test_baseline_and_drift_flow(workdir, capsys) -> None:
+    config = _copy_config(workdir, "memorization_sft.yaml")
+    assert main(["run", config, "--quiet"]) == 0
+    capsys.readouterr()
+
+    assert main(["baseline", "latest", "--name", "sft-ref"]) == 0
+    assert "sft-ref.json" in capsys.readouterr().out
+
+    # Identical rerun: no critical drift.
+    assert main(["run", config, "--quiet"]) == 0
+    capsys.readouterr()
+    assert main(["drift", "latest", "--baseline", "sft-ref"]) == 0
+    capsys.readouterr()
+
+    # A run that fails is critical drift against a completed baseline.
+    bad = _copy_config(workdir, "failure_nan.yaml")
+    assert main(["run", bad, "--quiet"]) == 2
+    capsys.readouterr()
+    assert main(["drift", "latest", "--baseline", "sft-ref", "--json"]) == 2
+    findings = json.loads(capsys.readouterr().out)
+    assert any(finding["code"] == "run_not_completed" for finding in findings)
+
+
 def test_unknown_run_reference(workdir, capsys) -> None:
     assert main(["status", "nope"]) == 1
     assert "Cannot resolve run" in capsys.readouterr().err
