@@ -45,12 +45,12 @@
           </div>
           <dl class="proof-grid" aria-label="Project proof points">
             <div>
-              <dt>76</dt>
+              <dt>82</dt>
               <dd>passing tests</dd>
             </div>
             <div>
-              <dt>4</dt>
-              <dd>upstream PRs</dd>
+              <dt>3</dt>
+              <dd>training backends</dd>
             </div>
             <div>
               <dt>1.0000</dt>
@@ -128,6 +128,39 @@
               <span role="cell">1.0000</span>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section class="reliability-section section-shell" aria-labelledby="reliability-title">
+        <div class="reliability-copy">
+          <h2 id="reliability-title">Regression testing for post-training recipes.</h2>
+          <p>
+            Workbench does more than record a successful run. It saves known-good
+            behavior, reruns it later, and flags silent drift before a recipe becomes
+            misleading.
+          </p>
+        </div>
+        <div class="reliability-grid">
+          <article>
+            <span>Baseline</span>
+            <strong>Pin a blessed run.</strong>
+            <p>Store config fingerprints, loss curves, eval scores, and token usage as the reference.</p>
+          </article>
+          <article>
+            <span>Drift</span>
+            <strong>Catch behavior changes.</strong>
+            <p>Compare reruns against the baseline for loss shape, eval regressions, and cost drift.</p>
+          </article>
+          <article>
+            <span>Doctor</span>
+            <strong>Explain failed runs.</strong>
+            <p>Detect NaNs, divergence, stalls, checkpoint gaps, budget overruns, and eval drops.</p>
+          </article>
+          <article>
+            <span>Conformance</span>
+            <strong>Validate renderers.</strong>
+            <p>Probe tokenization and chat rendering before distillation silently trains on mismatched inputs.</p>
+          </article>
         </div>
       </section>
 

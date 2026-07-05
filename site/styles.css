@@ -382,6 +382,7 @@ a {
 
 .loop-shell,
 .contribution-band .section-shell,
+.reliability-section,
 .study-section,
 .proof-section,
 .cta-section {
@@ -443,6 +444,63 @@ a {
 }
 
 .loop-grid p {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.reliability-section {
+  display: grid;
+  grid-template-columns: 0.82fr 1.18fr;
+  gap: 54px;
+  align-items: start;
+  border-top: 1px solid var(--line);
+}
+
+.reliability-copy h2 {
+  margin: 0;
+  max-width: 560px;
+  font-size: clamp(36px, 4.8vw, 62px);
+  font-weight: 820;
+  line-height: 0.98;
+}
+
+.reliability-copy p {
+  margin: 22px 0 0;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.65;
+}
+
+.reliability-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.reliability-grid article {
+  min-height: 210px;
+  padding: 18px;
+  background: linear-gradient(180deg, #ffffff, #f8fbfe);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.reliability-grid span {
+  color: var(--teal);
+  font-size: 13px;
+  font-weight: 820;
+}
+
+.reliability-grid strong {
+  display: block;
+  margin-top: 42px;
+  font-size: 23px;
+  line-height: 1.12;
+}
+
+.reliability-grid p {
   margin: 12px 0 0;
   color: var(--muted);
   font-size: 14px;
@@ -606,6 +664,7 @@ td:first-child {
   }
 
   .hero,
+  .reliability-section,
   .study-section,
   .proof-section,
   .section-heading {
@@ -679,6 +738,7 @@ td:first-child {
 
   .loop-shell,
   .contribution-band .section-shell,
+  .reliability-section,
   .study-section,
   .proof-section,
   .cta-section {
@@ -686,13 +746,19 @@ td:first-child {
   }
 
   .loop-grid li,
+  .reliability-grid article,
   .pr-grid a {
     min-height: auto;
   }
 
   .loop-grid strong,
+  .reliability-grid strong,
   .pr-grid strong {
     margin-top: 22px;
+  }
+
+  .reliability-grid {
+    grid-template-columns: 1fr;
   }
 
   .footer {
