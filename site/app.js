@@ -28,11 +28,16 @@ const UPTIME_WINDOWS = [
 
 const CHECK_INTERVAL_MIN = 10;
 const INCIDENT_MERGE_MS = CHECK_INTERVAL_MIN * 2.5 * 60 * 1000;
+const INCIDENTS_PREVIEW = 3;
+const FINDINGS_PREVIEW = 2;
 
 let platformData = null;
 let runData = null;
 let platformLoading = true;
 let activeWindow = "24h";
+let incidentsExpanded = false;
+let findingsExpanded = false;
+let platformDetailsExpanded = false;
 
 function pctStr(p) {
   return p === null || p === undefined ? NA : `${p.toFixed(2)}%`;
@@ -176,20 +181,6 @@ function checkpointOverall(run) {
   return { text: "Not ready", cls: "down", short: "fail" };
 }
 
-function combinedOverall(platform, run) {
-  if (platform.cls === "down") return { text: "Tinker down - not your code", cls: "down" };
-  if (run.cls === "down" && platform.cls === "") {
-    return { text: "Tinker up - run needs attention", cls: "degraded" };
-  }
-  if (platform.cls === "degraded" && run.cls === "") {
-    return { text: "Tinker degraded - run looks fine", cls: "degraded" };
-  }
-  if (platform.cls === "" && run.cls === "") {
-    return { text: "Tinker up, run healthy", cls: "" };
-  }
-  return { text: `${platform.text}, ${run.text}`, cls: run.cls || platform.cls };
-}
-
 function workbenchHeaderOverall(run, platform) {
   if (!run) return { text: "Export a run to get started", cls: "degraded" };
   const ro = runOverall(run);
@@ -236,6 +227,113 @@ function renderWorkbenchSummary(run, runO, budgetO, checkpointO, platform) {
       </a>
       <div class="service-meta">${platform.text}</div>
     </div>`;
+}
+
+function renderIncidentRow(inc, hidden = false) {
+  const svc = PLATFORM_SVCS.find((s) => s.key === inc.service);
+  const dur = fmtDuration(inc.lastSeen - inc.start);
+  return `<div class="incident${hidden ? " is-hidden" : ""}">
+    <div class="incident-dot"></div>
+    <div class="incident-body">
+      <div class="incident-svc">${svc?.name || inc.service}</div>
+      <div class="incident-meta">${fmtTime(inc.start)}${inc.count > 1 ? ` | ${dur} | ${inc.count} failed checks` : ""}</div>
+      <div class="incident-err">${inc.error || "Unknown error"}</div>
+    </div>
+  </div>`;
+}
+
+function renderCollapsibleBlock(items, renderItem, previewCount, expanded, toggleKey) {
+  if (!items.length) return "";
+  const hiddenCount = Math.max(0, items.length - previewCount);
+  const html = items
+    .map((item, i) => renderItem(item, !expanded && i >= previewCount))
+    .join("");
+  const toggle =
+    hiddenCount > 0
+      ? `<button type="button" class="expand-btn" data-toggle="${toggleKey}">
+          ${expanded ? "Show less" : `Show ${hiddenCount} more`}
+        </button>`
+      : "";
+  return `${html}${toggle}`;
+}
+
+function renderProgressBar(pct, label) {
+  const clamped = Math.max(0, Math.min(100, pct));
+  const cls = clamped > 105 ? "over" : clamped >= 95 ? "warn" : "";
+  return `
+    <div class="progress-block">
+      <div class="progress-label">
+        <span>${label}</span>
+        <span class="progress-pct">${clamped.toFixed(0)}%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill ${cls}" style="width:${Math.min(clamped, 100)}%"></div>
+      </div>
+    </div>`;
+}
+
+function renderNextSteps(run, platform, runO, checkpointO) {
+  const steps = [];
+  if (!run) {
+    steps.push({
+      text: "Export your latest run to populate the dashboard.",
+      cmd: "tinker-workbench export-dashboard latest",
+    });
+  } else {
+    if (runO.cls === "down") {
+      steps.push({
+        text: "Investigate run health with doctor.",
+        cmd: `tinker-workbench doctor --run ${run.run_id}`,
+      });
+    }
+    if (checkpointO.cls === "degraded" || checkpointO.cls === "down") {
+      steps.push({
+        text: "Verify checkpoint sampling before the next run.",
+        cmd: `tinker-workbench probe --run ${run.run_id}`,
+      });
+    }
+    const budget = run.budget || {};
+    const tokens = run.tokens || {};
+    if (budget.planned_train_tokens && tokens.train > budget.planned_train_tokens * 1.05) {
+      steps.push({
+        text: "Train tokens exceeded plan - replan before scaling up.",
+        cmd: "tinker-workbench plan --help",
+      });
+    }
+    if (platform.cls === "down") {
+      steps.push({
+        text: "Platform outage detected - pause spend until Tinker is back.",
+        link: "https://lokashrinav.github.io/tinker-status/",
+        linkLabel: "tinker-status",
+      });
+    }
+    if (!steps.length) {
+      steps.push({
+        text: "Run looks good - plan the next experiment.",
+        cmd: "tinker-workbench plan memorization --backend mock",
+      });
+    }
+  }
+
+  return `
+    <section class="next-steps">
+      <div class="section-head">
+        <div class="section-title">Next</div>
+        <div class="section-sub">suggested</div>
+      </div>
+      ${steps
+        .map(
+          (s) => `<div class="next-step">
+        <div class="next-step-text">${s.text}</div>
+        ${
+          s.cmd
+            ? `<code class="next-step-cmd">${s.cmd}</code>`
+            : `<a href="${s.link}" target="_blank" rel="noopener">${s.linkLabel}</a>`
+        }
+      </div>`
+        )
+        .join("")}
+    </section>`;
 }
 
 function lossSparkline(metrics) {
@@ -317,6 +415,7 @@ function renderPlatformSection() {
         }).join("")}
       </div>
 
+      <div class="platform-details ${platformDetailsExpanded ? "" : "is-hidden"}">
       <div class="bar-section">
         <div class="section-head">
           <div class="section-title">Last ${win.label}</div>
@@ -387,33 +486,37 @@ function renderPlatformSection() {
       <div class="incidents-section">
         <div class="section-head">
           <div class="section-title">Incidents</div>
-          <div class="section-sub">90d window</div>
+          <div class="section-sub">${incidents.length ? `${incidents.length} in 90d` : "90d window"}</div>
         </div>
         ${
           incidents.length === 0
             ? `<div class="no-incidents">No incidents in the last 90d.</div>`
-            : incidents
-                .map((inc) => {
-                  const svc = PLATFORM_SVCS.find((s) => s.key === inc.service);
-                  const dur = fmtDuration(inc.lastSeen - inc.start);
-                  return `<div class="incident">
-              <div class="incident-dot"></div>
-              <div class="incident-body">
-                <div class="incident-svc">${svc?.name || inc.service}</div>
-                <div class="incident-meta">${fmtTime(inc.start)}${inc.count > 1 ? ` | ${dur} | ${inc.count} failed checks` : ""}</div>
-                <div class="incident-err">${inc.error || "Unknown error"}</div>
-              </div>
-            </div>`;
-                })
-                .join("")
+            : renderCollapsibleBlock(
+                incidents,
+                renderIncidentRow,
+                INCIDENTS_PREVIEW,
+                incidentsExpanded,
+                "incidents"
+              )
         }
       </div>
+      </div>
+      ${
+        !platformDetailsExpanded
+          ? `<button type="button" class="expand-btn expand-btn-block" data-toggle="platform">Show platform details</button>`
+          : `<button type="button" class="expand-btn expand-btn-block" data-toggle="platform">Hide platform details</button>`
+      }
       <p class="section-note">Last checked ${fmtTime(lastCheck)} | powered by <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">tinker-status</a></p>
     </div>`;
 }
 
 function renderRunSection(run) {
   const statusCls = run.status === "failed" ? "bad" : run.status === "completed" ? "good" : "warn";
+  const stepPct =
+    run.steps_planned && run.steps_completed != null
+      ? (run.steps_completed / run.steps_planned) * 100
+      : 0;
+  const findings = run.findings || [];
   return `
     <section class="run-section" id="run">
       <div class="section-head">
@@ -422,7 +525,7 @@ function renderRunSection(run) {
       </div>
       <table class="uptime-table">
         <tbody>
-          <tr><td>Run</td><td>${run.run_id}</td></tr>
+          <tr><td>Run</td><td><span class="run-id">${run.run_id}</span> <button type="button" class="copy-btn" data-copy="${run.run_id}" title="Copy run ID">copy</button></td></tr>
           <tr><td>Status</td><td class="${statusCls}">${run.status}</td></tr>
           <tr><td>Backend</td><td>${run.backend || NA}</td></tr>
           <tr><td>Method</td><td>${run.method || NA}</td></tr>
@@ -430,22 +533,25 @@ function renderRunSection(run) {
           <tr><td>Final loss</td><td>${fmtNum(run.final_loss)}</td></tr>
         </tbody>
       </table>
+      ${renderProgressBar(stepPct, "Training steps")}
       ${lossSparkline(run.metrics)}
       ${
-        !(run.findings || []).length
+        !findings.length
           ? `<div class="no-incidents">No issues detected by doctor.</div>`
-          : (run.findings || [])
-              .map(
-                (f) => `<div class="finding">
+          : renderCollapsibleBlock(
+              findings,
+              (f, hidden) => `<div class="finding${hidden ? " is-hidden" : ""}">
           <div class="finding-dot ${f.severity}"></div>
           <div class="finding-body">
             <div class="finding-code">${f.severity} | ${f.code}</div>
             <div class="finding-msg">${f.message}</div>
             <div class="finding-hint">${f.suggestion}</div>
           </div>
-        </div>`
-              )
-              .join("")
+        </div>`,
+              FINDINGS_PREVIEW,
+              findingsExpanded,
+              "findings"
+            )
       }
     </section>`;
 }
@@ -453,6 +559,10 @@ function renderRunSection(run) {
 function renderBudgetSection(run) {
   const budget = run.budget || {};
   const tokens = run.tokens || {};
+  const trainPct =
+    budget.planned_train_tokens && tokens.train
+      ? (tokens.train / budget.planned_train_tokens) * 100
+      : 0;
   return `
     <section class="budget-section" id="budget">
       <div class="section-head">
@@ -460,6 +570,7 @@ function renderBudgetSection(run) {
         <div class="section-sub">plan vs actual</div>
       </div>
       <p class="section-note">Account balance needs upstream API (<a href="https://github.com/thinking-machines-lab/tinker-cookbook/issues/781" target="_blank" rel="noopener">#781</a>).</p>
+      ${budget.planned_train_tokens ? renderProgressBar(trainPct, "Train tokens vs plan") : ""}
       <table class="uptime-table">
         <thead><tr><th>Metric</th><th>Planned</th><th>Actual</th></tr></thead>
         <tbody>
@@ -505,7 +616,7 @@ function renderRunsList(runs, selectedId) {
   const rows = runs
     .slice(0, 6)
     .map(
-      (r) => `<tr>
+      (r) => `<tr class="${r.run_id === selectedId ? "selected-run" : ""}">
       <td>${r.name || r.run_id}</td>
       <td>${r.backend || NA}</td>
       <td class="${r.status === "completed" ? "good" : r.status === "failed" ? "bad" : "warn"}">${r.status}</td>
@@ -551,6 +662,7 @@ function render() {
       </div>
     </header>
     ${renderWorkbenchSummary(run, runO, budgetO, checkpointO, platform)}
+    ${renderNextSteps(run, platform, runO, checkpointO)}
     <p class="jump-links">
       <a href="#run">Run</a> |
       <a href="#budget">Budget</a> |
@@ -573,6 +685,30 @@ function render() {
     btn.addEventListener("click", () => {
       activeWindow = btn.dataset.window;
       render();
+    });
+  });
+
+  document.querySelectorAll("[data-toggle]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const key = btn.dataset.toggle;
+      if (key === "incidents") incidentsExpanded = !incidentsExpanded;
+      if (key === "findings") findingsExpanded = !findingsExpanded;
+      if (key === "platform") platformDetailsExpanded = !platformDetailsExpanded;
+      render();
+    });
+  });
+
+  document.querySelectorAll("[data-copy]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy);
+        btn.textContent = "copied";
+        setTimeout(() => {
+          btn.textContent = "copy";
+        }, 1500);
+      } catch {
+        btn.textContent = "fail";
+      }
     });
   });
 
