@@ -11,12 +11,13 @@ if [[ ! -d "$DEST/.git" ]]; then
   exit 1
 fi
 
-echo "Syncing $ROOT/site/ -> $DEST/tinker-workbench/site/"
+cd "$DEST"
+git checkout gh-pages
+git pull --rebase origin gh-pages
+
 rsync -av --delete "$ROOT/site/" "$DEST/tinker-workbench/site/"
 cp "$ROOT/index.html" "$DEST/tinker-workbench/index.html"
 
-cd "$DEST"
-git checkout gh-pages
 git add tinker-workbench/
 if git diff --cached --quiet; then
   echo "No site changes to publish."
