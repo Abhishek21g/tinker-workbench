@@ -110,9 +110,12 @@ CI: lint + tests + CLI smoke (including `probe` + `export-dashboard`) on Python 
 
 ## Collaborate
 
-Feedback and PRs welcome — especially on dashboard UX, upstream alignment ([tinker#44](https://github.com/thinking-machines-lab/tinker/issues/44), [cookbook#551](https://github.com/thinking-machines-lab/tinker-cookbook/issues/551)), and tinker-status integration.
+Feedback welcome — especially from the Tinker team on dashboard UX, `probe` vs [tinker#44](https://github.com/thinking-machines-lab/tinker/issues/44), and cookbook export shape.
 
-Open an [issue](https://github.com/Abhishek21g/tinker-workbench/issues) or comment on an upstream thread with a link to this repo.
+- [Open an issue](https://github.com/Abhishek21g/tinker-workbench/issues)
+- Comment on upstream with a link to the [live dashboard](https://enaguthi.com/tinker-workbench/site/)
+
+Platform uptime data from [tinker-status](https://lokashrinav.github.io/tinker-status/) (community monitor; integrated, not duplicated).
 
 ---
 
