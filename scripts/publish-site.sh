@@ -13,7 +13,7 @@ fi
 
 cd "$DEST"
 git checkout gh-pages
-git pull --rebase origin gh-pages
+git pull origin gh-pages --no-rebase
 
 rsync -av --delete "$ROOT/site/" "$DEST/tinker-workbench/site/"
 cp "$ROOT/index.html" "$DEST/tinker-workbench/index.html"
@@ -25,7 +25,7 @@ if git diff --cached --quiet; then
 fi
 
 git commit -m "Sync Tinker Workbench dashboard from tinker-workbench"
-git pull --rebase origin gh-pages
+git pull origin gh-pages --no-rebase
 git push origin gh-pages
 
 echo "Published: https://enaguthi.com/tinker-workbench/site/"
