@@ -1,4 +1,6 @@
-/* Tinker DX Dashboard — tinker-status UX + Workbench run panels. */
+/* Tinker DX Dashboard - tinker-status UX + Workbench run panels. */
+
+const NA = "-";
 
 const SB_URL = "https://fbtndmrbruifjdeaydjh.supabase.co";
 const SB_KEY =
@@ -33,7 +35,7 @@ let platformLoading = true;
 let activeWindow = "24h";
 
 function pctStr(p) {
-  return p === null || p === undefined ? "\u2014" : `${p.toFixed(2)}%`;
+  return p === null || p === undefined ? NA : `${p.toFixed(2)}%`;
 }
 
 function pctCls(p) {
@@ -41,7 +43,7 @@ function pctCls(p) {
 }
 
 function fmtTime(ts) {
-  if (!ts) return "\u2014";
+  if (!ts) return NA;
   return new Date(ts).toLocaleString([], {
     month: "short",
     day: "numeric",
@@ -51,7 +53,7 @@ function fmtTime(ts) {
 }
 
 function fmtMs(ms) {
-  if (ms === null || ms === undefined) return "\u2014";
+  if (ms === null || ms === undefined) return NA;
   if (ms < 1000) return `${Math.round(ms)}ms`;
   return `${(ms / 1000).toFixed(1)}s`;
 }
@@ -64,18 +66,18 @@ function fmtDuration(ms) {
 }
 
 function fmtNum(n, digits = 4) {
-  if (n === null || n === undefined) return "\u2014";
+  if (n === null || n === undefined) return NA;
   if (typeof n === "number") return n.toFixed(digits);
   return String(n);
 }
 
 function fmtUsd(n) {
-  if (n === null || n === undefined) return "\u2014";
+  if (n === null || n === undefined) return NA;
   return `$${Number(n).toFixed(2)}`;
 }
 
 function fmtTokens(n) {
-  if (n === null || n === undefined) return "\u2014";
+  if (n === null || n === undefined) return NA;
   return Number(n).toLocaleString();
 }
 
@@ -123,7 +125,7 @@ async function fetchRunData() {
 }
 
 function platformOverall() {
-  if (platformLoading) return { text: "Loading…", cls: "degraded", short: "…" };
+  if (platformLoading) return { text: "Loading...", cls: "degraded", short: "..." };
   if (!platformData) return { text: "Unavailable", cls: "degraded", short: "n/a" };
   const sts = PLATFORM_SVCS.map((s) => platformData.latest[s.key]?.status);
   const upCount = sts.filter((s) => s === "up").length;
@@ -150,7 +152,7 @@ function runOverall(run) {
 }
 
 function budgetOverall(run) {
-  if (!run) return { text: "—", cls: "degraded", short: "n/a" };
+  if (!run) return { text: NA, cls: "degraded", short: "n/a" };
   const budget = run.budget || {};
   const tokens = run.tokens || {};
   const est = budget.estimated_usd;
@@ -163,7 +165,7 @@ function budgetOverall(run) {
 }
 
 function checkpointOverall(run) {
-  if (!run?.probe) return { text: "—", cls: "degraded", short: "n/a" };
+  if (!run?.probe) return { text: NA, cls: "degraded", short: "n/a" };
   const probe = run.probe;
   if (probe.native_sampling_ok) {
     return { text: "Sampler verified", cls: "", short: "verified" };
@@ -175,17 +177,17 @@ function checkpointOverall(run) {
 }
 
 function combinedOverall(platform, run) {
-  if (platform.cls === "down") return { text: "Tinker down — not your code", cls: "down" };
+  if (platform.cls === "down") return { text: "Tinker down - not your code", cls: "down" };
   if (run.cls === "down" && platform.cls === "") {
-    return { text: "Tinker up — run needs attention", cls: "degraded" };
+    return { text: "Tinker up - run needs attention", cls: "degraded" };
   }
   if (platform.cls === "degraded" && run.cls === "") {
-    return { text: "Tinker degraded — run looks fine", cls: "degraded" };
+    return { text: "Tinker degraded - run looks fine", cls: "degraded" };
   }
   if (platform.cls === "" && run.cls === "") {
-    return { text: "Tinker up · run healthy", cls: "" };
+    return { text: "Tinker up, run healthy", cls: "" };
   }
-  return { text: `${platform.text} · ${run.text}`, cls: run.cls || platform.cls };
+  return { text: `${platform.text}, ${run.text}`, cls: run.cls || platform.cls };
 }
 
 function renderPillarCards(run, platform, runO, budgetO, checkpointO) {
@@ -199,7 +201,7 @@ function renderPillarCards(run, platform, runO, budgetO, checkpointO) {
       <a href="#run" class="pillar-card ${runO.cls}">
         <div class="pillar-top"><span class="pillar-dot"></span><span class="pillar-label">My Run</span></div>
         <span class="pillar-value">${runO.text}</span>
-        <span class="pillar-detail">${run ? run.method || "—" : "no data"} · ${run ? fmtNum(run.final_loss) : "—"} loss</span>
+        <span class="pillar-detail">${run ? run.method || NA : "no data"} | loss ${run ? fmtNum(run.final_loss) : NA}</span>
       </a>
       <a href="#budget" class="pillar-card ${budgetO.cls}">
         <div class="pillar-top"><span class="pillar-dot"></span><span class="pillar-label">Budget</span></div>
@@ -209,7 +211,7 @@ function renderPillarCards(run, platform, runO, budgetO, checkpointO) {
       <a href="#checkpoint" class="pillar-card ${checkpointO.cls}">
         <div class="pillar-top"><span class="pillar-dot"></span><span class="pillar-label">Checkpoint</span></div>
         <span class="pillar-value">${checkpointO.text}</span>
-        <span class="pillar-detail">sampler probe · tinker#44</span>
+        <span class="pillar-detail">sampler probe (tinker#44)</span>
       </a>
     </div>`;
 }
@@ -242,8 +244,8 @@ function lossSparkline(metrics) {
         <polyline points="${line}" fill="none" stroke="#2da44e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       <div class="sparkline-meta">
-        <span>step ${first.step} → ${last.step}</span>
-        <span>${fmtNum(first.loss)} → ${fmtNum(last.loss)}</span>
+        <span>step ${first.step} to ${last.step}</span>
+        <span>${fmtNum(first.loss)} to ${fmtNum(last.loss)}</span>
       </div>
     </div>`;
 }
@@ -254,7 +256,7 @@ function renderPlatformSection() {
       <section class="section-block" id="tinker-status">
         <div class="section-head">
           <div class="section-title">Tinker Status</div>
-          <div class="section-sub">fetching…</div>
+          <div class="section-sub">fetching...</div>
         </div>
         <div class="loading" style="padding:48px 0"><div class="spinner"></div>fetching status</div>
       </section>`;
@@ -376,7 +378,7 @@ function renderPlatformSection() {
               <div class="incident-dot"></div>
               <div class="incident-body">
                 <div class="incident-svc">${svc?.name || inc.service}</div>
-                <div class="incident-meta">${fmtTime(inc.start)}${inc.count > 1 ? ` · ${dur} · ${inc.count} failed checks` : ""}</div>
+                <div class="incident-meta">${fmtTime(inc.start)}${inc.count > 1 ? ` | ${dur} | ${inc.count} failed checks` : ""}</div>
                 <div class="incident-err">${inc.error || "Unknown error"}</div>
               </div>
             </div>`;
@@ -384,7 +386,7 @@ function renderPlatformSection() {
                 .join("")
         }
       </div>
-      <p class="section-note" style="margin-top:16px">Last checked ${fmtTime(lastCheck)} · powered by <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">tinker-status</a></p>
+      <p class="section-note" style="margin-top:16px">Last checked ${fmtTime(lastCheck)} | powered by <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">tinker-status</a></p>
     </section>`;
 }
 
@@ -400,9 +402,9 @@ function renderRunSection(run) {
       <dl class="stat-strip">
         <div class="stat-cell"><dt>Run</dt><dd>${run.run_id}</dd></div>
         <div class="stat-cell"><dt>Status</dt><dd class="${statusCls}">${run.status}</dd></div>
-        <div class="stat-cell"><dt>Backend</dt><dd>${run.backend || "\u2014"}</dd></div>
-        <div class="stat-cell"><dt>Method</dt><dd>${run.method || "\u2014"}</dd></div>
-        <div class="stat-cell"><dt>Steps</dt><dd>${run.steps_completed ?? "\u2014"}/${run.steps_planned ?? "\u2014"}</dd></div>
+        <div class="stat-cell"><dt>Backend</dt><dd>${run.backend || NA}</dd></div>
+        <div class="stat-cell"><dt>Method</dt><dd>${run.method || NA}</dd></div>
+        <div class="stat-cell"><dt>Steps</dt><dd>${run.steps_completed ?? NA}/${run.steps_planned ?? NA}</dd></div>
         <div class="stat-cell"><dt>Final loss</dt><dd>${fmtNum(run.final_loss)}</dd></div>
       </dl>
       ${lossSparkline(run.metrics)}
@@ -414,7 +416,7 @@ function renderRunSection(run) {
                 (f) => `<div class="finding">
           <div class="finding-dot ${f.severity}"></div>
           <div class="finding-body">
-            <div class="finding-code">${f.severity} · ${f.code}</div>
+            <div class="finding-code">${f.severity} | ${f.code}</div>
             <div class="finding-msg">${f.message}</div>
             <div class="finding-hint">${f.suggestion}</div>
           </div>
@@ -440,10 +442,10 @@ function renderBudgetSection(run) {
         <tbody>
           <tr><td>Train tokens</td><td>${fmtTokens(budget.planned_train_tokens)}</td><td>${fmtTokens(tokens.train)}</td></tr>
           <tr><td>Sample tokens</td><td>${fmtTokens(budget.planned_sample_tokens)}</td><td>${fmtTokens(tokens.sample)}</td></tr>
-          <tr><td>Checkpoints</td><td>${budget.checkpoints ?? "\u2014"}</td><td>${(run.checkpoints || []).length}</td></tr>
-          <tr><td>Storage (est.)</td><td>${budget.checkpoint_storage_gb ?? "\u2014"} GB</td><td>\u2014</td></tr>
-          <tr><td>Cost (est.)</td><td>${fmtUsd(budget.estimated_usd)}</td><td>\u2014</td></tr>
-          <tr><td>Budget cap</td><td>${fmtUsd(budget.max_usd)}</td><td>\u2014</td></tr>
+          <tr><td>Checkpoints</td><td>${budget.checkpoints ?? NA}</td><td>${(run.checkpoints || []).length}</td></tr>
+          <tr><td>Storage (est.)</td><td>${budget.checkpoint_storage_gb ?? NA} GB</td><td>${NA}</td></tr>
+          <tr><td>Cost (est.)</td><td>${fmtUsd(budget.estimated_usd)}</td><td>${NA}</td></tr>
+          <tr><td>Budget cap</td><td>${fmtUsd(budget.max_usd)}</td><td>${NA}</td></tr>
         </tbody>
       </table>
     </section>`;
@@ -461,15 +463,15 @@ function renderCheckpointSection(run) {
         <div class="section-sub">sampler probe</div>
       </div>
       <div class="service">
-        <div class="service-name">Step ${probe.step ?? "\u2014"}</div>
+        <div class="service-name">Step ${probe.step ?? NA}</div>
         <span class="status ${st}"><span class="dot"></span>${label}</span>
       </div>
       <table class="uptime-table" style="margin-top:12px">
         <tbody>
           <tr><td>Sampler ready</td><td>${probe.sampler_ready ? "yes" : "no"}</td></tr>
-          <tr><td>Adapter applied</td><td>${probe.adapter_applied === null ? "\u2014" : probe.adapter_applied ? "yes" : "no"}</td></tr>
+          <tr><td>Adapter applied</td><td>${probe.adapter_applied === null ? NA : probe.adapter_applied ? "yes" : "no"}</td></tr>
           <tr><td>Eval samples</td><td>${probe.eval_samples_at_step ?? 0}</td></tr>
-          <tr><td>Path</td><td style="font-size:0.72rem;word-break:break-all">${probe.checkpoint_path || "\u2014"}</td></tr>
+          <tr><td>Path</td><td style="word-break:break-all">${probe.checkpoint_path || NA}</td></tr>
         </tbody>
       </table>
     </section>`;
@@ -482,7 +484,7 @@ function renderRunsList(runs, selectedId) {
     .map(
       (r) => `<tr>
       <td>${r.name || r.run_id}</td>
-      <td>${r.backend || "\u2014"}</td>
+      <td>${r.backend || NA}</td>
       <td class="${r.status === "completed" ? "good" : r.status === "failed" ? "bad" : "warn"}">${r.status}</td>
       <td>${fmtNum(r.final_loss)}</td>
     </tr>`
@@ -530,12 +532,12 @@ function render() {
     </header>
     ${renderPillarCards(run, platform, runO, budgetO, checkpointO)}
     ${renderPlatformSection()}
-    ${run ? renderRunSection(run) : `<div class="no-items">No run data — run <code>tinker-workbench export-dashboard</code>.</div>`}
+    ${run ? renderRunSection(run) : `<div class="no-items">No run data. Run <code>tinker-workbench export-dashboard</code>.</div>`}
     ${run ? renderBudgetSection(run) : ""}
     ${run ? renderCheckpointSection(run) : ""}
     ${renderRunsList(runData?.runs, run?.run_id)}
     <footer>
-      Tinker Status by <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">Shrinav</a> ·
+      Tinker Status by <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">Shrinav</a> |
       Workbench by <a href="https://github.com/Abhishek21g/tinker-workbench" target="_blank" rel="noopener">Abhishek Enaguthi</a>
     </footer>`;
 
