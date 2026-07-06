@@ -145,6 +145,42 @@ h1 {
   margin-bottom: 64px;
 }
 
+.workbench-summary {
+  margin-bottom: 32px;
+}
+
+.workbench-summary .service-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.workbench-summary .service-link:hover .service-name {
+  color: var(--text);
+}
+
+.service-meta {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-3);
+  padding: 0 0 14px;
+  margin-top: -10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.platform-appendix {
+  margin-top: 80px;
+  padding-top: 48px;
+  border-top: 1px solid var(--border);
+}
+
+.platform-appendix .section-head {
+  margin-bottom: 28px;
+}
+
+.platform-appendix .services {
+  margin-bottom: 0;
+}
+
 .service {
   display: flex;
   justify-content: space-between;

@@ -190,6 +190,54 @@ function combinedOverall(platform, run) {
   return { text: `${platform.text}, ${run.text}`, cls: run.cls || platform.cls };
 }
 
+function workbenchHeaderOverall(run, platform) {
+  if (!run) return { text: "Export a run to get started", cls: "degraded" };
+  const ro = runOverall(run);
+  if (ro.cls === "down") return { text: `Run needs attention: ${ro.text}`, cls: "down" };
+  if (ro.cls === "degraded") return { text: `Run: ${ro.text}`, cls: "degraded" };
+  if (platform.cls === "down") return { text: "Run healthy, platform outage", cls: "degraded" };
+  if (platform.cls === "degraded") return { text: "Run healthy", cls: "" };
+  return { text: "Run healthy", cls: "" };
+}
+
+function platformStatusClass(cls) {
+  if (cls === "down") return "down";
+  if (cls === "degraded") return "warn";
+  return "up";
+}
+
+function renderWorkbenchSummary(run, runO, budgetO, checkpointO, platform) {
+  if (!run) {
+    return `<div class="no-items">No run data. Run <code>tinker-workbench export-dashboard</code>.</div>`;
+  }
+  const runDetail = `${run.method || NA} | loss ${fmtNum(run.final_loss)}`;
+  const budgetDetail = budgetO.short || "plan vs actual";
+  const checkpointDetail = checkpointO.short || "sampler probe";
+  return `
+    <div class="services workbench-summary">
+      <a class="service service-link" href="#run">
+        <div class="service-name">My Run</div>
+        <span class="status ${platformStatusClass(runO.cls)}"><span class="dot"></span>${runO.text}</span>
+      </a>
+      <div class="service-meta">${runDetail}</div>
+      <a class="service service-link" href="#budget">
+        <div class="service-name">Budget</div>
+        <span class="status ${platformStatusClass(budgetO.cls)}"><span class="dot"></span>${budgetO.text}</span>
+      </a>
+      <div class="service-meta">${budgetDetail}</div>
+      <a class="service service-link" href="#checkpoint">
+        <div class="service-name">Checkpoint</div>
+        <span class="status ${platformStatusClass(checkpointO.cls)}"><span class="dot"></span>${checkpointO.text}</span>
+      </a>
+      <div class="service-meta">${checkpointDetail}</div>
+      <a class="service service-link" href="#tinker-status">
+        <div class="service-name">Tinker Platform</div>
+        <span class="status ${platformStatusClass(platform.cls)}"><span class="dot"></span>${platform.short}</span>
+      </a>
+      <div class="service-meta">${platform.text}</div>
+    </div>`;
+}
+
 function lossSparkline(metrics) {
   if (!metrics || !metrics.length) {
     return `<div class="no-items">No loss metrics recorded.</div>`;
@@ -227,14 +275,22 @@ function lossSparkline(metrics) {
 function renderPlatformSection() {
   if (platformLoading) {
     return `
-      <div class="platform-section" id="tinker-status">
+      <div class="platform-section platform-appendix" id="tinker-status">
+        <div class="section-head">
+          <div class="section-title">Tinker Status</div>
+          <div class="section-sub">fetching...</div>
+        </div>
         <div class="loading" style="padding:48px 0"><div class="spinner"></div>fetching status</div>
       </div>`;
   }
 
   if (!platformData) {
     return `
-      <div class="platform-section" id="tinker-status">
+      <div class="platform-section platform-appendix" id="tinker-status">
+        <div class="section-head">
+          <div class="section-title">Tinker Status</div>
+          <div class="section-sub">offline</div>
+        </div>
         <div class="no-items">Could not load platform status. <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">Open tinker-status</a>.</div>
       </div>`;
   }
@@ -245,7 +301,11 @@ function renderPlatformSection() {
   const incidents = buildIncidents(rawIncidents || []);
 
   return `
-    <div class="platform-section" id="tinker-status">
+    <div class="platform-section platform-appendix" id="tinker-status">
+      <div class="section-head">
+        <div class="section-title">Tinker Status</div>
+        <div class="section-sub"><a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">full page</a></div>
+      </div>
       <div class="services">
         ${PLATFORM_SVCS.map((s) => {
           const d = latest[s.key];
@@ -470,31 +530,40 @@ function render() {
   const run = runData?.selected_run;
   const platform = platformOverall();
   const runO = runOverall(run);
-  const combined = combinedOverall(platform, runO);
+  const budgetO = budgetOverall(run);
+  const checkpointO = checkpointOverall(run);
+  const header = workbenchHeaderOverall(run, platform);
   const generated = runData?.generated_at;
+  const platformNote = platformLoading
+    ? "Platform loading..."
+    : platform.cls === ""
+      ? "Platform operational"
+      : platform.text;
 
   document.getElementById("app").innerHTML = `
     <header>
       <h1>Tinker Workbench</h1>
+      <p class="tagline">Is my run healthy? Can I afford the next step? Can I trust this checkpoint? Is Tinker up?</p>
       <div class="overall">
-        <div class="dot ${combined.cls}"></div>
-        ${combined.text}
-        <span class="ts">Updated ${fmtTime(generated)}</span>
+        <div class="dot ${header.cls}"></div>
+        ${header.text}
+        <span class="ts">Updated ${fmtTime(generated)} | ${platformNote}</span>
       </div>
     </header>
+    ${renderWorkbenchSummary(run, runO, budgetO, checkpointO, platform)}
     <p class="jump-links">
-      <a href="#tinker-status">Status</a> |
       <a href="#run">Run</a> |
       <a href="#budget">Budget</a> |
       <a href="#checkpoint">Checkpoint</a> |
+      <a href="#tinker-status">Platform</a> |
       <a href="./about.html">About</a> |
       <a href="https://github.com/Abhishek21g/tinker-workbench" target="_blank" rel="noopener">GitHub</a>
     </p>
-    ${renderPlatformSection()}
-    ${run ? renderRunSection(run) : `<div class="no-items">No run data. Run <code>tinker-workbench export-dashboard</code>.</div>`}
+    ${run ? renderRunSection(run) : ""}
     ${run ? renderBudgetSection(run) : ""}
     ${run ? renderCheckpointSection(run) : ""}
     ${renderRunsList(runData?.runs, run?.run_id)}
+    ${renderPlatformSection()}
     <footer>
       Tinker Status by <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">Shrinav</a> |
       Workbench by <a href="https://github.com/Abhishek21g/tinker-workbench" target="_blank" rel="noopener">Abhishek Enaguthi</a>
