@@ -8,7 +8,7 @@ dependencies = []
 
 [project.optional-dependencies]
 yaml = ["pyyaml>=6.0"]
-local = ["numpy>=1.24"]
+local = ["numpy>=1.24", "pyyaml>=6.0"]
 tinker = ["tinker"]
 
 [project.scripts]
