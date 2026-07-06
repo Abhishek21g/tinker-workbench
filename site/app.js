@@ -190,32 +190,6 @@ function combinedOverall(platform, run) {
   return { text: `${platform.text}, ${run.text}`, cls: run.cls || platform.cls };
 }
 
-function renderPillarCards(run, platform, runO, budgetO, checkpointO) {
-  return `
-    <div class="pillar-cards">
-      <a href="#tinker-status" class="pillar-card ${platform.cls}">
-        <div class="pillar-top"><span class="pillar-dot"></span><span class="pillar-label">Tinker Status</span></div>
-        <span class="pillar-value">${platform.text}</span>
-        <span class="pillar-detail">${platform.short}</span>
-      </a>
-      <a href="#run" class="pillar-card ${runO.cls}">
-        <div class="pillar-top"><span class="pillar-dot"></span><span class="pillar-label">My Run</span></div>
-        <span class="pillar-value">${runO.text}</span>
-        <span class="pillar-detail">${run ? run.method || NA : "no data"} | loss ${run ? fmtNum(run.final_loss) : NA}</span>
-      </a>
-      <a href="#budget" class="pillar-card ${budgetO.cls}">
-        <div class="pillar-top"><span class="pillar-dot"></span><span class="pillar-label">Budget</span></div>
-        <span class="pillar-value">${budgetO.text}</span>
-        <span class="pillar-detail">plan vs actual tokens</span>
-      </a>
-      <a href="#checkpoint" class="pillar-card ${checkpointO.cls}">
-        <div class="pillar-top"><span class="pillar-dot"></span><span class="pillar-label">Checkpoint</span></div>
-        <span class="pillar-value">${checkpointO.text}</span>
-        <span class="pillar-detail">sampler probe (tinker#44)</span>
-      </a>
-    </div>`;
-}
-
 function lossSparkline(metrics) {
   if (!metrics || !metrics.length) {
     return `<div class="no-items">No loss metrics recorded.</div>`;
@@ -253,24 +227,16 @@ function lossSparkline(metrics) {
 function renderPlatformSection() {
   if (platformLoading) {
     return `
-      <section class="section-block" id="tinker-status">
-        <div class="section-head">
-          <div class="section-title">Tinker Status</div>
-          <div class="section-sub">fetching...</div>
-        </div>
+      <div class="platform-section" id="tinker-status">
         <div class="loading" style="padding:48px 0"><div class="spinner"></div>fetching status</div>
-      </section>`;
+      </div>`;
   }
 
   if (!platformData) {
     return `
-      <section class="section-block" id="tinker-status">
-        <div class="section-head">
-          <div class="section-title">Tinker Status</div>
-          <div class="section-sub">offline</div>
-        </div>
-        <div class="no-items">Could not load. <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">Open tinker-status</a>.</div>
-      </section>`;
+      <div class="platform-section" id="tinker-status">
+        <div class="no-items">Could not load platform status. <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">Open tinker-status</a>.</div>
+      </div>`;
   }
 
   const { ticks, uptime, latency, latest, incidents: rawIncidents } = platformData;
@@ -279,11 +245,7 @@ function renderPlatformSection() {
   const incidents = buildIncidents(rawIncidents || []);
 
   return `
-    <section class="section-block" id="tinker-status">
-      <div class="section-head">
-        <div class="section-title">Tinker Status</div>
-        <div class="section-sub"><a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">tinker-status</a></div>
-      </div>
+    <div class="platform-section" id="tinker-status">
       <div class="services">
         ${PLATFORM_SVCS.map((s) => {
           const d = latest[s.key];
@@ -386,27 +348,28 @@ function renderPlatformSection() {
                 .join("")
         }
       </div>
-      <p class="section-note" style="margin-top:16px">Last checked ${fmtTime(lastCheck)} | powered by <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">tinker-status</a></p>
-    </section>`;
+      <p class="section-note">Last checked ${fmtTime(lastCheck)} | powered by <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">tinker-status</a></p>
+    </div>`;
 }
 
 function renderRunSection(run) {
-  const ro = runOverall(run);
-  const statusCls = ro.cls === "down" ? "bad" : ro.cls === "degraded" ? "warn" : "good";
+  const statusCls = run.status === "failed" ? "bad" : run.status === "completed" ? "good" : "warn";
   return `
-    <section class="section-block" id="run">
+    <section class="run-section" id="run">
       <div class="section-head">
         <div class="section-title">My Run</div>
         <div class="section-sub">workbench doctor</div>
       </div>
-      <dl class="stat-strip">
-        <div class="stat-cell"><dt>Run</dt><dd>${run.run_id}</dd></div>
-        <div class="stat-cell"><dt>Status</dt><dd class="${statusCls}">${run.status}</dd></div>
-        <div class="stat-cell"><dt>Backend</dt><dd>${run.backend || NA}</dd></div>
-        <div class="stat-cell"><dt>Method</dt><dd>${run.method || NA}</dd></div>
-        <div class="stat-cell"><dt>Steps</dt><dd>${run.steps_completed ?? NA}/${run.steps_planned ?? NA}</dd></div>
-        <div class="stat-cell"><dt>Final loss</dt><dd>${fmtNum(run.final_loss)}</dd></div>
-      </dl>
+      <table class="uptime-table">
+        <tbody>
+          <tr><td>Run</td><td>${run.run_id}</td></tr>
+          <tr><td>Status</td><td class="${statusCls}">${run.status}</td></tr>
+          <tr><td>Backend</td><td>${run.backend || NA}</td></tr>
+          <tr><td>Method</td><td>${run.method || NA}</td></tr>
+          <tr><td>Steps</td><td>${run.steps_completed ?? NA}/${run.steps_planned ?? NA}</td></tr>
+          <tr><td>Final loss</td><td>${fmtNum(run.final_loss)}</td></tr>
+        </tbody>
+      </table>
       ${lossSparkline(run.metrics)}
       ${
         !(run.findings || []).length
@@ -431,7 +394,7 @@ function renderBudgetSection(run) {
   const budget = run.budget || {};
   const tokens = run.tokens || {};
   return `
-    <section class="section-block" id="budget">
+    <section class="budget-section" id="budget">
       <div class="section-head">
         <div class="section-title">Budget</div>
         <div class="section-sub">plan vs actual</div>
@@ -457,7 +420,7 @@ function renderCheckpointSection(run) {
   const st = ok ? "up" : probe.sampler_ready ? "warn" : "down";
   const label = ok ? "Sampler verified" : probe.sampler_ready ? "Ready, unverified" : "Not ready";
   return `
-    <section class="section-block" id="checkpoint">
+    <section class="checkpoint-section" id="checkpoint">
       <div class="section-head">
         <div class="section-title">Checkpoint</div>
         <div class="section-sub">sampler probe</div>
@@ -491,7 +454,7 @@ function renderRunsList(runs, selectedId) {
     )
     .join("");
   return `
-    <section class="section-block">
+    <section class="runs-section">
       <div class="section-head">
         <div class="section-title">Recent runs</div>
         <div class="section-sub">${selectedId}</div>
@@ -507,30 +470,26 @@ function render() {
   const run = runData?.selected_run;
   const platform = platformOverall();
   const runO = runOverall(run);
-  const budgetO = budgetOverall(run);
-  const checkpointO = checkpointOverall(run);
   const combined = combinedOverall(platform, runO);
   const generated = runData?.generated_at;
 
   document.getElementById("app").innerHTML = `
-    <nav class="sticky-nav" aria-label="Dashboard sections">
-      <a href="#tinker-status">Status</a>
-      <a href="#run">Run</a>
-      <a href="#budget">Budget</a>
-      <a href="#checkpoint">Checkpoint</a>
-      <a href="./about.html" class="nav-external">About</a>
-      <a href="https://github.com/Abhishek21g/tinker-workbench" class="nav-external" target="_blank" rel="noopener">GitHub</a>
-    </nav>
     <header>
       <h1>Tinker Workbench</h1>
-      <p class="tagline">Is Tinker up? Is my run healthy? Can I afford the next step? Can I trust this checkpoint?</p>
       <div class="overall">
         <div class="dot ${combined.cls}"></div>
         ${combined.text}
         <span class="ts">Updated ${fmtTime(generated)}</span>
       </div>
     </header>
-    ${renderPillarCards(run, platform, runO, budgetO, checkpointO)}
+    <p class="jump-links">
+      <a href="#tinker-status">Status</a> |
+      <a href="#run">Run</a> |
+      <a href="#budget">Budget</a> |
+      <a href="#checkpoint">Checkpoint</a> |
+      <a href="./about.html">About</a> |
+      <a href="https://github.com/Abhishek21g/tinker-workbench" target="_blank" rel="noopener">GitHub</a>
+    </p>
     ${renderPlatformSection()}
     ${run ? renderRunSection(run) : `<div class="no-items">No run data. Run <code>tinker-workbench export-dashboard</code>.</div>`}
     ${run ? renderBudgetSection(run) : ""}
