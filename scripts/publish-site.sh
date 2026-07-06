@@ -28,3 +28,4 @@ git pull --rebase origin gh-pages
 git push origin gh-pages
 
 echo "Published: https://enaguthi.com/tinker-workbench/site/"
+echo "Tip: hard-refresh (Cmd+Shift+R) if styles look stale."

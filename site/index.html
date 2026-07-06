@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#000000" media="(max-width: 600px)" />
+    <meta name="theme-color" content="#fafafa" media="(min-width: 601px)" />
     <title>Tinker Workbench — DX Dashboard</title>
     <meta
       name="description"
@@ -20,25 +21,43 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./dashboard.css" />
+    <link rel="stylesheet" href="./dashboard.css?v=3" />
   </head>
   <body>
-    <div class="ink-blob-wrap" aria-hidden="true">
-      <svg class="ink-blob" viewBox="0 0 1100 1100" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="g" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#2da44e" stop-opacity="0.07" />
-            <stop offset="100%" stop-color="#2da44e" stop-opacity="0" />
-          </radialGradient>
-        </defs>
-        <circle cx="550" cy="550" r="520" fill="url(#g)" />
-      </svg>
-    </div>
     <div class="page-wrap">
+      <div class="ink-blob-wrap" aria-hidden="true">
+        <svg class="ink-blob" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+          <path
+            fill="#000"
+            d="M200,120 C210,100 225,85 240,80 C250,77 255,82 252,90 C248,100 235,108 230,115
+    C260,95 280,78 295,72 C305,68 312,74 308,84 C302,98 280,112 265,122
+    C290,108 310,100 320,105 C330,110 325,120 312,128 C298,136 275,138 260,140
+    C285,138 305,142 315,152 C322,160 318,170 305,172 C290,174 270,166 255,158
+    C270,172 278,190 275,205 C272,218 260,222 252,212 C244,200 242,182 238,168
+    C235,188 228,210 218,220 C210,228 198,225 196,214 C194,200 200,182 204,168
+    C195,185 182,205 170,212 C160,218 152,212 155,200 C158,188 170,175 178,162
+    C165,175 148,188 138,185 C128,182 128,172 136,162 C144,152 160,148 172,144
+    C155,148 135,152 125,145 C115,138 118,128 130,122 C142,116 160,118 172,122
+    C155,112 140,98 142,88 C144,78 155,75 164,82 C174,90 180,105 185,115
+    C182,98 185,78 195,70 C205,62 215,68 215,80 C215,92 208,108 200,120 Z"
+          />
+          <ellipse fill="#000" cx="310" cy="68" rx="8" ry="7" />
+          <ellipse fill="#000" cx="335" cy="115" rx="6" ry="5" />
+          <ellipse fill="#000" cx="148" cy="72" rx="7" ry="6" />
+          <ellipse fill="#000" cx="120" cy="155" rx="5" ry="5" />
+          <ellipse fill="#000" cx="278" cy="218" rx="6" ry="5" />
+          <ellipse fill="#000" cx="165" cy="225" rx="5" ry="4" />
+        </svg>
+      </div>
       <div class="container">
-        <div id="app" class="loading">Loading run data…</div>
+        <div id="app">
+          <div class="loading">
+            <div class="spinner"></div>
+            loading workbench
+          </div>
+        </div>
       </div>
     </div>
-    <script src="./app.js?v=2"></script>
+    <script src="./app.js?v=3"></script>
   </body>
 </html>

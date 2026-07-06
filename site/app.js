@@ -1,4 +1,4 @@
-/* Tinker DX Dashboard — composes tinker-status (platform) + Workbench run data. */
+/* Tinker DX Dashboard — tinker-status UX + Workbench run panels. */
 
 const SB_URL = "https://fbtndmrbruifjdeaydjh.supabase.co";
 const SB_KEY =
@@ -11,13 +11,21 @@ const PLATFORM_SVCS = [
   { key: "training_infra", name: "Training" },
 ];
 
-const WINDOWS = [
+const BAR_WINDOWS = [
   { key: "24h", label: "24h" },
   { key: "7d", label: "7d" },
   { key: "30d", label: "30d" },
 ];
 
+const UPTIME_WINDOWS = [
+  { key: "24h", label: "24h" },
+  { key: "7d", label: "7d" },
+  { key: "30d", label: "30d" },
+  { key: "90d", label: "90d" },
+];
+
 const CHECK_INTERVAL_MIN = 10;
+const INCIDENT_MERGE_MS = CHECK_INTERVAL_MIN * 2.5 * 60 * 1000;
 
 let platformData = null;
 let runData = null;
@@ -42,6 +50,19 @@ function fmtTime(ts) {
   });
 }
 
+function fmtMs(ms) {
+  if (ms === null || ms === undefined) return "\u2014";
+  if (ms < 1000) return `${Math.round(ms)}ms`;
+  return `${(ms / 1000).toFixed(1)}s`;
+}
+
+function fmtDuration(ms) {
+  const m = Math.round(ms / 60000);
+  if (m < 60) return `${m}m`;
+  const h = Math.floor(m / 60);
+  return `${h}h ${m % 60}m`;
+}
+
 function fmtNum(n, digits = 4) {
   if (n === null || n === undefined) return "\u2014";
   if (typeof n === "number") return n.toFixed(digits);
@@ -56,6 +77,29 @@ function fmtUsd(n) {
 function fmtTokens(n) {
   if (n === null || n === undefined) return "\u2014";
   return Number(n).toLocaleString();
+}
+
+function buildIncidents(downRows) {
+  const incidents = [];
+  let current = null;
+  for (const row of downRows) {
+    const t = new Date(row.checked_at).getTime();
+    if (current && current.service === row.service && t - current.lastSeen < INCIDENT_MERGE_MS) {
+      current.lastSeen = t;
+      current.count += 1;
+    } else {
+      if (current) incidents.push(current);
+      current = {
+        service: row.service,
+        error: row.error,
+        start: t,
+        lastSeen: t,
+        count: 1,
+      };
+    }
+  }
+  if (current) incidents.push(current);
+  return incidents.reverse();
 }
 
 async function fetchPlatformSummary() {
@@ -79,28 +123,55 @@ async function fetchRunData() {
 }
 
 function platformOverall() {
-  if (platformLoading) return { text: "Loading tinker status…", cls: "degraded" };
-  if (!platformData) return { text: "Tinker status unavailable", cls: "degraded" };
+  if (platformLoading) return { text: "Loading…", cls: "degraded", short: "…" };
+  if (!platformData) return { text: "Unavailable", cls: "degraded", short: "n/a" };
   const sts = PLATFORM_SVCS.map((s) => platformData.latest[s.key]?.status);
+  const upCount = sts.filter((s) => s === "up").length;
   const allUp = sts.every((s) => s === "up");
   const allDown = sts.every((s) => s === "down" || !s);
-  if (allUp) return { text: "Tinker API operational", cls: "" };
-  if (allDown) return { text: "Tinker API outage", cls: "down" };
-  return { text: "Tinker API degraded", cls: "degraded" };
+  if (allUp) return { text: "All systems operational", cls: "", short: "operational" };
+  if (allDown) return { text: "Major outage", cls: "down", short: "outage" };
+  return { text: "Experiencing issues", cls: "degraded", short: `${upCount}/4 up` };
 }
 
 function runOverall(run) {
-  if (!run) return { text: "No run loaded", cls: "degraded" };
+  if (!run) return { text: "No run", cls: "degraded", short: "n/a" };
   const critical = (run.findings || []).some((f) => f.severity === "critical");
-  if (run.status === "failed" || critical) return { text: "Run unhealthy", cls: "down" };
+  if (run.status === "failed" || critical) {
+    return { text: "Unhealthy", cls: "down", short: "failed" };
+  }
   if (run.status === "completed" && !(run.findings || []).length) {
-    return { text: "Run healthy", cls: "" };
+    return { text: "Healthy", cls: "", short: run.status };
   }
   if ((run.findings || []).some((f) => f.severity === "warning")) {
-    return { text: "Run has warnings", cls: "degraded" };
+    return { text: "Warnings", cls: "degraded", short: "warnings" };
   }
-  if (run.status === "completed") return { text: "Run healthy", cls: "" };
-  return { text: "Run in progress", cls: "degraded" };
+  return { text: run.status || "unknown", cls: "degraded", short: run.status || "?" };
+}
+
+function budgetOverall(run) {
+  if (!run) return { text: "—", cls: "degraded", short: "n/a" };
+  const budget = run.budget || {};
+  const tokens = run.tokens || {};
+  const est = budget.estimated_usd;
+  const train = tokens.train;
+  const planned = budget.planned_train_tokens;
+  let cls = "";
+  if (planned && train && train > planned * 1.05) cls = "degraded";
+  const short = est != null ? fmtUsd(est) : `${fmtTokens(train)} tok`;
+  return { text: est != null ? `Est. ${fmtUsd(est)}` : `${fmtTokens(train)} tokens`, cls, short };
+}
+
+function checkpointOverall(run) {
+  if (!run?.probe) return { text: "—", cls: "degraded", short: "n/a" };
+  const probe = run.probe;
+  if (probe.native_sampling_ok) {
+    return { text: "Sampler verified", cls: "", short: "verified" };
+  }
+  if (probe.sampler_ready) {
+    return { text: "Ready, unverified", cls: "degraded", short: "unverified" };
+  }
+  return { text: "Not ready", cls: "down", short: "fail" };
 }
 
 function combinedOverall(platform, run) {
@@ -117,12 +188,38 @@ function combinedOverall(platform, run) {
   return { text: `${platform.text} · ${run.text}`, cls: run.cls || platform.cls };
 }
 
+function renderPillarCards(run, platform, runO, budgetO, checkpointO) {
+  return `
+    <div class="pillar-cards">
+      <a href="#tinker-status" class="pillar-card ${platform.cls}">
+        <div class="pillar-top"><span class="pillar-dot"></span><span class="pillar-label">Tinker Status</span></div>
+        <span class="pillar-value">${platform.text}</span>
+        <span class="pillar-detail">${platform.short}</span>
+      </a>
+      <a href="#run" class="pillar-card ${runO.cls}">
+        <div class="pillar-top"><span class="pillar-dot"></span><span class="pillar-label">My Run</span></div>
+        <span class="pillar-value">${runO.text}</span>
+        <span class="pillar-detail">${run ? run.method || "—" : "no data"} · ${run ? fmtNum(run.final_loss) : "—"} loss</span>
+      </a>
+      <a href="#budget" class="pillar-card ${budgetO.cls}">
+        <div class="pillar-top"><span class="pillar-dot"></span><span class="pillar-label">Budget</span></div>
+        <span class="pillar-value">${budgetO.text}</span>
+        <span class="pillar-detail">plan vs actual tokens</span>
+      </a>
+      <a href="#checkpoint" class="pillar-card ${checkpointO.cls}">
+        <div class="pillar-top"><span class="pillar-dot"></span><span class="pillar-label">Checkpoint</span></div>
+        <span class="pillar-value">${checkpointO.text}</span>
+        <span class="pillar-detail">sampler probe · tinker#44</span>
+      </a>
+    </div>`;
+}
+
 function lossSparkline(metrics) {
   if (!metrics || !metrics.length) {
     return `<div class="no-items">No loss metrics recorded.</div>`;
   }
   const w = 640;
-  const h = 120;
+  const h = 100;
   const pad = 8;
   const losses = metrics.map((m) => m.loss);
   const min = Math.min(...losses);
@@ -139,13 +236,14 @@ function lossSparkline(metrics) {
   const last = metrics[metrics.length - 1];
   return `
     <div class="sparkline-wrap">
+      <div class="sparkline-label">Loss curve</div>
       <svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Training loss curve">
-        <path d="M${fill}" fill="rgba(45,164,78,0.12)" stroke="none"/>
+        <path d="M${fill}" fill="rgba(45,164,78,0.14)" stroke="none"/>
         <polyline points="${line}" fill="none" stroke="#2da44e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       <div class="sparkline-meta">
         <span>step ${first.step} → ${last.step}</span>
-        <span>loss ${fmtNum(first.loss)} → ${fmtNum(last.loss)}</span>
+        <span>${fmtNum(first.loss)} → ${fmtNum(last.loss)}</span>
       </div>
     </div>`;
 }
@@ -156,9 +254,9 @@ function renderPlatformSection() {
       <section class="section-block" id="tinker-status">
         <div class="section-head">
           <div class="section-title">Tinker Status</div>
-          <div class="section-sub">live from tinker-status</div>
+          <div class="section-sub">fetching…</div>
         </div>
-        <div class="no-items">Loading tinker status from Shrinav's uptime monitor…</div>
+        <div class="loading" style="padding:48px 0"><div class="spinner"></div>fetching status</div>
       </section>`;
   }
 
@@ -167,25 +265,23 @@ function renderPlatformSection() {
       <section class="section-block" id="tinker-status">
         <div class="section-head">
           <div class="section-title">Tinker Status</div>
-          <div class="section-sub">tinker-status</div>
+          <div class="section-sub">offline</div>
         </div>
-        <div class="no-items">Could not load tinker status. <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">Open tinker-status directly</a>.</div>
+        <div class="no-items">Could not load. <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">Open tinker-status</a>.</div>
       </section>`;
   }
 
-  const { ticks, uptime, latest } = platformData;
-  const win = WINDOWS.find((w) => w.key === activeWindow);
+  const { ticks, uptime, latency, latest, incidents: rawIncidents } = platformData;
+  const win = BAR_WINDOWS.find((w) => w.key === activeWindow);
   const lastCheck = latest[PLATFORM_SVCS[0].key]?.checked_at;
+  const incidents = buildIncidents(rawIncidents || []);
 
   return `
     <section class="section-block" id="tinker-status">
       <div class="section-head">
         <div class="section-title">Tinker Status</div>
-        <div class="section-sub">
-          live via <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">tinker-status</a>
-        </div>
+        <div class="section-sub"><a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">tinker-status</a></div>
       </div>
-      <p class="section-note">Same checks as <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">lokashrinav.github.io/tinker-status</a> — API, inference, OpenAI-compatible, training — every ${CHECK_INTERVAL_MIN} min. Last check ${fmtTime(lastCheck)}.</p>
       <div class="services">
         ${PLATFORM_SVCS.map((s) => {
           const d = latest[s.key];
@@ -196,47 +292,123 @@ function renderPlatformSection() {
           </div>`;
         }).join("")}
       </div>
-      <div class="tabs" style="margin-top:24px">
-        ${WINDOWS.map(
-          (w) =>
-            `<button class="tab ${w.key === activeWindow ? "active" : ""}" data-window="${w.key}">${w.label}</button>`
-        ).join("")}
+
+      <div class="bar-section">
+        <div class="section-head">
+          <div class="section-title">Last ${win.label}</div>
+          <div class="section-sub">1 bar / ${CHECK_INTERVAL_MIN} min</div>
+        </div>
+        <div class="tabs">
+          ${BAR_WINDOWS.map(
+            (w) =>
+              `<button type="button" class="tab ${w.key === activeWindow ? "active" : ""}" data-window="${w.key}">${w.label}</button>`
+          ).join("")}
+        </div>
+        ${PLATFORM_SVCS.map((s) => {
+          const tk = ticks[s.key]?.[win.key] || [];
+          const u = uptime[s.key]?.[win.key] ?? null;
+          return `<div class="bar-row">
+            <div class="bar-label">
+              <span class="bar-name">${s.name}</span>
+              <span class="bar-pct ${pctCls(u)}">${pctStr(u)}</span>
+            </div>
+            <div class="bar">${tk.map((t) => `<div class="t ${t}"></div>`).join("")}</div>
+          </div>`;
+        }).join("")}
+        <div class="bar-range"><span>${win.label} ago</span><span>now</span></div>
       </div>
-      ${PLATFORM_SVCS.map((s) => {
-        const tk = ticks[s.key]?.[win.key] || [];
-        const u = uptime[s.key]?.[win.key] ?? null;
-        return `<div class="bar-row">
-          <div class="bar-label">
-            <span class="bar-name">${s.name}</span>
-            <span class="bar-pct ${pctCls(u)}">${pctStr(u)}</span>
-          </div>
-          <div class="bar">${tk.map((t) => `<div class="t ${t}"></div>`).join("")}</div>
-        </div>`;
-      }).join("")}
-      <div class="bar-range"><span>${win.label} ago</span><span>now</span></div>
+
+      <div class="uptime-section">
+        <div class="section-head">
+          <div class="section-title">Uptime</div>
+        </div>
+        <table class="uptime-table">
+          <thead><tr><th></th>${UPTIME_WINDOWS.map((w) => `<th>${w.label}</th>`).join("")}</tr></thead>
+          <tbody>
+            ${PLATFORM_SVCS.map(
+              (s) => `<tr>
+              <td>${s.name}</td>
+              ${UPTIME_WINDOWS.map((w) => {
+                const u = uptime[s.key]?.[w.key] ?? null;
+                return `<td class="${pctCls(u)}">${pctStr(u)}</td>`;
+              }).join("")}
+            </tr>`
+            ).join("")}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="latency-section">
+        <div class="section-head">
+          <div class="section-title">Response time</div>
+          <div class="section-sub">90d window</div>
+        </div>
+        <p class="latency-note">Checks every ${CHECK_INTERVAL_MIN} min from one GitHub Actions runner. Latency is a trend, not a benchmark.</p>
+        <table class="uptime-table">
+          <thead><tr><th></th><th>p50</th><th>p95</th><th>p99</th></tr></thead>
+          <tbody>
+            ${PLATFORM_SVCS.map((s) => {
+              const l = latency[s.key] || {};
+              return `<tr>
+                <td>${s.name}</td>
+                <td>${fmtMs(l.p50)}</td>
+                <td>${fmtMs(l.p95)}</td>
+                <td>${fmtMs(l.p99)}</td>
+              </tr>`;
+            }).join("")}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="incidents-section">
+        <div class="section-head">
+          <div class="section-title">Incidents</div>
+          <div class="section-sub">90d window</div>
+        </div>
+        ${
+          incidents.length === 0
+            ? `<div class="no-incidents">No incidents in the last 90d.</div>`
+            : incidents
+                .map((inc) => {
+                  const svc = PLATFORM_SVCS.find((s) => s.key === inc.service);
+                  const dur = fmtDuration(inc.lastSeen - inc.start);
+                  return `<div class="incident">
+              <div class="incident-dot"></div>
+              <div class="incident-body">
+                <div class="incident-svc">${svc?.name || inc.service}</div>
+                <div class="incident-meta">${fmtTime(inc.start)}${inc.count > 1 ? ` · ${dur} · ${inc.count} failed checks` : ""}</div>
+                <div class="incident-err">${inc.error || "Unknown error"}</div>
+              </div>
+            </div>`;
+                })
+                .join("")
+        }
+      </div>
+      <p class="section-note" style="margin-top:16px">Last checked ${fmtTime(lastCheck)} · powered by <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">tinker-status</a></p>
     </section>`;
 }
 
 function renderRunSection(run) {
   const ro = runOverall(run);
+  const statusCls = ro.cls === "down" ? "bad" : ro.cls === "degraded" ? "warn" : "good";
   return `
     <section class="section-block" id="run">
       <div class="section-head">
-        <div class="section-title">My run</div>
+        <div class="section-title">My Run</div>
         <div class="section-sub">workbench doctor</div>
       </div>
-      <dl class="run-meta">
-        <div><dt>Run</dt><dd>${run.run_id}</dd></div>
-        <div><dt>Status</dt><dd class="${ro.cls === "down" ? "bad" : ro.cls === "degraded" ? "warn" : "good"}">${run.status}</dd></div>
-        <div><dt>Backend</dt><dd>${run.backend || "\u2014"}</dd></div>
-        <div><dt>Method</dt><dd>${run.method || "\u2014"}</dd></div>
-        <div><dt>Steps</dt><dd>${run.steps_completed ?? "\u2014"}/${run.steps_planned ?? "\u2014"}</dd></div>
-        <div><dt>Final loss</dt><dd>${fmtNum(run.final_loss)}</dd></div>
+      <dl class="stat-strip">
+        <div class="stat-cell"><dt>Run</dt><dd>${run.run_id}</dd></div>
+        <div class="stat-cell"><dt>Status</dt><dd class="${statusCls}">${run.status}</dd></div>
+        <div class="stat-cell"><dt>Backend</dt><dd>${run.backend || "\u2014"}</dd></div>
+        <div class="stat-cell"><dt>Method</dt><dd>${run.method || "\u2014"}</dd></div>
+        <div class="stat-cell"><dt>Steps</dt><dd>${run.steps_completed ?? "\u2014"}/${run.steps_planned ?? "\u2014"}</dd></div>
+        <div class="stat-cell"><dt>Final loss</dt><dd>${fmtNum(run.final_loss)}</dd></div>
       </dl>
       ${lossSparkline(run.metrics)}
       ${
         !(run.findings || []).length
-          ? `<div class="no-items">No issues detected by doctor.</div>`
+          ? `<div class="no-incidents">No issues detected by doctor.</div>`
           : (run.findings || [])
               .map(
                 (f) => `<div class="finding">
@@ -256,31 +428,22 @@ function renderRunSection(run) {
 function renderBudgetSection(run) {
   const budget = run.budget || {};
   const tokens = run.tokens || {};
-  const plannedTrain = budget.planned_train_tokens;
-  const plannedSample = budget.planned_sample_tokens;
-  const actualTrain = tokens.train;
-  const actualSample = tokens.sample;
-  const estUsd = budget.estimated_usd;
-  const maxUsd = budget.max_usd;
-
   return `
     <section class="section-block" id="budget">
       <div class="section-head">
         <div class="section-title">Budget</div>
-        <div class="section-sub">pre-run plan vs actual</div>
+        <div class="section-sub">plan vs actual</div>
       </div>
-      <p class="section-note">Account balance requires upstream API (<a href="https://github.com/thinking-machines-lab/tinker-cookbook/issues/781" target="_blank" rel="noopener">#781</a>). Estimates use config-supplied rates.</p>
+      <p class="section-note">Account balance needs upstream API (<a href="https://github.com/thinking-machines-lab/tinker-cookbook/issues/781" target="_blank" rel="noopener">#781</a>).</p>
       <table class="uptime-table">
-        <thead><tr>
-          <th>Metric</th><th>Planned</th><th>Actual</th>
-        </tr></thead>
+        <thead><tr><th>Metric</th><th>Planned</th><th>Actual</th></tr></thead>
         <tbody>
-          <tr><td>Train tokens</td><td>${fmtTokens(plannedTrain)}</td><td>${fmtTokens(actualTrain)}</td></tr>
-          <tr><td>Sample tokens</td><td>${fmtTokens(plannedSample)}</td><td>${fmtTokens(actualSample)}</td></tr>
+          <tr><td>Train tokens</td><td>${fmtTokens(budget.planned_train_tokens)}</td><td>${fmtTokens(tokens.train)}</td></tr>
+          <tr><td>Sample tokens</td><td>${fmtTokens(budget.planned_sample_tokens)}</td><td>${fmtTokens(tokens.sample)}</td></tr>
           <tr><td>Checkpoints</td><td>${budget.checkpoints ?? "\u2014"}</td><td>${(run.checkpoints || []).length}</td></tr>
           <tr><td>Storage (est.)</td><td>${budget.checkpoint_storage_gb ?? "\u2014"} GB</td><td>\u2014</td></tr>
-          <tr><td>Cost (est.)</td><td>${fmtUsd(estUsd)}</td><td>\u2014</td></tr>
-          <tr><td>Budget cap</td><td>${fmtUsd(maxUsd)}</td><td>\u2014</td></tr>
+          <tr><td>Cost (est.)</td><td>${fmtUsd(budget.estimated_usd)}</td><td>\u2014</td></tr>
+          <tr><td>Budget cap</td><td>${fmtUsd(budget.max_usd)}</td><td>\u2014</td></tr>
         </tbody>
       </table>
     </section>`;
@@ -290,35 +453,32 @@ function renderCheckpointSection(run) {
   const probe = run.probe || {};
   const ok = probe.native_sampling_ok;
   const st = ok ? "up" : probe.sampler_ready ? "warn" : "down";
-  const label = ok ? "Sampler verified" : probe.sampler_ready ? "Sampler ready, unverified" : "Not ready";
-
+  const label = ok ? "Sampler verified" : probe.sampler_ready ? "Ready, unverified" : "Not ready";
   return `
     <section class="section-block" id="checkpoint">
       <div class="section-head">
         <div class="section-title">Checkpoint</div>
         <div class="section-sub">sampler probe</div>
       </div>
-      <p class="section-note">Artifact-based probe aligned with <a href="https://github.com/thinking-machines-lab/tinker/issues/44" target="_blank" rel="noopener">tinker#44</a>. Eval samples at checkpoint step prove native sampling worked.</p>
       <div class="service">
         <div class="service-name">Step ${probe.step ?? "\u2014"}</div>
         <span class="status ${st}"><span class="dot"></span>${label}</span>
       </div>
-      <table class="uptime-table" style="margin-top:16px">
+      <table class="uptime-table" style="margin-top:12px">
         <tbody>
           <tr><td>Sampler ready</td><td>${probe.sampler_ready ? "yes" : "no"}</td></tr>
           <tr><td>Adapter applied</td><td>${probe.adapter_applied === null ? "\u2014" : probe.adapter_applied ? "yes" : "no"}</td></tr>
-          <tr><td>Eval samples at step</td><td>${probe.eval_samples_at_step ?? 0}</td></tr>
-          <tr><td>Path</td><td style="word-break:break-all;font-size:0.72rem">${probe.checkpoint_path || "\u2014"}</td></tr>
+          <tr><td>Eval samples</td><td>${probe.eval_samples_at_step ?? 0}</td></tr>
+          <tr><td>Path</td><td style="font-size:0.72rem;word-break:break-all">${probe.checkpoint_path || "\u2014"}</td></tr>
         </tbody>
       </table>
-      ${probe.error && !ok ? `<div class="finding" style="margin-top:16px;border-top:1px solid var(--border)"><div class="finding-dot warning"></div><div class="finding-body"><div class="finding-msg">${probe.error}</div></div></div>` : ""}
     </section>`;
 }
 
 function renderRunsList(runs, selectedId) {
   if (!runs || runs.length <= 1) return "";
   const rows = runs
-    .slice(0, 8)
+    .slice(0, 6)
     .map(
       (r) => `<tr>
       <td>${r.name || r.run_id}</td>
@@ -332,9 +492,8 @@ function renderRunsList(runs, selectedId) {
     <section class="section-block">
       <div class="section-head">
         <div class="section-title">Recent runs</div>
-        <div class="section-sub">exported: ${selectedId}</div>
+        <div class="section-sub">${selectedId}</div>
       </div>
-      <p class="section-note">Re-export with <code>tinker-workbench export-dashboard &lt;run-id&gt;</code> to change the featured run.</p>
       <table class="uptime-table">
         <thead><tr><th>Run</th><th>Backend</th><th>Status</th><th>Loss</th></tr></thead>
         <tbody>${rows}</tbody>
@@ -346,34 +505,38 @@ function render() {
   const run = runData?.selected_run;
   const platform = platformOverall();
   const runO = runOverall(run);
+  const budgetO = budgetOverall(run);
+  const checkpointO = checkpointOverall(run);
   const combined = combinedOverall(platform, runO);
   const generated = runData?.generated_at;
 
   document.getElementById("app").innerHTML = `
-    <nav class="top-nav">
+    <nav class="sticky-nav" aria-label="Dashboard sections">
       <a href="#tinker-status">Status</a>
       <a href="#run">Run</a>
       <a href="#budget">Budget</a>
       <a href="#checkpoint">Checkpoint</a>
-      <a href="./about.html">About</a>
-      <a href="https://github.com/Abhishek21g/tinker-workbench" target="_blank" rel="noopener">GitHub</a>
+      <a href="./about.html" class="nav-external">About</a>
+      <a href="https://github.com/Abhishek21g/tinker-workbench" class="nav-external" target="_blank" rel="noopener">GitHub</a>
     </nav>
     <header>
       <h1>Tinker Workbench</h1>
+      <p class="tagline">Is Tinker up? Is my run healthy? Can I afford the next step? Can I trust this checkpoint?</p>
       <div class="overall">
         <div class="dot ${combined.cls}"></div>
         ${combined.text}
         <span class="ts">Updated ${fmtTime(generated)}</span>
       </div>
     </header>
+    ${renderPillarCards(run, platform, runO, budgetO, checkpointO)}
     ${renderPlatformSection()}
-    ${run ? renderRunSection(run) : `<div class="no-items">No run data. Run <code>tinker-workbench export-dashboard</code>.</div>`}
+    ${run ? renderRunSection(run) : `<div class="no-items">No run data — run <code>tinker-workbench export-dashboard</code>.</div>`}
     ${run ? renderBudgetSection(run) : ""}
     ${run ? renderCheckpointSection(run) : ""}
     ${renderRunsList(runData?.runs, run?.run_id)}
     <footer>
-      Tinker Status uptime by <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">tinker-status</a> (Shrinav).<br>
-      Run health, budget, and checkpoint data from <a href="https://github.com/Abhishek21g/tinker-workbench" target="_blank" rel="noopener">Tinker Workbench</a>.
+      Tinker Status by <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">Shrinav</a> ·
+      Workbench by <a href="https://github.com/Abhishek21g/tinker-workbench" target="_blank" rel="noopener">Abhishek Enaguthi</a>
     </footer>`;
 
   document.querySelectorAll(".tab[data-window]").forEach((btn) => {
@@ -413,6 +576,6 @@ setInterval(async () => {
     platformData = await fetchPlatformSummary();
     render();
   } catch {
-    /* keep last good platform snapshot */
+    /* keep last snapshot */
   }
 }, 60000);
