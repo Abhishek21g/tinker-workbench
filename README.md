@@ -73,7 +73,8 @@ evals at every checkpoint and `compare` as the study readout.
 
 ## Docs
 
-- [site/index.html](site/index.html) — static launch/product page
+- [site/index.html](site/index.html) — live DX dashboard (platform + run health + budget + checkpoint)
+- [site/about.html](site/about.html) — product overview and research context
 - [docs/commands.md](docs/commands.md) — full command reference
 - [docs/architecture.md](docs/architecture.md) — design and rationale
 - [docs/upstream-collab.md](docs/upstream-collab.md) — Tinker upstream collaboration targets

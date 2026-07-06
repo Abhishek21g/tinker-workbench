@@ -9,9 +9,11 @@ from tinker_workbench.collab import build_collab_proposal
 from tinker_workbench.compare import build_comparison
 from tinker_workbench.config import load_config
 from tinker_workbench.conformance import compare_renderers
+from tinker_workbench.dashboard import export_dashboard
 from tinker_workbench.doctor import diagnose
 from tinker_workbench.errors import WorkbenchError
 from tinker_workbench.planner import build_plan
+from tinker_workbench.probe import probe_checkpoint
 from tinker_workbench.reference import detect_drift, load_baseline, save_baseline
 from tinker_workbench.report import write_report
 from tinker_workbench.runner import execute_run
@@ -122,6 +124,33 @@ def build_parser() -> argparse.ArgumentParser:
     )
     collab_parser.add_argument("--run-dir", type=Path, default=None)
     collab_parser.set_defaults(handler=_cmd_collab)
+
+    export_parser = subparsers.add_parser(
+        "export-dashboard",
+        help="Export run health, budget, and checkpoint data for the web dashboard.",
+    )
+    export_parser.add_argument("run", nargs="?", default="latest", help="Run id or 'latest'.")
+    export_parser.add_argument(
+        "--out",
+        type=Path,
+        default=Path("site/data/dashboard.json"),
+        help="Output JSON path (default: site/data/dashboard.json).",
+    )
+    export_parser.add_argument(
+        "--runs-root",
+        type=Path,
+        default=Path("runs"),
+        help="Runs directory (default: runs/).",
+    )
+    export_parser.set_defaults(handler=_cmd_export_dashboard)
+
+    probe_parser = subparsers.add_parser(
+        "probe",
+        help="Check checkpoint sampler readiness from run artifacts.",
+    )
+    probe_parser.add_argument("run", help="Run directory, run id, or 'latest'.")
+    probe_parser.add_argument("--json", action="store_true", dest="as_json")
+    probe_parser.set_defaults(handler=_cmd_probe)
 
     return parser
 
@@ -284,6 +313,26 @@ def _cmd_collab(args) -> int:
     proposal = build_collab_proposal(args.target, args.run_dir)
     print(json.dumps(proposal, indent=2))
     return 0
+
+
+def _cmd_export_dashboard(args) -> int:
+    out = export_dashboard(run_ref=args.run, runs_root=args.runs_root, out=args.out)
+    print(out)
+    return 0
+
+
+def _cmd_probe(args) -> int:
+    artifacts = RunStore().load(args.run)
+    result = probe_checkpoint(artifacts)
+    if args.as_json:
+        print(json.dumps(result, indent=2))
+    else:
+        status = "ok" if result["native_sampling_ok"] else "fail"
+        print(f"probe: {status}")
+        print(f"checkpoint: step {result['step']}  sampler_ready={result['sampler_ready']}")
+        if result.get("error"):
+            print(f"error: {result['error']}")
+    return 0 if result["native_sampling_ok"] else 2
 
 
 if __name__ == "__main__":

@@ -1,0 +1,394 @@
+{
+  "generated_at": "2026-07-06T00:53:15.635903+00:00",
+  "runs": [
+    {
+      "run_id": "20260706T005210Z-memorization-sft",
+      "name": "memorization-sft",
+      "method": "sft",
+      "status": "completed",
+      "backend": "mock",
+      "final_loss": 0.38189626889050066
+    },
+    {
+      "run_id": "20260704T190035Z-memorization-local",
+      "name": "memorization-local",
+      "method": "sft",
+      "status": "completed",
+      "backend": "local",
+      "final_loss": 0.0026279684371374413
+    },
+    {
+      "run_id": "20260704T185937Z-failure-divergence-local",
+      "name": "failure-divergence-local",
+      "method": "sft",
+      "status": "completed",
+      "backend": "local",
+      "final_loss": 12.253346455234256
+    },
+    {
+      "run_id": "20260704T185936Z-memorization-local",
+      "name": "memorization-local",
+      "method": "sft",
+      "status": "completed",
+      "backend": "local",
+      "final_loss": 0.0026279684371374413
+    },
+    {
+      "run_id": "20260704T184226Z-memorization-rl-terminal",
+      "name": "memorization-rl-terminal",
+      "method": "rl_terminal_reward",
+      "status": "completed",
+      "backend": "mock",
+      "final_loss": 1.2701750926592044
+    },
+    {
+      "run_id": "20260704T184226Z-memorization-rl-dense",
+      "name": "memorization-rl-dense",
+      "method": "rl_dense_reward",
+      "status": "completed",
+      "backend": "mock",
+      "final_loss": 0.7330058055086952
+    },
+    {
+      "run_id": "20260704T184225Z-memorization-sft",
+      "name": "memorization-sft",
+      "method": "sft",
+      "status": "completed",
+      "backend": "mock",
+      "final_loss": 0.38189626889050066
+    },
+    {
+      "run_id": "20260704T184217Z-memorization-local",
+      "name": "memorization-local",
+      "method": "sft",
+      "status": "completed",
+      "backend": "local",
+      "final_loss": 0.0026279684371374413
+    }
+  ],
+  "selected_run": {
+    "run_id": "20260706T005210Z-memorization-sft",
+    "run_dir": "runs/20260706T005210Z-memorization-sft",
+    "status": "completed",
+    "failure_reason": null,
+    "backend": "mock",
+    "method": "sft",
+    "steps_completed": 40,
+    "steps_planned": 40,
+    "final_loss": 0.38189626889050066,
+    "tokens": {
+      "train": 15360,
+      "sample": 4096
+    },
+    "plan": {
+      "name": "memorization-sft",
+      "mode": "mock",
+      "method": "sft",
+      "model": {
+        "base_model": "meta-llama/Llama-3.2-1B",
+        "lora_rank": 32
+      },
+      "data": {
+        "source": "builtin:memorization",
+        "train_examples": 128,
+        "eval_examples": 64
+      },
+      "schedule": {
+        "steps": 40,
+        "batch_size": 8,
+        "learning_rate": 0.0001,
+        "lr_schedule": "constant",
+        "seed": 7
+      },
+      "evals": [
+        "exact_match",
+        "bits_recovered"
+      ],
+      "budget": {
+        "planned_train_tokens": 15360,
+        "planned_sample_tokens": 4096,
+        "planned_total_tokens": 19456,
+        "max_train_tokens": 250000,
+        "max_sample_tokens": 50000,
+        "checkpoints": 4,
+        "checkpoint_storage_gb": 2.0,
+        "estimated_usd": null,
+        "max_usd": null
+      },
+      "risks": []
+    },
+    "budget": {
+      "planned_train_tokens": 15360,
+      "planned_sample_tokens": 4096,
+      "planned_total_tokens": 19456,
+      "max_train_tokens": 250000,
+      "max_sample_tokens": 50000,
+      "checkpoints": 4,
+      "checkpoint_storage_gb": 2.0,
+      "estimated_usd": null,
+      "max_usd": null
+    },
+    "findings": [],
+    "metrics": [
+      {
+        "step": 0,
+        "loss": 4.010744694509854
+      },
+      {
+        "step": 1,
+        "loss": 3.669505946528751
+      },
+      {
+        "step": 2,
+        "loss": 3.4127972905640522
+      },
+      {
+        "step": 3,
+        "loss": 3.128161121261656
+      },
+      {
+        "step": 4,
+        "loss": 2.9080756935485828
+      },
+      {
+        "step": 5,
+        "loss": 2.7388082207139868
+      },
+      {
+        "step": 6,
+        "loss": 2.503167580146923
+      },
+      {
+        "step": 7,
+        "loss": 2.274130963595411
+      },
+      {
+        "step": 8,
+        "loss": 2.1541875086106894
+      },
+      {
+        "step": 9,
+        "loss": 1.998828386319153
+      },
+      {
+        "step": 10,
+        "loss": 1.817278658124859
+      },
+      {
+        "step": 11,
+        "loss": 1.6458758402729214
+      },
+      {
+        "step": 12,
+        "loss": 1.614137939058115
+      },
+      {
+        "step": 13,
+        "loss": 1.478042313983924
+      },
+      {
+        "step": 14,
+        "loss": 1.3443725431456277
+      },
+      {
+        "step": 15,
+        "loss": 1.3409194641393436
+      },
+      {
+        "step": 16,
+        "loss": 1.2013688661624915
+      },
+      {
+        "step": 17,
+        "loss": 1.0954121747536893
+      },
+      {
+        "step": 18,
+        "loss": 1.0209171311715561
+      },
+      {
+        "step": 19,
+        "loss": 1.005845927366114
+      },
+      {
+        "step": 20,
+        "loss": 0.9820617559893285
+      },
+      {
+        "step": 21,
+        "loss": 0.8475395917623472
+      },
+      {
+        "step": 22,
+        "loss": 0.818214875015438
+      },
+      {
+        "step": 23,
+        "loss": 0.7445608677204555
+      },
+      {
+        "step": 24,
+        "loss": 0.7257915931822909
+      },
+      {
+        "step": 25,
+        "loss": 0.7097077691630388
+      },
+      {
+        "step": 26,
+        "loss": 0.6077112060897415
+      },
+      {
+        "step": 27,
+        "loss": 0.6260691950027353
+      },
+      {
+        "step": 28,
+        "loss": 0.532890459853455
+      },
+      {
+        "step": 29,
+        "loss": 0.5459329078769937
+      },
+      {
+        "step": 30,
+        "loss": 0.48185931688698813
+      },
+      {
+        "step": 31,
+        "loss": 0.5598037329072931
+      },
+      {
+        "step": 32,
+        "loss": 0.4267892711296788
+      },
+      {
+        "step": 33,
+        "loss": 0.4155538222902293
+      },
+      {
+        "step": 34,
+        "loss": 0.40042963397644854
+      },
+      {
+        "step": 35,
+        "loss": 0.4294465232860904
+      },
+      {
+        "step": 36,
+        "loss": 0.3606626421963998
+      },
+      {
+        "step": 37,
+        "loss": 0.4081351546075222
+      },
+      {
+        "step": 38,
+        "loss": 0.3293779596180727
+      },
+      {
+        "step": 39,
+        "loss": 0.38189626889050066
+      }
+    ],
+    "checkpoints": [
+      {
+        "step": 9,
+        "path": "mock://20260706T005210Z-memorization-sft/checkpoint-00009",
+        "sampler_ready": true
+      },
+      {
+        "step": 19,
+        "path": "mock://20260706T005210Z-memorization-sft/checkpoint-00019",
+        "sampler_ready": true
+      },
+      {
+        "step": 29,
+        "path": "mock://20260706T005210Z-memorization-sft/checkpoint-00029",
+        "sampler_ready": true
+      },
+      {
+        "step": 39,
+        "path": "mock://20260706T005210Z-memorization-sft/checkpoint-00039",
+        "sampler_ready": true
+      }
+    ],
+    "evals": [
+      {
+        "step": 9,
+        "name": "exact_match",
+        "grader": "exact_match",
+        "score": 0.1875,
+        "num_examples": 32,
+        "sample_tokens": 512
+      },
+      {
+        "step": 9,
+        "name": "bits_recovered",
+        "grader": "bits_recovered",
+        "score": 0.7844,
+        "num_examples": 32,
+        "sample_tokens": 512
+      },
+      {
+        "step": 19,
+        "name": "exact_match",
+        "grader": "exact_match",
+        "score": 0.375,
+        "num_examples": 32,
+        "sample_tokens": 512
+      },
+      {
+        "step": 19,
+        "name": "bits_recovered",
+        "grader": "bits_recovered",
+        "score": 0.8938,
+        "num_examples": 32,
+        "sample_tokens": 512
+      },
+      {
+        "step": 29,
+        "name": "exact_match",
+        "grader": "exact_match",
+        "score": 0.7188,
+        "num_examples": 32,
+        "sample_tokens": 512
+      },
+      {
+        "step": 29,
+        "name": "bits_recovered",
+        "grader": "bits_recovered",
+        "score": 0.9688,
+        "num_examples": 32,
+        "sample_tokens": 512
+      },
+      {
+        "step": 39,
+        "name": "exact_match",
+        "grader": "exact_match",
+        "score": 0.8438,
+        "num_examples": 32,
+        "sample_tokens": 512
+      },
+      {
+        "step": 39,
+        "name": "bits_recovered",
+        "grader": "bits_recovered",
+        "score": 0.9812,
+        "num_examples": 32,
+        "sample_tokens": 512
+      }
+    ],
+    "probe": {
+      "checkpoint_path": "mock://20260706T005210Z-memorization-sft/checkpoint-00039",
+      "step": 39,
+      "sampler_ready": true,
+      "adapter_applied": true,
+      "native_sampling_ok": true,
+      "openai_compatible_sampling_ok": null,
+      "latency_ms": null,
+      "eval_samples_at_step": 2,
+      "error": null
+    }
+  }
+}

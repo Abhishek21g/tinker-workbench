@@ -108,3 +108,25 @@ tinker-cookbook#796 failure class — plausible-looking loss, garbage results.
 
 Exports the upstream-facing proposal JSON shapes used in our collaboration
 with the Tinker repos.
+
+## `export-dashboard [RUN] [--out PATH] [--runs-root DIR]`
+
+Writes `site/data/dashboard.json` for the static web dashboard: run health
+(doctor findings), budget reconciliation, checkpoint probe, and loss metrics.
+Default run is `latest`; default output is `site/data/dashboard.json`.
+
+```bash
+tinker-workbench run configs/memorization_sft.yaml
+tinker-workbench export-dashboard latest
+# open site/index.html locally, or push to GitHub Pages
+```
+
+## `probe RUN [--json]`
+
+Checkpoint sampler readiness from run artifacts (no API re-call). Exit code 2
+when native sampling cannot be verified at the latest checkpoint.
+
+```bash
+tinker-workbench probe latest
+tinker-workbench probe latest --json
+```

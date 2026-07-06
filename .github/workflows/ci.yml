@@ -29,7 +29,9 @@ jobs:
           tinker-workbench plan configs/memorization_sft.yaml
           tinker-workbench run configs/memorization_sft.yaml --quiet
           tinker-workbench doctor latest
+          tinker-workbench probe latest --json
           tinker-workbench report latest
+          tinker-workbench export-dashboard latest --out site/data/dashboard.json
           # Real local neural-LM training, end to end
           tinker-workbench run configs/memorization_local.yaml --quiet
           tinker-workbench baseline latest --name local-ref
