@@ -269,8 +269,27 @@ h1 {
 .section-note {
   font-size: 0.75rem;
   color: var(--text-3);
-  margin: -12px 0 20px;
+  margin: 0 0 20px;
   line-height: 1.5;
+}
+
+.platform-footer {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.platform-footer .expand-btn-block {
+  border-top: none;
+  margin-top: 0;
+  padding-top: 0;
+  padding-bottom: 12px;
+}
+
+.platform-footer .section-note {
+  margin: 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
 }
 
 .section-note a {

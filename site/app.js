@@ -633,12 +633,14 @@ function renderPlatformSection() {
         }
       </div>
       </div>
+      <div class="platform-footer">
       ${
         !platformDetailsExpanded
           ? `<button type="button" class="expand-btn expand-btn-block" data-toggle="platform">Show platform details</button>`
           : `<button type="button" class="expand-btn expand-btn-block" data-toggle="platform">Hide platform details</button>`
       }
       <p class="section-note">Last checked ${fmtTime(lastCheck)} | powered by <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">tinker-status</a></p>
+      </div>
     </div>`;
 }
 
