@@ -29,7 +29,8 @@ jobs:
           tinker-workbench plan configs/memorization_sft.yaml
           tinker-workbench run configs/memorization_sft.yaml --quiet
           tinker-workbench doctor latest
-          tinker-workbench probe latest --json
+          tinker-workbench probe latest --json > probe.json
+          python -c "import json; d=json.load(open('probe.json')); assert d.get('sampler_ready'), d"
           tinker-workbench report latest
           tinker-workbench export-dashboard latest --out site/data/dashboard.json
           # Real local neural-LM training, end to end

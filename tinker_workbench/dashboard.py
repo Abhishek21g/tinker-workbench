@@ -8,6 +8,8 @@ from tinker_workbench.doctor import diagnose
 from tinker_workbench.probe import probe_checkpoint
 from tinker_workbench.store import RunStore, write_json
 
+MAX_DASHBOARD_RUNS = 8
+
 
 def build_run_panel(artifacts) -> dict[str, Any]:
     summary = artifacts.summary or {}
@@ -60,15 +62,32 @@ def build_dashboard_payload(
                 "final_loss": record.get("final_loss"),
             }
         )
-    panel = build_run_panel(artifacts)
+    run_panels: dict[str, Any] = {}
+    for record in runs[:MAX_DASHBOARD_RUNS]:
+        run_id = record.get("run_id")
+        if not run_id:
+            continue
+        try:
+            run_panels[run_id] = build_run_panel(store.load(run_id))
+        except (FileNotFoundError, OSError, KeyError):
+            continue
+    selected_id = (artifacts.summary or {}).get("run_id") or artifacts.run_dir.name
+    panel = run_panels.get(selected_id) or build_run_panel(artifacts)
     try:
         panel["run_dir"] = str(artifacts.run_dir.relative_to(Path.cwd()))
     except ValueError:
         panel["run_dir"] = str(artifacts.run_dir)
+    for entry in run_panels.values():
+        try:
+            entry["run_dir"] = str(Path(entry["run_dir"]).relative_to(Path.cwd()))
+        except ValueError:
+            pass
     return {
         "generated_at": datetime.now(tz=UTC).isoformat(),
         "runs": runs,
+        "selected_run_id": selected_id,
         "selected_run": panel,
+        "run_panels": run_panels,
     }
 
 

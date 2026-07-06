@@ -631,6 +631,135 @@ footer a:hover {
   color: var(--text);
 }
 
+.site-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 32px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+.site-back {
+  color: var(--text-2);
+  text-decoration: none;
+}
+
+.site-back:hover {
+  color: var(--text);
+}
+
+.site-eyebrow {
+  color: var(--text-3);
+}
+
+.site-top-links {
+  display: flex;
+  gap: 14px;
+}
+
+.site-top-links a {
+  color: var(--text-3);
+  text-decoration: none;
+}
+
+.site-top-links a:hover {
+  color: var(--text);
+}
+
+.story-section {
+  margin-bottom: 40px;
+}
+
+.story-toggle {
+  margin-bottom: 0;
+}
+
+.story-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 20px 0 32px;
+}
+
+.story-card {
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+}
+
+.story-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+  display: block;
+  margin-bottom: 10px;
+}
+
+.story-card p {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text-2);
+}
+
+.onboarding {
+  margin-bottom: 8px;
+}
+
+.tour-tabs {
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+
+.tour-pane {
+  padding: 16px 0 8px;
+  border-top: 1px solid var(--border);
+}
+
+.tour-pane-title {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.tour-pane-body {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.tour-pane-body p {
+  margin-bottom: 10px;
+}
+
+.tour-list {
+  margin: 8px 0 0 18px;
+}
+
+.tour-list li {
+  margin-bottom: 6px;
+}
+
+.notify-banner {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-3);
+  margin: -24px 0 32px;
+}
+
+.run-row {
+  cursor: pointer;
+}
+
+.run-row:hover td {
+  color: var(--text);
+}
+
 a {
   color: var(--text-2);
 }
@@ -757,6 +886,15 @@ code {
 }
 
 @media (max-width: 600px) {
+  .story-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .site-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   html,
   body {
     background: #000;

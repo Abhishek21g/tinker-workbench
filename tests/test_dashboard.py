@@ -24,6 +24,8 @@ def test_export_dashboard_writes_json(workdir, tmp_path: Path) -> None:
     export_dashboard(run_ref=run_dir.name, runs_root=Path("runs"), out=out)
     payload = build_dashboard_payload(run_ref=run_dir.name, runs_root=Path("runs"))
     assert payload["selected_run"]["run_id"]
+    assert payload["run_panels"]
+    assert run_dir.name in payload["run_panels"]
     assert out.exists()
     assert "findings" in payload["selected_run"]
     assert "probe" in payload["selected_run"]

@@ -38,6 +38,138 @@ let activeWindow = "24h";
 let incidentsExpanded = false;
 let findingsExpanded = false;
 let platformDetailsExpanded = false;
+let storyExpanded = false;
+let activeTour = "start";
+let selectedRunId = null;
+let lastPlatformCls = null;
+let notifyPermissionAsked = false;
+
+const TOUR_STEPS = {
+  start: {
+    title: "The problem",
+    body: `<p>After a Tinker post-training run you get artifacts everywhere — metrics, checkpoints, eval JSON — but no single place answers the four questions that matter before you spend again.</p>
+      <ul class="tour-list">
+        <li><strong>Platform</strong> — is Tinker down or is it my code?</li>
+        <li><strong>Run health</strong> — divergence, NaN, stalled loss?</li>
+        <li><strong>Budget</strong> — can I afford the next step?</li>
+        <li><strong>Checkpoint</strong> — will sampling actually work?</li>
+      </ul>`,
+  },
+  plan: {
+    title: "Plan before credits",
+    body: `<p><code>tinker-workbench plan</code> estimates train/sample tokens, checkpoint storage, and cost <em>before</em> you launch.</p>
+      <p>Same YAML you will run — no duplicate config.</p>`,
+  },
+  run: {
+    title: "Run with receipts",
+    body: `<p><code>tinker-workbench run</code> writes a full artifact trail: events, metrics, checkpoints, evals.</p>
+      <p>Mock, local neural LM, or Tinker SDK backends.</p>`,
+  },
+  doctor: {
+    title: "Doctor classifies failures",
+    body: `<p><code>tinker-workbench doctor</code> scans artifacts for divergence, NaN loss, checkpoint gaps, and budget overruns.</p>
+      <p>Separates <strong>your experiment</strong> from <strong>platform outages</strong> (via tinker-status).</p>`,
+  },
+  dashboard: {
+    title: "This dashboard",
+    body: `<p><code>tinker-workbench export-dashboard</code> compiles your run into this page — workbench panels up top, live Tinker Status below.</p>
+      <p>Click any recent run to switch. No re-export needed when panels are cached.</p>`,
+  },
+};
+
+function getRunIdFromUrl() {
+  return new URLSearchParams(window.location.search).get("run");
+}
+
+function setRunIdInUrl(runId) {
+  const url = new URL(window.location.href);
+  if (runId) url.searchParams.set("run", runId);
+  else url.searchParams.delete("run");
+  history.replaceState(null, "", url);
+}
+
+function getSelectedRun() {
+  if (!runData) return null;
+  const id = selectedRunId || getRunIdFromUrl() || runData.selected_run_id || runData.selected_run?.run_id;
+  if (id && runData.run_panels?.[id]) return runData.run_panels[id];
+  return runData.selected_run;
+}
+
+function maybeNotifyPlatform(platform) {
+  if (platformLoading || !platform) return;
+  const cls = platform.cls;
+  if (lastPlatformCls !== "down" && cls === "down") {
+    if (Notification.permission === "granted") {
+      new Notification("Tinker platform outage", {
+        body: platform.text,
+        icon: "./favicon.svg",
+      });
+    } else if (!notifyPermissionAsked && Notification.permission === "default") {
+      notifyPermissionAsked = true;
+    }
+  }
+  lastPlatformCls = cls;
+}
+
+function renderSiteTop() {
+  return `
+    <nav class="site-top" aria-label="Site">
+      <a class="site-back" href="https://enaguthi.com/">← enaguthi.com</a>
+      <span class="site-eyebrow">Built by Abhishek Enaguthi</span>
+      <div class="site-top-links">
+        <a href="#story">Story</a>
+        <a href="#run">Dashboard</a>
+        <a href="https://github.com/Abhishek21g/tinker-workbench" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </nav>`;
+}
+
+function renderStorySection() {
+  return `
+    <section class="story-section" id="story">
+      <button type="button" class="expand-btn expand-btn-block story-toggle" data-toggle="story">
+        ${storyExpanded ? "Hide problem & solution" : "What is this? Problem, solution & walkthrough"}
+      </button>
+      <div class="${storyExpanded ? "" : "is-hidden"}">
+        <div class="story-grid">
+          <article class="story-card">
+            <span class="story-label">Problem</span>
+            <p>Tinker runs scatter signal across files. You burn credits re-running because you cannot tell if the platform, your loss curve, budget, or checkpoint is the blocker.</p>
+          </article>
+          <article class="story-card">
+            <span class="story-label">Solution</span>
+            <p><strong>Tinker Workbench</strong> is a local-first harness: plan, run, doctor, probe, export. This dashboard composes your run with live <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">tinker-status</a> so you know what to do next.</p>
+          </article>
+        </div>
+        <div class="onboarding">
+          <div class="section-head">
+            <div class="section-title">Walkthrough</div>
+            <div class="section-sub">5 steps</div>
+          </div>
+          <div class="tabs tour-tabs">
+            ${Object.keys(TOUR_STEPS)
+              .map(
+                (key) =>
+                  `<button type="button" class="tab tour-tab ${key === activeTour ? "active" : ""}" data-tour="${key}">${TOUR_STEPS[key].title}</button>`
+              )
+              .join("")}
+          </div>
+          <div class="tour-pane">
+            <h3 class="tour-pane-title">${TOUR_STEPS[activeTour].title}</h3>
+            <div class="tour-pane-body">${TOUR_STEPS[activeTour].body}</div>
+          </div>
+        </div>
+      </div>
+    </section>`;
+}
+
+function renderNotifyBanner(platform) {
+  if (Notification.permission !== "default" || !platform || platform.cls === "") return "";
+  return `<p class="notify-banner">
+      <button type="button" class="expand-btn" data-action="notify">Enable alerts</button>
+      when Tinker platform goes down.
+    </p>`;
+}
 
 function pctStr(p) {
   return p === null || p === undefined ? NA : `${p.toFixed(2)}%`;
@@ -614,9 +746,9 @@ function renderCheckpointSection(run) {
 function renderRunsList(runs, selectedId) {
   if (!runs || runs.length <= 1) return "";
   const rows = runs
-    .slice(0, 6)
+    .slice(0, 8)
     .map(
-      (r) => `<tr class="${r.run_id === selectedId ? "selected-run" : ""}">
+      (r) => `<tr class="run-row ${r.run_id === selectedId ? "selected-run" : ""}" data-run-id="${r.run_id}" role="button" tabindex="0">
       <td>${r.name || r.run_id}</td>
       <td>${r.backend || NA}</td>
       <td class="${r.status === "completed" ? "good" : r.status === "failed" ? "bad" : "warn"}">${r.status}</td>
@@ -628,7 +760,7 @@ function renderRunsList(runs, selectedId) {
     <section class="runs-section">
       <div class="section-head">
         <div class="section-title">Recent runs</div>
-        <div class="section-sub">${selectedId}</div>
+        <div class="section-sub">click to switch</div>
       </div>
       <table class="uptime-table">
         <thead><tr><th>Run</th><th>Backend</th><th>Status</th><th>Loss</th></tr></thead>
@@ -638,8 +770,9 @@ function renderRunsList(runs, selectedId) {
 }
 
 function render() {
-  const run = runData?.selected_run;
+  const run = getSelectedRun();
   const platform = platformOverall();
+  maybeNotifyPlatform(platform);
   const runO = runOverall(run);
   const budgetO = budgetOverall(run);
   const checkpointO = checkpointOverall(run);
@@ -652,6 +785,7 @@ function render() {
       : platform.text;
 
   document.getElementById("app").innerHTML = `
+    ${renderSiteTop()}
     <header>
       <h1>Tinker Workbench</h1>
       <p class="tagline">Is my run healthy? Can I afford the next step? Can I trust this checkpoint? Is Tinker up?</p>
@@ -661,6 +795,8 @@ function render() {
         <span class="ts">Updated ${fmtTime(generated)} | ${platformNote}</span>
       </div>
     </header>
+    ${renderNotifyBanner(platform)}
+    ${renderStorySection()}
     ${renderWorkbenchSummary(run, runO, budgetO, checkpointO, platform)}
     ${renderNextSteps(run, platform, runO, checkpointO)}
     <p class="jump-links">
@@ -694,8 +830,36 @@ function render() {
       if (key === "incidents") incidentsExpanded = !incidentsExpanded;
       if (key === "findings") findingsExpanded = !findingsExpanded;
       if (key === "platform") platformDetailsExpanded = !platformDetailsExpanded;
+      if (key === "story") storyExpanded = !storyExpanded;
       render();
     });
+  });
+
+  document.querySelectorAll("[data-tour]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      activeTour = btn.dataset.tour;
+      render();
+    });
+  });
+
+  document.querySelectorAll(".run-row[data-run-id]").forEach((row) => {
+    const pick = () => {
+      selectedRunId = row.dataset.runId;
+      setRunIdInUrl(selectedRunId);
+      render();
+    };
+    row.addEventListener("click", pick);
+    row.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        pick();
+      }
+    });
+  });
+
+  document.querySelector("[data-action='notify']")?.addEventListener("click", async () => {
+    await Notification.requestPermission();
+    render();
   });
 
   document.querySelectorAll("[data-copy]").forEach((btn) => {
@@ -718,6 +882,7 @@ function render() {
 async function load() {
   try {
     runData = await fetchRunData();
+    selectedRunId = getRunIdFromUrl();
     render();
     fetchPlatformSummary()
       .then((data) => {
