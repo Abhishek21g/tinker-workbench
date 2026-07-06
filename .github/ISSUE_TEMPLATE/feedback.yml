@@ -1,0 +1,19 @@
+---
+name: Feedback
+about: UX, docs, or integration feedback
+title: "[feedback] "
+labels: feedback
+---
+
+**What were you trying to do?**
+
+
+**What happened?**
+
+
+**Dashboard / CLI?**
+- [ ] Live dashboard (https://enaguthi.com/tinker-workbench/site/)
+- [ ] CLI (`tinker-workbench ...`)
+
+**Screenshots or run ID (if any)**
+

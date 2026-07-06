@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Live dashboard
+    url: https://enaguthi.com/tinker-workbench/site/
+    about: Operational dashboard (run health, budget, checkpoint, tinker-status)
+  - name: Tinker upstream
+    url: https://github.com/thinking-machines-lab/tinker
+    about: Official Tinker SDK repo

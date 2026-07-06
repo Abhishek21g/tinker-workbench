@@ -792,7 +792,7 @@ function render() {
       <div class="overall">
         <div class="dot ${header.cls}"></div>
         ${header.text}
-        <span class="ts">Updated ${fmtTime(generated)} | ${platformNote}</span>
+        <span class="ts">Run data ${fmtTime(generated)} | ${platformNote}</span>
       </div>
     </header>
     ${renderNotifyBanner(platform)}

@@ -1,103 +1,119 @@
 # Tinker Workbench
 
-A local-first lab assistant for [Tinker](https://github.com/thinking-machines-lab/tinker)
-post-training experiments: it **plans** a run before any tokens are spent,
-**runs** it with a complete artifact trail, then **observes**, **debugs**, and
-**evaluates** entirely from those artifacts.
+**Operational dashboard + experiment harness for [Tinker](https://github.com/thinking-machines-lab/tinker) post-training.**
+
+[![CI](https://github.com/Abhishek21g/tinker-workbench/actions/workflows/ci.yml/badge.svg)](https://github.com/Abhishek21g/tinker-workbench/actions/workflows/ci.yml)
+[![Live dashboard](https://img.shields.io/badge/dashboard-live-2da44e)](https://enaguthi.com/tinker-workbench/site/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/)
+
+### [→ Live dashboard](https://enaguthi.com/tinker-workbench/site/) · [About](https://enaguthi.com/tinker-workbench/site/about.html) · [Issues](https://github.com/Abhishek21g/tinker-workbench/issues)
+
+---
+
+## What it answers
+
+| Question | Layer | How |
+|----------|-------|-----|
+| Is **my run** healthy? | Workbench | `doctor`, loss metrics, findings |
+| Can I **afford** the next step? | Workbench | `plan`, token/cost estimates |
+| Can I **trust** this checkpoint? | Workbench | `probe` (sampler readiness, [tinker#44](https://github.com/thinking-machines-lab/tinker/issues/44)) |
+| Is **Tinker** up? | [tinker-status](https://lokashrinav.github.io/tinker-status/) | Live integration — we compose, not duplicate |
+
+**Stack completion**, not "you don't have this." Workbench composes with [tinker-status](https://lokashrinav.github.io/tinker-status/), [tinkpad](https://github.com/thinking-machines-lab/tinker-cookbook/issues/551), and cookbook tooling into one pre-spend → mid-run → post-run loop.
+
+---
+
+## What we built
 
 ```
-plan ──► run ──► status / doctor / compare / report
-tokens & cost      artifact trail       post-hoc, re-run nothing
+plan ──► run ──► doctor / probe / report ──► export-dashboard ──► live site
 ```
 
-- **Plan before you pay.** Token, checkpoint-storage, and cost estimates plus
-  a risk list, from the same config that runs the experiment.
-- **Every run leaves a trail.** Ordered events, per-step metrics, checkpoints,
-  eval scores, and a final summary — enough to debug or reproduce any run.
-- **`doctor` finds the failure.** NaN losses, divergence, stalls, checkpoint
-  gaps, budget overruns, and eval regressions, each with a suggested action
-  and a CI-friendly exit code.
-- **Two free backends.** Develop and test the whole workflow with the
-  deterministic mock backend, or run a real tiny neural LM locally with
-  `mode: local`; the real SDK adapter implements the same protocol.
-- **Reliability layer.** Pin a blessed run as a `baseline`, re-run it later,
-  and `drift` flags regressions (loss, evals, cost) with CI exit codes —
-  recipe-regression testing for post-training. `conformance` catches silent
-  renderer mismatches (token-exact, adversarial probe corpus) before a
-  distillation run wastes money.
+| Piece | What it does |
+|-------|----------------|
+| **CLI** | `plan`, `run`, `status`, `doctor`, `probe`, `compare`, `report`, `baseline`, `drift` |
+| **Backends** | Mock (no credits), local neural LM, Tinker SDK adapter |
+| **Artifacts** | Events, metrics, checkpoints, evals — full trail per run |
+| **Dashboard** | Static export + live tinker-status; [enaguthi.com/tinker-workbench/site/](https://enaguthi.com/tinker-workbench/site/) |
+
+---
 
 ## Quick start
 
 ```bash
-python3 -m venv .venv && .venv/bin/pip install -e ".[local]" pyyaml
-source .venv/bin/activate
+python3 -m venv .venv && source .venv/bin/activate
+pip install -e ".[local]" pyyaml
 
-# 1. Plan: tokens, storage, cost, risks — nothing runs yet
+# Plan before you pay
 tinker-workbench plan configs/memorization_sft.yaml
 
-# 2. Run the three-arm memorization study (mock backend, deterministic)
-tinker-workbench run configs/memorization_sft.yaml \
-                     configs/memorization_rl_dense.yaml \
-                     configs/memorization_rl_terminal.yaml
+# Run (mock backend — no API key)
+tinker-workbench run configs/memorization_sft.yaml
 
-# 3. Compare the arms
-tinker-workbench compare runs/*memorization*
+# Debug + checkpoint trust
+tinker-workbench doctor latest
+tinker-workbench probe latest
 
-# 4. Run the no-credit local neural LM version
-tinker-workbench run configs/memorization_local.yaml
-
-# 5. Full report for one run
-tinker-workbench report latest
+# Publish to the live dashboard
+tinker-workbench export-dashboard latest
 ```
 
-Debugging workflow:
+Real Tinker runs: set `mode: tinker` in config + `TINKER_API_KEY`.
+
+---
+
+## Live dashboard
+
+**https://enaguthi.com/tinker-workbench/site/**
+
+- Workbench panels first (run, budget, checkpoint)
+- Live [tinker-status](https://lokashrinav.github.io/tinker-status/) appendix (uptime, incidents)
+- Run switching, next-step CLI hints, collapsible platform details
+
+Refresh local data then publish:
 
 ```bash
-tinker-workbench run configs/failure_divergence.yaml
-tinker-workbench doctor latest
-# [CRITICAL] loss_divergence: Loss is diverging: best 1.2743 around step 15, ...
-#     -> Lower training.learning_rate or switch lr_schedule to cosine/linear decay ...
+tinker-workbench export-dashboard latest
+./scripts/publish-site.sh   # syncs to enaguthi.com
 ```
 
-Real Tinker runs use the same configs with `mode: tinker` (or `--backend
-tinker`) and require the `tinker` SDK plus `TINKER_API_KEY`. Local neural runs
-use `mode: local` and require the `local` extra (`pip install -e ".[local]"`).
+---
 
-## The memorization study
+## Memorization study
 
-The shipped configs implement the workflow for the
-[tinker-project-ideas](https://github.com/thinking-machines-lab/tinker-project-ideas)
-memorization empirical study: identical data and budget across SFT, dense-reward
-RL, and terminal-reward RL arms, with `bits_recovered` and `exact_match`
-evals at every checkpoint and `compare` as the study readout.
+Shipped configs for the [tinker-project-ideas](https://github.com/thinking-machines-lab/tinker-project-ideas) memorization empirical study — SFT vs dense RL vs terminal RL, same budget, `compare` readout.
+
+---
 
 ## Docs
 
-- [site/index.html](site/index.html) — live DX dashboard (tinker-status + run health + budget + checkpoint)
-- [site/about.html](site/about.html) — product overview and research context
+| Doc | Contents |
+|-----|----------|
+| [docs/commands.md](docs/commands.md) | Full CLI reference |
+| [docs/architecture.md](docs/architecture.md) | Design and rationale |
+| [docs/upstream-collab.md](docs/upstream-collab.md) | Upstream issue/PR targets |
+| [site/about.html](site/about.html) | Product overview |
 
-### Publish to enaguthi.com
-
-`enaguthi.com/tinker-workbench/` is served from `Abhishek21g.github.io` (gh-pages), not this repo directly:
-
-```bash
-tinker-workbench export-dashboard latest   # refresh run data
-./scripts/publish-site.sh                # sync site/ and push gh-pages
-```
-- [docs/commands.md](docs/commands.md) — full command reference
-- [docs/architecture.md](docs/architecture.md) — design and rationale
-- [docs/upstream-collab.md](docs/upstream-collab.md) — Tinker upstream collaboration targets
-- [docs/progress-report-2026-07-04.md](docs/progress-report-2026-07-04.md) — current outreach and build report
+---
 
 ## Development
 
 ```bash
-.venv/bin/pip install -e ".[local]" pytest ruff pyyaml
-pytest tests/ -q       # 76 tests
+pip install -e ".[local]" pytest ruff pyyaml
+pytest tests/ -q
 ruff check tinker_workbench/ tests/
 ```
 
-CI runs lint, tests, and a CLI smoke test on Python 3.11–3.13.
+CI: lint + tests + CLI smoke (including `probe` + `export-dashboard`) on Python 3.11–3.13.
 
-Project coordination lives in `agent/EXECUTION_BOARD.md` and the
-[issue tracker](https://github.com/Abhishek21g/tinker-workbench/issues).
+---
+
+## Collaborate
+
+Feedback and PRs welcome — especially on dashboard UX, upstream alignment ([tinker#44](https://github.com/thinking-machines-lab/tinker/issues/44), [cookbook#551](https://github.com/thinking-machines-lab/tinker-cookbook/issues/551)), and tinker-status integration.
+
+Open an [issue](https://github.com/Abhishek21g/tinker-workbench/issues) or comment on an upstream thread with a link to this repo.
+
+---
+
+Built by [Abhishek Enaguthi](https://enaguthi.com/) · BS/MS CS & AI, Oregon State University
