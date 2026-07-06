@@ -1,89 +1,41 @@
 {
-  "generated_at": "2026-07-06T20:49:22.772626+00:00",
+  "generated_at": "2026-07-06T20:54:52.416286+00:00",
   "runs": [
     {
-      "run_id": "20260706T005210Z-memorization-sft",
+      "run_id": "20260706T205451Z-memorization-local",
+      "name": "memorization-local",
+      "method": "sft",
+      "status": "completed",
+      "backend": "local",
+      "final_loss": 0.0026279684371374686
+    },
+    {
+      "run_id": "20260706T205451Z-memorization-sft",
       "name": "memorization-sft",
       "method": "sft",
       "status": "completed",
       "backend": "mock",
       "final_loss": 0.38189626889050066
-    },
-    {
-      "run_id": "20260704T190035Z-memorization-local",
-      "name": "memorization-local",
-      "method": "sft",
-      "status": "completed",
-      "backend": "local",
-      "final_loss": 0.0026279684371374413
-    },
-    {
-      "run_id": "20260704T185937Z-failure-divergence-local",
-      "name": "failure-divergence-local",
-      "method": "sft",
-      "status": "completed",
-      "backend": "local",
-      "final_loss": 12.253346455234256
-    },
-    {
-      "run_id": "20260704T185936Z-memorization-local",
-      "name": "memorization-local",
-      "method": "sft",
-      "status": "completed",
-      "backend": "local",
-      "final_loss": 0.0026279684371374413
-    },
-    {
-      "run_id": "20260704T184226Z-memorization-rl-terminal",
-      "name": "memorization-rl-terminal",
-      "method": "rl_terminal_reward",
-      "status": "completed",
-      "backend": "mock",
-      "final_loss": 1.2701750926592044
-    },
-    {
-      "run_id": "20260704T184226Z-memorization-rl-dense",
-      "name": "memorization-rl-dense",
-      "method": "rl_dense_reward",
-      "status": "completed",
-      "backend": "mock",
-      "final_loss": 0.7330058055086952
-    },
-    {
-      "run_id": "20260704T184225Z-memorization-sft",
-      "name": "memorization-sft",
-      "method": "sft",
-      "status": "completed",
-      "backend": "mock",
-      "final_loss": 0.38189626889050066
-    },
-    {
-      "run_id": "20260704T184217Z-memorization-local",
-      "name": "memorization-local",
-      "method": "sft",
-      "status": "completed",
-      "backend": "local",
-      "final_loss": 0.0026279684371374413
     }
   ],
-  "selected_run_id": "20260706T005210Z-memorization-sft",
+  "selected_run_id": "20260706T205451Z-memorization-local",
   "selected_run": {
-    "run_id": "20260706T005210Z-memorization-sft",
-    "run_dir": "runs/20260706T005210Z-memorization-sft",
+    "run_id": "20260706T205451Z-memorization-local",
+    "run_dir": "runs/20260706T205451Z-memorization-local",
     "status": "completed",
     "failure_reason": null,
-    "backend": "mock",
+    "backend": "local",
     "method": "sft",
-    "steps_completed": 40,
-    "steps_planned": 40,
-    "final_loss": 0.38189626889050066,
+    "steps_completed": 200,
+    "steps_planned": 200,
+    "final_loss": 0.0026279684371374686,
     "tokens": {
-      "train": 15360,
-      "sample": 4096
+      "train": 14400,
+      "sample": 2048
     },
     "plan": {
-      "name": "memorization-sft",
-      "mode": "mock",
+      "name": "memorization-local",
+      "mode": "local",
       "method": "sft",
       "model": {
         "base_model": "meta-llama/Llama-3.2-1B",
@@ -91,13 +43,13 @@
       },
       "data": {
         "source": "builtin:memorization",
-        "train_examples": 128,
-        "eval_examples": 64
+        "train_examples": 32,
+        "eval_examples": 16
       },
       "schedule": {
-        "steps": 40,
+        "steps": 200,
         "batch_size": 8,
-        "learning_rate": 0.0001,
+        "learning_rate": 0.03,
         "lr_schedule": "constant",
         "seed": 7
       },
@@ -106,26 +58,26 @@
         "bits_recovered"
       ],
       "budget": {
-        "planned_train_tokens": 15360,
-        "planned_sample_tokens": 4096,
-        "planned_total_tokens": 19456,
-        "max_train_tokens": 250000,
-        "max_sample_tokens": 50000,
+        "planned_train_tokens": 76800,
+        "planned_sample_tokens": 2048,
+        "planned_total_tokens": 78848,
+        "max_train_tokens": 0,
+        "max_sample_tokens": 0,
         "checkpoints": 4,
-        "checkpoint_storage_gb": 2.0,
+        "checkpoint_storage_gb": 0.004,
         "estimated_usd": null,
         "max_usd": null
       },
       "risks": []
     },
     "budget": {
-      "planned_train_tokens": 15360,
-      "planned_sample_tokens": 4096,
-      "planned_total_tokens": 19456,
-      "max_train_tokens": 250000,
-      "max_sample_tokens": 50000,
+      "planned_train_tokens": 76800,
+      "planned_sample_tokens": 2048,
+      "planned_total_tokens": 78848,
+      "max_train_tokens": 0,
+      "max_sample_tokens": 0,
       "checkpoints": 4,
-      "checkpoint_storage_gb": 2.0,
+      "checkpoint_storage_gb": 0.004,
       "estimated_usd": null,
       "max_usd": null
     },
@@ -133,256 +85,896 @@
     "metrics": [
       {
         "step": 0,
-        "loss": 4.010744694509854
+        "loss": 3.4861211167557755
       },
       {
         "step": 1,
-        "loss": 3.669505946528751
+        "loss": 1.5635752669857967
       },
       {
         "step": 2,
-        "loss": 3.4127972905640522
+        "loss": 0.7877535779889513
       },
       {
         "step": 3,
-        "loss": 3.128161121261656
+        "loss": 1.0163920153709065
       },
       {
         "step": 4,
-        "loss": 2.9080756935485828
+        "loss": 1.0034904892920096
       },
       {
         "step": 5,
-        "loss": 2.7388082207139868
+        "loss": 0.6677715841152091
       },
       {
         "step": 6,
-        "loss": 2.503167580146923
+        "loss": 0.6243544795848168
       },
       {
         "step": 7,
-        "loss": 2.274130963595411
+        "loss": 0.6549175846072399
       },
       {
         "step": 8,
-        "loss": 2.1541875086106894
+        "loss": 0.640399858938085
       },
       {
         "step": 9,
-        "loss": 1.998828386319153
+        "loss": 0.5901133179300408
       },
       {
         "step": 10,
-        "loss": 1.817278658124859
+        "loss": 0.6186198406631868
       },
       {
         "step": 11,
-        "loss": 1.6458758402729214
+        "loss": 0.6108710760130671
       },
       {
         "step": 12,
-        "loss": 1.614137939058115
+        "loss": 0.6280822531682928
       },
       {
         "step": 13,
-        "loss": 1.478042313983924
+        "loss": 0.6127341439134807
       },
       {
         "step": 14,
-        "loss": 1.3443725431456277
+        "loss": 0.757080366745524
       },
       {
         "step": 15,
-        "loss": 1.3409194641393436
+        "loss": 0.6294540839148665
       },
       {
         "step": 16,
-        "loss": 1.2013688661624915
+        "loss": 0.6660876619979312
       },
       {
         "step": 17,
-        "loss": 1.0954121747536893
+        "loss": 0.865575714682406
       },
       {
         "step": 18,
-        "loss": 1.0209171311715561
+        "loss": 0.5883750302796442
       },
       {
         "step": 19,
-        "loss": 1.005845927366114
+        "loss": 0.7586507420047511
       },
       {
         "step": 20,
-        "loss": 0.9820617559893285
+        "loss": 0.6830207162719631
       },
       {
         "step": 21,
-        "loss": 0.8475395917623472
+        "loss": 0.7119124355958262
       },
       {
         "step": 22,
-        "loss": 0.818214875015438
+        "loss": 0.6170315675288313
       },
       {
         "step": 23,
-        "loss": 0.7445608677204555
+        "loss": 0.5865136002227256
       },
       {
         "step": 24,
-        "loss": 0.7257915931822909
+        "loss": 0.6353117879252852
       },
       {
         "step": 25,
-        "loss": 0.7097077691630388
+        "loss": 0.5823016609423615
       },
       {
         "step": 26,
-        "loss": 0.6077112060897415
+        "loss": 0.5796984184380995
       },
       {
         "step": 27,
-        "loss": 0.6260691950027353
+        "loss": 0.5710076976906048
       },
       {
         "step": 28,
-        "loss": 0.532890459853455
+        "loss": 0.5981477680191558
       },
       {
         "step": 29,
-        "loss": 0.5459329078769937
+        "loss": 0.6613577599225218
       },
       {
         "step": 30,
-        "loss": 0.48185931688698813
+        "loss": 0.5682455400674501
       },
       {
         "step": 31,
-        "loss": 0.5598037329072931
+        "loss": 0.6396256160042614
       },
       {
         "step": 32,
-        "loss": 0.4267892711296788
+        "loss": 0.5721140624002247
       },
       {
         "step": 33,
-        "loss": 0.4155538222902293
+        "loss": 0.7054008944745019
       },
       {
         "step": 34,
-        "loss": 0.40042963397644854
+        "loss": 0.5240567207694306
       },
       {
         "step": 35,
-        "loss": 0.4294465232860904
+        "loss": 0.5480878775250495
       },
       {
         "step": 36,
-        "loss": 0.3606626421963998
+        "loss": 0.5737838584179555
       },
       {
         "step": 37,
-        "loss": 0.4081351546075222
+        "loss": 0.5672832197244522
       },
       {
         "step": 38,
-        "loss": 0.3293779596180727
+        "loss": 0.5025062420858207
       },
       {
         "step": 39,
-        "loss": 0.38189626889050066
+        "loss": 0.5009689468302211
+      },
+      {
+        "step": 40,
+        "loss": 0.5113152922263274
+      },
+      {
+        "step": 41,
+        "loss": 0.5728742877258353
+      },
+      {
+        "step": 42,
+        "loss": 0.5155370691480068
+      },
+      {
+        "step": 43,
+        "loss": 0.49177816141776315
+      },
+      {
+        "step": 44,
+        "loss": 0.4678397751604994
+      },
+      {
+        "step": 45,
+        "loss": 0.6323371459137136
+      },
+      {
+        "step": 46,
+        "loss": 0.45474139402452224
+      },
+      {
+        "step": 47,
+        "loss": 0.45694226994942355
+      },
+      {
+        "step": 48,
+        "loss": 0.4610612540185731
+      },
+      {
+        "step": 49,
+        "loss": 0.5416433893092601
+      },
+      {
+        "step": 50,
+        "loss": 0.44420663367968044
+      },
+      {
+        "step": 51,
+        "loss": 0.3597687659164428
+      },
+      {
+        "step": 52,
+        "loss": 0.4295379457898878
+      },
+      {
+        "step": 53,
+        "loss": 0.4635484609735108
+      },
+      {
+        "step": 54,
+        "loss": 0.4103754869211243
+      },
+      {
+        "step": 55,
+        "loss": 0.350114992953096
+      },
+      {
+        "step": 56,
+        "loss": 0.35634641375052084
+      },
+      {
+        "step": 57,
+        "loss": 0.4047867309135734
+      },
+      {
+        "step": 58,
+        "loss": 0.4073561650370052
+      },
+      {
+        "step": 59,
+        "loss": 0.2807189727041507
+      },
+      {
+        "step": 60,
+        "loss": 0.3352243527341084
+      },
+      {
+        "step": 61,
+        "loss": 0.4458366712278464
+      },
+      {
+        "step": 62,
+        "loss": 0.3514364360275399
+      },
+      {
+        "step": 63,
+        "loss": 0.3294738714761849
+      },
+      {
+        "step": 64,
+        "loss": 0.31870434911500023
+      },
+      {
+        "step": 65,
+        "loss": 0.3400395984596757
+      },
+      {
+        "step": 66,
+        "loss": 0.37715603000712794
+      },
+      {
+        "step": 67,
+        "loss": 0.19789897587177496
+      },
+      {
+        "step": 68,
+        "loss": 0.266854158544055
+      },
+      {
+        "step": 69,
+        "loss": 0.33760797231474293
+      },
+      {
+        "step": 70,
+        "loss": 0.2691579116090343
+      },
+      {
+        "step": 71,
+        "loss": 0.15832666358031386
+      },
+      {
+        "step": 72,
+        "loss": 0.2655743287269265
+      },
+      {
+        "step": 73,
+        "loss": 0.2524635562555645
+      },
+      {
+        "step": 74,
+        "loss": 0.25260316661362836
+      },
+      {
+        "step": 75,
+        "loss": 0.16310305181245802
+      },
+      {
+        "step": 76,
+        "loss": 0.21872362971676967
+      },
+      {
+        "step": 77,
+        "loss": 0.17633397189053102
+      },
+      {
+        "step": 78,
+        "loss": 0.2401736062543125
+      },
+      {
+        "step": 79,
+        "loss": 0.11223467604927825
+      },
+      {
+        "step": 80,
+        "loss": 0.16548078237845387
+      },
+      {
+        "step": 81,
+        "loss": 0.14776616675299584
+      },
+      {
+        "step": 82,
+        "loss": 0.19322650161031463
+      },
+      {
+        "step": 83,
+        "loss": 0.09092921644926541
+      },
+      {
+        "step": 84,
+        "loss": 0.14313719977686346
+      },
+      {
+        "step": 85,
+        "loss": 0.12103088276389526
+      },
+      {
+        "step": 86,
+        "loss": 0.18374815034553935
+      },
+      {
+        "step": 87,
+        "loss": 0.05022274665662843
+      },
+      {
+        "step": 88,
+        "loss": 0.10449030646864158
+      },
+      {
+        "step": 89,
+        "loss": 0.12032448062640716
+      },
+      {
+        "step": 90,
+        "loss": 0.12244819012261801
+      },
+      {
+        "step": 91,
+        "loss": 0.053865923159363595
+      },
+      {
+        "step": 92,
+        "loss": 0.10520199023827398
+      },
+      {
+        "step": 93,
+        "loss": 0.08366791932546558
+      },
+      {
+        "step": 94,
+        "loss": 0.10171213042143279
+      },
+      {
+        "step": 95,
+        "loss": 0.031488664484886665
+      },
+      {
+        "step": 96,
+        "loss": 0.08880061074401525
+      },
+      {
+        "step": 97,
+        "loss": 0.07844668310652253
+      },
+      {
+        "step": 98,
+        "loss": 0.09918166489758524
+      },
+      {
+        "step": 99,
+        "loss": 0.02686319491407353
+      },
+      {
+        "step": 100,
+        "loss": 0.06169841617319302
+      },
+      {
+        "step": 101,
+        "loss": 0.05504978893278815
+      },
+      {
+        "step": 102,
+        "loss": 0.08121576361869356
+      },
+      {
+        "step": 103,
+        "loss": 0.02642317789055794
+      },
+      {
+        "step": 104,
+        "loss": 0.04708061173302003
+      },
+      {
+        "step": 105,
+        "loss": 0.040458826066075614
+      },
+      {
+        "step": 106,
+        "loss": 0.0689642890754176
+      },
+      {
+        "step": 107,
+        "loss": 0.01825228830116142
+      },
+      {
+        "step": 108,
+        "loss": 0.04059816536247439
+      },
+      {
+        "step": 109,
+        "loss": 0.03604848735614622
+      },
+      {
+        "step": 110,
+        "loss": 0.055518486334405114
+      },
+      {
+        "step": 111,
+        "loss": 0.017909914613989792
+      },
+      {
+        "step": 112,
+        "loss": 0.035447377715314615
+      },
+      {
+        "step": 113,
+        "loss": 0.024713296168426616
+      },
+      {
+        "step": 114,
+        "loss": 0.046860880500169136
+      },
+      {
+        "step": 115,
+        "loss": 0.01821238071701334
+      },
+      {
+        "step": 116,
+        "loss": 0.03191387203277726
+      },
+      {
+        "step": 117,
+        "loss": 0.021949341303070552
+      },
+      {
+        "step": 118,
+        "loss": 0.041225378550626086
+      },
+      {
+        "step": 119,
+        "loss": 0.012227123170906622
+      },
+      {
+        "step": 120,
+        "loss": 0.024626557588879553
+      },
+      {
+        "step": 121,
+        "loss": 0.02221165959173653
+      },
+      {
+        "step": 122,
+        "loss": 0.03621329526425037
+      },
+      {
+        "step": 123,
+        "loss": 0.010068145511996751
+      },
+      {
+        "step": 124,
+        "loss": 0.02136932553759547
+      },
+      {
+        "step": 125,
+        "loss": 0.01891996815172852
+      },
+      {
+        "step": 126,
+        "loss": 0.030759109083423695
+      },
+      {
+        "step": 127,
+        "loss": 0.00927552036186522
+      },
+      {
+        "step": 128,
+        "loss": 0.019982101121997456
+      },
+      {
+        "step": 129,
+        "loss": 0.016172192275016116
+      },
+      {
+        "step": 130,
+        "loss": 0.0243141406150522
+      },
+      {
+        "step": 131,
+        "loss": 0.008604328807937748
+      },
+      {
+        "step": 132,
+        "loss": 0.018555078217078896
+      },
+      {
+        "step": 133,
+        "loss": 0.014816464257718712
+      },
+      {
+        "step": 134,
+        "loss": 0.020172361591738033
+      },
+      {
+        "step": 135,
+        "loss": 0.007807980683508177
+      },
+      {
+        "step": 136,
+        "loss": 0.017309504954693453
+      },
+      {
+        "step": 137,
+        "loss": 0.013509019368876198
+      },
+      {
+        "step": 138,
+        "loss": 0.018339298993754305
+      },
+      {
+        "step": 139,
+        "loss": 0.006937489663523868
+      },
+      {
+        "step": 140,
+        "loss": 0.015270022300685403
+      },
+      {
+        "step": 141,
+        "loss": 0.012049743600477314
+      },
+      {
+        "step": 142,
+        "loss": 0.016823087523544906
+      },
+      {
+        "step": 143,
+        "loss": 0.006334348242772065
+      },
+      {
+        "step": 144,
+        "loss": 0.013881368963331177
+      },
+      {
+        "step": 145,
+        "loss": 0.01103179613929525
+      },
+      {
+        "step": 146,
+        "loss": 0.01543518200882251
+      },
+      {
+        "step": 147,
+        "loss": 0.005780182006069048
+      },
+      {
+        "step": 148,
+        "loss": 0.012785827820923417
+      },
+      {
+        "step": 149,
+        "loss": 0.01033484110225947
+      },
+      {
+        "step": 150,
+        "loss": 0.014206157687816289
+      },
+      {
+        "step": 151,
+        "loss": 0.005192250641143777
+      },
+      {
+        "step": 152,
+        "loss": 0.011808645653929547
+      },
+      {
+        "step": 153,
+        "loss": 0.009806073331892885
+      },
+      {
+        "step": 154,
+        "loss": 0.013234104415494746
+      },
+      {
+        "step": 155,
+        "loss": 0.004635022471913018
+      },
+      {
+        "step": 156,
+        "loss": 0.01070145946379136
+      },
+      {
+        "step": 157,
+        "loss": 0.009531933995491957
+      },
+      {
+        "step": 158,
+        "loss": 0.012283764968850851
+      },
+      {
+        "step": 159,
+        "loss": 0.004233080106324931
+      },
+      {
+        "step": 160,
+        "loss": 0.009927829069345204
+      },
+      {
+        "step": 161,
+        "loss": 0.008674898486380324
+      },
+      {
+        "step": 162,
+        "loss": 0.011329186614567416
+      },
+      {
+        "step": 163,
+        "loss": 0.004002942929964425
+      },
+      {
+        "step": 164,
+        "loss": 0.009452876026861198
+      },
+      {
+        "step": 165,
+        "loss": 0.007973580026925307
+      },
+      {
+        "step": 166,
+        "loss": 0.010582634550334138
+      },
+      {
+        "step": 167,
+        "loss": 0.0038112044243286325
+      },
+      {
+        "step": 168,
+        "loss": 0.008754051876782607
+      },
+      {
+        "step": 169,
+        "loss": 0.007606377656181375
+      },
+      {
+        "step": 170,
+        "loss": 0.009960056508166715
+      },
+      {
+        "step": 171,
+        "loss": 0.0036033285960666095
+      },
+      {
+        "step": 172,
+        "loss": 0.008129261946318455
+      },
+      {
+        "step": 173,
+        "loss": 0.007299112872334881
+      },
+      {
+        "step": 174,
+        "loss": 0.009370218274617046
+      },
+      {
+        "step": 175,
+        "loss": 0.003397068053968553
+      },
+      {
+        "step": 176,
+        "loss": 0.0075849145230591376
+      },
+      {
+        "step": 177,
+        "loss": 0.006974996148235719
+      },
+      {
+        "step": 178,
+        "loss": 0.008790262356194468
+      },
+      {
+        "step": 179,
+        "loss": 0.0032140686371162786
+      },
+      {
+        "step": 180,
+        "loss": 0.007106163504961972
+      },
+      {
+        "step": 181,
+        "loss": 0.006696012048622567
+      },
+      {
+        "step": 182,
+        "loss": 0.008244828596591487
+      },
+      {
+        "step": 183,
+        "loss": 0.0030656286907760266
+      },
+      {
+        "step": 184,
+        "loss": 0.006655940651560027
+      },
+      {
+        "step": 185,
+        "loss": 0.006441860509545355
+      },
+      {
+        "step": 186,
+        "loss": 0.007537095259738693
+      },
+      {
+        "step": 187,
+        "loss": 0.0029513415245746894
+      },
+      {
+        "step": 188,
+        "loss": 0.006276225796413518
+      },
+      {
+        "step": 189,
+        "loss": 0.006144914231958719
+      },
+      {
+        "step": 190,
+        "loss": 0.00683679959161631
+      },
+      {
+        "step": 191,
+        "loss": 0.00285789121538027
+      },
+      {
+        "step": 192,
+        "loss": 0.005972956082562973
+      },
+      {
+        "step": 193,
+        "loss": 0.00584069986697735
+      },
+      {
+        "step": 194,
+        "loss": 0.0065401871366033044
+      },
+      {
+        "step": 195,
+        "loss": 0.002754679705621517
+      },
+      {
+        "step": 196,
+        "loss": 0.005649244164195354
+      },
+      {
+        "step": 197,
+        "loss": 0.005597934609675123
+      },
+      {
+        "step": 198,
+        "loss": 0.006285346579153983
+      },
+      {
+        "step": 199,
+        "loss": 0.0026279684371374686
       }
     ],
     "checkpoints": [
       {
-        "step": 9,
-        "path": "mock://20260706T005210Z-memorization-sft/checkpoint-00009",
+        "step": 49,
+        "path": "runs/20260706T205451Z-memorization-local/checkpoints/step-00049.npz",
         "sampler_ready": true
       },
       {
-        "step": 19,
-        "path": "mock://20260706T005210Z-memorization-sft/checkpoint-00019",
+        "step": 99,
+        "path": "runs/20260706T205451Z-memorization-local/checkpoints/step-00099.npz",
         "sampler_ready": true
       },
       {
-        "step": 29,
-        "path": "mock://20260706T005210Z-memorization-sft/checkpoint-00029",
+        "step": 149,
+        "path": "runs/20260706T205451Z-memorization-local/checkpoints/step-00149.npz",
         "sampler_ready": true
       },
       {
-        "step": 39,
-        "path": "mock://20260706T005210Z-memorization-sft/checkpoint-00039",
+        "step": 199,
+        "path": "runs/20260706T205451Z-memorization-local/checkpoints/step-00199.npz",
         "sampler_ready": true
       }
     ],
     "evals": [
       {
-        "step": 9,
+        "step": 49,
         "name": "exact_match",
         "grader": "exact_match",
-        "score": 0.1875,
-        "num_examples": 32,
-        "sample_tokens": 512
+        "score": 0.0,
+        "num_examples": 16,
+        "sample_tokens": 256
       },
       {
-        "step": 9,
+        "step": 49,
         "name": "bits_recovered",
         "grader": "bits_recovered",
-        "score": 0.7844,
-        "num_examples": 32,
-        "sample_tokens": 512
+        "score": 0.7031,
+        "num_examples": 16,
+        "sample_tokens": 256
       },
       {
-        "step": 19,
+        "step": 99,
         "name": "exact_match",
         "grader": "exact_match",
-        "score": 0.375,
-        "num_examples": 32,
-        "sample_tokens": 512
+        "score": 0.9375,
+        "num_examples": 16,
+        "sample_tokens": 256
       },
       {
-        "step": 19,
+        "step": 99,
         "name": "bits_recovered",
         "grader": "bits_recovered",
-        "score": 0.8938,
-        "num_examples": 32,
-        "sample_tokens": 512
+        "score": 0.9844,
+        "num_examples": 16,
+        "sample_tokens": 256
       },
       {
-        "step": 29,
+        "step": 149,
         "name": "exact_match",
         "grader": "exact_match",
-        "score": 0.7188,
-        "num_examples": 32,
-        "sample_tokens": 512
+        "score": 1.0,
+        "num_examples": 16,
+        "sample_tokens": 256
       },
       {
-        "step": 29,
+        "step": 149,
         "name": "bits_recovered",
         "grader": "bits_recovered",
-        "score": 0.9688,
-        "num_examples": 32,
-        "sample_tokens": 512
+        "score": 1.0,
+        "num_examples": 16,
+        "sample_tokens": 256
       },
       {
-        "step": 39,
+        "step": 199,
         "name": "exact_match",
         "grader": "exact_match",
-        "score": 0.8438,
-        "num_examples": 32,
-        "sample_tokens": 512
+        "score": 1.0,
+        "num_examples": 16,
+        "sample_tokens": 256
       },
       {
-        "step": 39,
+        "step": 199,
         "name": "bits_recovered",
         "grader": "bits_recovered",
-        "score": 0.9812,
-        "num_examples": 32,
-        "sample_tokens": 512
+        "score": 1.0,
+        "num_examples": 16,
+        "sample_tokens": 256
       }
     ],
     "probe": {
-      "checkpoint_path": "mock://20260706T005210Z-memorization-sft/checkpoint-00039",
-      "step": 39,
+      "checkpoint_path": "runs/20260706T205451Z-memorization-local/checkpoints/step-00199.npz",
+      "step": 199,
       "sampler_ready": true,
       "adapter_applied": true,
       "native_sampling_ok": true,
@@ -393,9 +985,974 @@
     }
   },
   "run_panels": {
-    "20260706T005210Z-memorization-sft": {
-      "run_id": "20260706T005210Z-memorization-sft",
-      "run_dir": "runs/20260706T005210Z-memorization-sft",
+    "20260706T205451Z-memorization-local": {
+      "run_id": "20260706T205451Z-memorization-local",
+      "run_dir": "runs/20260706T205451Z-memorization-local",
+      "status": "completed",
+      "failure_reason": null,
+      "backend": "local",
+      "method": "sft",
+      "steps_completed": 200,
+      "steps_planned": 200,
+      "final_loss": 0.0026279684371374686,
+      "tokens": {
+        "train": 14400,
+        "sample": 2048
+      },
+      "plan": {
+        "name": "memorization-local",
+        "mode": "local",
+        "method": "sft",
+        "model": {
+          "base_model": "meta-llama/Llama-3.2-1B",
+          "lora_rank": 32
+        },
+        "data": {
+          "source": "builtin:memorization",
+          "train_examples": 32,
+          "eval_examples": 16
+        },
+        "schedule": {
+          "steps": 200,
+          "batch_size": 8,
+          "learning_rate": 0.03,
+          "lr_schedule": "constant",
+          "seed": 7
+        },
+        "evals": [
+          "exact_match",
+          "bits_recovered"
+        ],
+        "budget": {
+          "planned_train_tokens": 76800,
+          "planned_sample_tokens": 2048,
+          "planned_total_tokens": 78848,
+          "max_train_tokens": 0,
+          "max_sample_tokens": 0,
+          "checkpoints": 4,
+          "checkpoint_storage_gb": 0.004,
+          "estimated_usd": null,
+          "max_usd": null
+        },
+        "risks": []
+      },
+      "budget": {
+        "planned_train_tokens": 76800,
+        "planned_sample_tokens": 2048,
+        "planned_total_tokens": 78848,
+        "max_train_tokens": 0,
+        "max_sample_tokens": 0,
+        "checkpoints": 4,
+        "checkpoint_storage_gb": 0.004,
+        "estimated_usd": null,
+        "max_usd": null
+      },
+      "findings": [],
+      "metrics": [
+        {
+          "step": 0,
+          "loss": 3.4861211167557755
+        },
+        {
+          "step": 1,
+          "loss": 1.5635752669857967
+        },
+        {
+          "step": 2,
+          "loss": 0.7877535779889513
+        },
+        {
+          "step": 3,
+          "loss": 1.0163920153709065
+        },
+        {
+          "step": 4,
+          "loss": 1.0034904892920096
+        },
+        {
+          "step": 5,
+          "loss": 0.6677715841152091
+        },
+        {
+          "step": 6,
+          "loss": 0.6243544795848168
+        },
+        {
+          "step": 7,
+          "loss": 0.6549175846072399
+        },
+        {
+          "step": 8,
+          "loss": 0.640399858938085
+        },
+        {
+          "step": 9,
+          "loss": 0.5901133179300408
+        },
+        {
+          "step": 10,
+          "loss": 0.6186198406631868
+        },
+        {
+          "step": 11,
+          "loss": 0.6108710760130671
+        },
+        {
+          "step": 12,
+          "loss": 0.6280822531682928
+        },
+        {
+          "step": 13,
+          "loss": 0.6127341439134807
+        },
+        {
+          "step": 14,
+          "loss": 0.757080366745524
+        },
+        {
+          "step": 15,
+          "loss": 0.6294540839148665
+        },
+        {
+          "step": 16,
+          "loss": 0.6660876619979312
+        },
+        {
+          "step": 17,
+          "loss": 0.865575714682406
+        },
+        {
+          "step": 18,
+          "loss": 0.5883750302796442
+        },
+        {
+          "step": 19,
+          "loss": 0.7586507420047511
+        },
+        {
+          "step": 20,
+          "loss": 0.6830207162719631
+        },
+        {
+          "step": 21,
+          "loss": 0.7119124355958262
+        },
+        {
+          "step": 22,
+          "loss": 0.6170315675288313
+        },
+        {
+          "step": 23,
+          "loss": 0.5865136002227256
+        },
+        {
+          "step": 24,
+          "loss": 0.6353117879252852
+        },
+        {
+          "step": 25,
+          "loss": 0.5823016609423615
+        },
+        {
+          "step": 26,
+          "loss": 0.5796984184380995
+        },
+        {
+          "step": 27,
+          "loss": 0.5710076976906048
+        },
+        {
+          "step": 28,
+          "loss": 0.5981477680191558
+        },
+        {
+          "step": 29,
+          "loss": 0.6613577599225218
+        },
+        {
+          "step": 30,
+          "loss": 0.5682455400674501
+        },
+        {
+          "step": 31,
+          "loss": 0.6396256160042614
+        },
+        {
+          "step": 32,
+          "loss": 0.5721140624002247
+        },
+        {
+          "step": 33,
+          "loss": 0.7054008944745019
+        },
+        {
+          "step": 34,
+          "loss": 0.5240567207694306
+        },
+        {
+          "step": 35,
+          "loss": 0.5480878775250495
+        },
+        {
+          "step": 36,
+          "loss": 0.5737838584179555
+        },
+        {
+          "step": 37,
+          "loss": 0.5672832197244522
+        },
+        {
+          "step": 38,
+          "loss": 0.5025062420858207
+        },
+        {
+          "step": 39,
+          "loss": 0.5009689468302211
+        },
+        {
+          "step": 40,
+          "loss": 0.5113152922263274
+        },
+        {
+          "step": 41,
+          "loss": 0.5728742877258353
+        },
+        {
+          "step": 42,
+          "loss": 0.5155370691480068
+        },
+        {
+          "step": 43,
+          "loss": 0.49177816141776315
+        },
+        {
+          "step": 44,
+          "loss": 0.4678397751604994
+        },
+        {
+          "step": 45,
+          "loss": 0.6323371459137136
+        },
+        {
+          "step": 46,
+          "loss": 0.45474139402452224
+        },
+        {
+          "step": 47,
+          "loss": 0.45694226994942355
+        },
+        {
+          "step": 48,
+          "loss": 0.4610612540185731
+        },
+        {
+          "step": 49,
+          "loss": 0.5416433893092601
+        },
+        {
+          "step": 50,
+          "loss": 0.44420663367968044
+        },
+        {
+          "step": 51,
+          "loss": 0.3597687659164428
+        },
+        {
+          "step": 52,
+          "loss": 0.4295379457898878
+        },
+        {
+          "step": 53,
+          "loss": 0.4635484609735108
+        },
+        {
+          "step": 54,
+          "loss": 0.4103754869211243
+        },
+        {
+          "step": 55,
+          "loss": 0.350114992953096
+        },
+        {
+          "step": 56,
+          "loss": 0.35634641375052084
+        },
+        {
+          "step": 57,
+          "loss": 0.4047867309135734
+        },
+        {
+          "step": 58,
+          "loss": 0.4073561650370052
+        },
+        {
+          "step": 59,
+          "loss": 0.2807189727041507
+        },
+        {
+          "step": 60,
+          "loss": 0.3352243527341084
+        },
+        {
+          "step": 61,
+          "loss": 0.4458366712278464
+        },
+        {
+          "step": 62,
+          "loss": 0.3514364360275399
+        },
+        {
+          "step": 63,
+          "loss": 0.3294738714761849
+        },
+        {
+          "step": 64,
+          "loss": 0.31870434911500023
+        },
+        {
+          "step": 65,
+          "loss": 0.3400395984596757
+        },
+        {
+          "step": 66,
+          "loss": 0.37715603000712794
+        },
+        {
+          "step": 67,
+          "loss": 0.19789897587177496
+        },
+        {
+          "step": 68,
+          "loss": 0.266854158544055
+        },
+        {
+          "step": 69,
+          "loss": 0.33760797231474293
+        },
+        {
+          "step": 70,
+          "loss": 0.2691579116090343
+        },
+        {
+          "step": 71,
+          "loss": 0.15832666358031386
+        },
+        {
+          "step": 72,
+          "loss": 0.2655743287269265
+        },
+        {
+          "step": 73,
+          "loss": 0.2524635562555645
+        },
+        {
+          "step": 74,
+          "loss": 0.25260316661362836
+        },
+        {
+          "step": 75,
+          "loss": 0.16310305181245802
+        },
+        {
+          "step": 76,
+          "loss": 0.21872362971676967
+        },
+        {
+          "step": 77,
+          "loss": 0.17633397189053102
+        },
+        {
+          "step": 78,
+          "loss": 0.2401736062543125
+        },
+        {
+          "step": 79,
+          "loss": 0.11223467604927825
+        },
+        {
+          "step": 80,
+          "loss": 0.16548078237845387
+        },
+        {
+          "step": 81,
+          "loss": 0.14776616675299584
+        },
+        {
+          "step": 82,
+          "loss": 0.19322650161031463
+        },
+        {
+          "step": 83,
+          "loss": 0.09092921644926541
+        },
+        {
+          "step": 84,
+          "loss": 0.14313719977686346
+        },
+        {
+          "step": 85,
+          "loss": 0.12103088276389526
+        },
+        {
+          "step": 86,
+          "loss": 0.18374815034553935
+        },
+        {
+          "step": 87,
+          "loss": 0.05022274665662843
+        },
+        {
+          "step": 88,
+          "loss": 0.10449030646864158
+        },
+        {
+          "step": 89,
+          "loss": 0.12032448062640716
+        },
+        {
+          "step": 90,
+          "loss": 0.12244819012261801
+        },
+        {
+          "step": 91,
+          "loss": 0.053865923159363595
+        },
+        {
+          "step": 92,
+          "loss": 0.10520199023827398
+        },
+        {
+          "step": 93,
+          "loss": 0.08366791932546558
+        },
+        {
+          "step": 94,
+          "loss": 0.10171213042143279
+        },
+        {
+          "step": 95,
+          "loss": 0.031488664484886665
+        },
+        {
+          "step": 96,
+          "loss": 0.08880061074401525
+        },
+        {
+          "step": 97,
+          "loss": 0.07844668310652253
+        },
+        {
+          "step": 98,
+          "loss": 0.09918166489758524
+        },
+        {
+          "step": 99,
+          "loss": 0.02686319491407353
+        },
+        {
+          "step": 100,
+          "loss": 0.06169841617319302
+        },
+        {
+          "step": 101,
+          "loss": 0.05504978893278815
+        },
+        {
+          "step": 102,
+          "loss": 0.08121576361869356
+        },
+        {
+          "step": 103,
+          "loss": 0.02642317789055794
+        },
+        {
+          "step": 104,
+          "loss": 0.04708061173302003
+        },
+        {
+          "step": 105,
+          "loss": 0.040458826066075614
+        },
+        {
+          "step": 106,
+          "loss": 0.0689642890754176
+        },
+        {
+          "step": 107,
+          "loss": 0.01825228830116142
+        },
+        {
+          "step": 108,
+          "loss": 0.04059816536247439
+        },
+        {
+          "step": 109,
+          "loss": 0.03604848735614622
+        },
+        {
+          "step": 110,
+          "loss": 0.055518486334405114
+        },
+        {
+          "step": 111,
+          "loss": 0.017909914613989792
+        },
+        {
+          "step": 112,
+          "loss": 0.035447377715314615
+        },
+        {
+          "step": 113,
+          "loss": 0.024713296168426616
+        },
+        {
+          "step": 114,
+          "loss": 0.046860880500169136
+        },
+        {
+          "step": 115,
+          "loss": 0.01821238071701334
+        },
+        {
+          "step": 116,
+          "loss": 0.03191387203277726
+        },
+        {
+          "step": 117,
+          "loss": 0.021949341303070552
+        },
+        {
+          "step": 118,
+          "loss": 0.041225378550626086
+        },
+        {
+          "step": 119,
+          "loss": 0.012227123170906622
+        },
+        {
+          "step": 120,
+          "loss": 0.024626557588879553
+        },
+        {
+          "step": 121,
+          "loss": 0.02221165959173653
+        },
+        {
+          "step": 122,
+          "loss": 0.03621329526425037
+        },
+        {
+          "step": 123,
+          "loss": 0.010068145511996751
+        },
+        {
+          "step": 124,
+          "loss": 0.02136932553759547
+        },
+        {
+          "step": 125,
+          "loss": 0.01891996815172852
+        },
+        {
+          "step": 126,
+          "loss": 0.030759109083423695
+        },
+        {
+          "step": 127,
+          "loss": 0.00927552036186522
+        },
+        {
+          "step": 128,
+          "loss": 0.019982101121997456
+        },
+        {
+          "step": 129,
+          "loss": 0.016172192275016116
+        },
+        {
+          "step": 130,
+          "loss": 0.0243141406150522
+        },
+        {
+          "step": 131,
+          "loss": 0.008604328807937748
+        },
+        {
+          "step": 132,
+          "loss": 0.018555078217078896
+        },
+        {
+          "step": 133,
+          "loss": 0.014816464257718712
+        },
+        {
+          "step": 134,
+          "loss": 0.020172361591738033
+        },
+        {
+          "step": 135,
+          "loss": 0.007807980683508177
+        },
+        {
+          "step": 136,
+          "loss": 0.017309504954693453
+        },
+        {
+          "step": 137,
+          "loss": 0.013509019368876198
+        },
+        {
+          "step": 138,
+          "loss": 0.018339298993754305
+        },
+        {
+          "step": 139,
+          "loss": 0.006937489663523868
+        },
+        {
+          "step": 140,
+          "loss": 0.015270022300685403
+        },
+        {
+          "step": 141,
+          "loss": 0.012049743600477314
+        },
+        {
+          "step": 142,
+          "loss": 0.016823087523544906
+        },
+        {
+          "step": 143,
+          "loss": 0.006334348242772065
+        },
+        {
+          "step": 144,
+          "loss": 0.013881368963331177
+        },
+        {
+          "step": 145,
+          "loss": 0.01103179613929525
+        },
+        {
+          "step": 146,
+          "loss": 0.01543518200882251
+        },
+        {
+          "step": 147,
+          "loss": 0.005780182006069048
+        },
+        {
+          "step": 148,
+          "loss": 0.012785827820923417
+        },
+        {
+          "step": 149,
+          "loss": 0.01033484110225947
+        },
+        {
+          "step": 150,
+          "loss": 0.014206157687816289
+        },
+        {
+          "step": 151,
+          "loss": 0.005192250641143777
+        },
+        {
+          "step": 152,
+          "loss": 0.011808645653929547
+        },
+        {
+          "step": 153,
+          "loss": 0.009806073331892885
+        },
+        {
+          "step": 154,
+          "loss": 0.013234104415494746
+        },
+        {
+          "step": 155,
+          "loss": 0.004635022471913018
+        },
+        {
+          "step": 156,
+          "loss": 0.01070145946379136
+        },
+        {
+          "step": 157,
+          "loss": 0.009531933995491957
+        },
+        {
+          "step": 158,
+          "loss": 0.012283764968850851
+        },
+        {
+          "step": 159,
+          "loss": 0.004233080106324931
+        },
+        {
+          "step": 160,
+          "loss": 0.009927829069345204
+        },
+        {
+          "step": 161,
+          "loss": 0.008674898486380324
+        },
+        {
+          "step": 162,
+          "loss": 0.011329186614567416
+        },
+        {
+          "step": 163,
+          "loss": 0.004002942929964425
+        },
+        {
+          "step": 164,
+          "loss": 0.009452876026861198
+        },
+        {
+          "step": 165,
+          "loss": 0.007973580026925307
+        },
+        {
+          "step": 166,
+          "loss": 0.010582634550334138
+        },
+        {
+          "step": 167,
+          "loss": 0.0038112044243286325
+        },
+        {
+          "step": 168,
+          "loss": 0.008754051876782607
+        },
+        {
+          "step": 169,
+          "loss": 0.007606377656181375
+        },
+        {
+          "step": 170,
+          "loss": 0.009960056508166715
+        },
+        {
+          "step": 171,
+          "loss": 0.0036033285960666095
+        },
+        {
+          "step": 172,
+          "loss": 0.008129261946318455
+        },
+        {
+          "step": 173,
+          "loss": 0.007299112872334881
+        },
+        {
+          "step": 174,
+          "loss": 0.009370218274617046
+        },
+        {
+          "step": 175,
+          "loss": 0.003397068053968553
+        },
+        {
+          "step": 176,
+          "loss": 0.0075849145230591376
+        },
+        {
+          "step": 177,
+          "loss": 0.006974996148235719
+        },
+        {
+          "step": 178,
+          "loss": 0.008790262356194468
+        },
+        {
+          "step": 179,
+          "loss": 0.0032140686371162786
+        },
+        {
+          "step": 180,
+          "loss": 0.007106163504961972
+        },
+        {
+          "step": 181,
+          "loss": 0.006696012048622567
+        },
+        {
+          "step": 182,
+          "loss": 0.008244828596591487
+        },
+        {
+          "step": 183,
+          "loss": 0.0030656286907760266
+        },
+        {
+          "step": 184,
+          "loss": 0.006655940651560027
+        },
+        {
+          "step": 185,
+          "loss": 0.006441860509545355
+        },
+        {
+          "step": 186,
+          "loss": 0.007537095259738693
+        },
+        {
+          "step": 187,
+          "loss": 0.0029513415245746894
+        },
+        {
+          "step": 188,
+          "loss": 0.006276225796413518
+        },
+        {
+          "step": 189,
+          "loss": 0.006144914231958719
+        },
+        {
+          "step": 190,
+          "loss": 0.00683679959161631
+        },
+        {
+          "step": 191,
+          "loss": 0.00285789121538027
+        },
+        {
+          "step": 192,
+          "loss": 0.005972956082562973
+        },
+        {
+          "step": 193,
+          "loss": 0.00584069986697735
+        },
+        {
+          "step": 194,
+          "loss": 0.0065401871366033044
+        },
+        {
+          "step": 195,
+          "loss": 0.002754679705621517
+        },
+        {
+          "step": 196,
+          "loss": 0.005649244164195354
+        },
+        {
+          "step": 197,
+          "loss": 0.005597934609675123
+        },
+        {
+          "step": 198,
+          "loss": 0.006285346579153983
+        },
+        {
+          "step": 199,
+          "loss": 0.0026279684371374686
+        }
+      ],
+      "checkpoints": [
+        {
+          "step": 49,
+          "path": "runs/20260706T205451Z-memorization-local/checkpoints/step-00049.npz",
+          "sampler_ready": true
+        },
+        {
+          "step": 99,
+          "path": "runs/20260706T205451Z-memorization-local/checkpoints/step-00099.npz",
+          "sampler_ready": true
+        },
+        {
+          "step": 149,
+          "path": "runs/20260706T205451Z-memorization-local/checkpoints/step-00149.npz",
+          "sampler_ready": true
+        },
+        {
+          "step": 199,
+          "path": "runs/20260706T205451Z-memorization-local/checkpoints/step-00199.npz",
+          "sampler_ready": true
+        }
+      ],
+      "evals": [
+        {
+          "step": 49,
+          "name": "exact_match",
+          "grader": "exact_match",
+          "score": 0.0,
+          "num_examples": 16,
+          "sample_tokens": 256
+        },
+        {
+          "step": 49,
+          "name": "bits_recovered",
+          "grader": "bits_recovered",
+          "score": 0.7031,
+          "num_examples": 16,
+          "sample_tokens": 256
+        },
+        {
+          "step": 99,
+          "name": "exact_match",
+          "grader": "exact_match",
+          "score": 0.9375,
+          "num_examples": 16,
+          "sample_tokens": 256
+        },
+        {
+          "step": 99,
+          "name": "bits_recovered",
+          "grader": "bits_recovered",
+          "score": 0.9844,
+          "num_examples": 16,
+          "sample_tokens": 256
+        },
+        {
+          "step": 149,
+          "name": "exact_match",
+          "grader": "exact_match",
+          "score": 1.0,
+          "num_examples": 16,
+          "sample_tokens": 256
+        },
+        {
+          "step": 149,
+          "name": "bits_recovered",
+          "grader": "bits_recovered",
+          "score": 1.0,
+          "num_examples": 16,
+          "sample_tokens": 256
+        },
+        {
+          "step": 199,
+          "name": "exact_match",
+          "grader": "exact_match",
+          "score": 1.0,
+          "num_examples": 16,
+          "sample_tokens": 256
+        },
+        {
+          "step": 199,
+          "name": "bits_recovered",
+          "grader": "bits_recovered",
+          "score": 1.0,
+          "num_examples": 16,
+          "sample_tokens": 256
+        }
+      ],
+      "probe": {
+        "checkpoint_path": "runs/20260706T205451Z-memorization-local/checkpoints/step-00199.npz",
+        "step": 199,
+        "sampler_ready": true,
+        "adapter_applied": true,
+        "native_sampling_ok": true,
+        "openai_compatible_sampling_ok": null,
+        "latency_ms": null,
+        "eval_samples_at_step": 2,
+        "error": null
+      }
+    },
+    "20260706T205451Z-memorization-sft": {
+      "run_id": "20260706T205451Z-memorization-sft",
+      "run_dir": "runs/20260706T205451Z-memorization-sft",
       "status": "completed",
       "failure_reason": null,
       "backend": "mock",
@@ -621,22 +2178,22 @@
       "checkpoints": [
         {
           "step": 9,
-          "path": "mock://20260706T005210Z-memorization-sft/checkpoint-00009",
+          "path": "mock://20260706T205451Z-memorization-sft/checkpoint-00009",
           "sampler_ready": true
         },
         {
           "step": 19,
-          "path": "mock://20260706T005210Z-memorization-sft/checkpoint-00019",
+          "path": "mock://20260706T205451Z-memorization-sft/checkpoint-00019",
           "sampler_ready": true
         },
         {
           "step": 29,
-          "path": "mock://20260706T005210Z-memorization-sft/checkpoint-00029",
+          "path": "mock://20260706T205451Z-memorization-sft/checkpoint-00029",
           "sampler_ready": true
         },
         {
           "step": 39,
-          "path": "mock://20260706T005210Z-memorization-sft/checkpoint-00039",
+          "path": "mock://20260706T205451Z-memorization-sft/checkpoint-00039",
           "sampler_ready": true
         }
       ],
@@ -707,4250 +2264,8 @@
         }
       ],
       "probe": {
-        "checkpoint_path": "mock://20260706T005210Z-memorization-sft/checkpoint-00039",
+        "checkpoint_path": "mock://20260706T205451Z-memorization-sft/checkpoint-00039",
         "step": 39,
-        "sampler_ready": true,
-        "adapter_applied": true,
-        "native_sampling_ok": true,
-        "openai_compatible_sampling_ok": null,
-        "latency_ms": null,
-        "eval_samples_at_step": 2,
-        "error": null
-      }
-    },
-    "20260704T190035Z-memorization-local": {
-      "run_id": "20260704T190035Z-memorization-local",
-      "run_dir": "runs/20260704T190035Z-memorization-local",
-      "status": "completed",
-      "failure_reason": null,
-      "backend": "local",
-      "method": "sft",
-      "steps_completed": 200,
-      "steps_planned": 200,
-      "final_loss": 0.0026279684371374413,
-      "tokens": {
-        "train": 14400,
-        "sample": 2048
-      },
-      "plan": {
-        "name": "memorization-local",
-        "mode": "local",
-        "method": "sft",
-        "model": {
-          "base_model": "meta-llama/Llama-3.2-1B",
-          "lora_rank": 32
-        },
-        "data": {
-          "source": "builtin:memorization",
-          "train_examples": 32,
-          "eval_examples": 16
-        },
-        "schedule": {
-          "steps": 200,
-          "batch_size": 8,
-          "learning_rate": 0.03,
-          "lr_schedule": "constant",
-          "seed": 7
-        },
-        "evals": [
-          "exact_match",
-          "bits_recovered"
-        ],
-        "budget": {
-          "planned_train_tokens": 76800,
-          "planned_sample_tokens": 2048,
-          "planned_total_tokens": 78848,
-          "max_train_tokens": 0,
-          "max_sample_tokens": 0,
-          "checkpoints": 4,
-          "checkpoint_storage_gb": 0.004,
-          "estimated_usd": null,
-          "max_usd": null
-        },
-        "risks": []
-      },
-      "budget": {
-        "planned_train_tokens": 76800,
-        "planned_sample_tokens": 2048,
-        "planned_total_tokens": 78848,
-        "max_train_tokens": 0,
-        "max_sample_tokens": 0,
-        "checkpoints": 4,
-        "checkpoint_storage_gb": 0.004,
-        "estimated_usd": null,
-        "max_usd": null
-      },
-      "findings": [],
-      "metrics": [
-        {
-          "step": 0,
-          "loss": 3.4861211167557755
-        },
-        {
-          "step": 1,
-          "loss": 1.5635752669857967
-        },
-        {
-          "step": 2,
-          "loss": 0.7877535779889514
-        },
-        {
-          "step": 3,
-          "loss": 1.0163920153709067
-        },
-        {
-          "step": 4,
-          "loss": 1.0034904892920098
-        },
-        {
-          "step": 5,
-          "loss": 0.6677715841152092
-        },
-        {
-          "step": 6,
-          "loss": 0.6243544795848166
-        },
-        {
-          "step": 7,
-          "loss": 0.65491758460724
-        },
-        {
-          "step": 8,
-          "loss": 0.6403998589380853
-        },
-        {
-          "step": 9,
-          "loss": 0.5901133179300407
-        },
-        {
-          "step": 10,
-          "loss": 0.618619840663187
-        },
-        {
-          "step": 11,
-          "loss": 0.6108710760130672
-        },
-        {
-          "step": 12,
-          "loss": 0.6280822531682928
-        },
-        {
-          "step": 13,
-          "loss": 0.6127341439134809
-        },
-        {
-          "step": 14,
-          "loss": 0.7570803667455243
-        },
-        {
-          "step": 15,
-          "loss": 0.6294540839148666
-        },
-        {
-          "step": 16,
-          "loss": 0.6660876619979315
-        },
-        {
-          "step": 17,
-          "loss": 0.8655757146824065
-        },
-        {
-          "step": 18,
-          "loss": 0.5883750302796441
-        },
-        {
-          "step": 19,
-          "loss": 0.7586507420047514
-        },
-        {
-          "step": 20,
-          "loss": 0.683020716271963
-        },
-        {
-          "step": 21,
-          "loss": 0.7119124355958258
-        },
-        {
-          "step": 22,
-          "loss": 0.6170315675288313
-        },
-        {
-          "step": 23,
-          "loss": 0.5865136002227258
-        },
-        {
-          "step": 24,
-          "loss": 0.6353117879252852
-        },
-        {
-          "step": 25,
-          "loss": 0.5823016609423614
-        },
-        {
-          "step": 26,
-          "loss": 0.5796984184380997
-        },
-        {
-          "step": 27,
-          "loss": 0.5710076976906047
-        },
-        {
-          "step": 28,
-          "loss": 0.598147768019156
-        },
-        {
-          "step": 29,
-          "loss": 0.6613577599225223
-        },
-        {
-          "step": 30,
-          "loss": 0.5682455400674503
-        },
-        {
-          "step": 31,
-          "loss": 0.6396256160042617
-        },
-        {
-          "step": 32,
-          "loss": 0.572114062400225
-        },
-        {
-          "step": 33,
-          "loss": 0.7054008944745015
-        },
-        {
-          "step": 34,
-          "loss": 0.5240567207694307
-        },
-        {
-          "step": 35,
-          "loss": 0.5480878775250493
-        },
-        {
-          "step": 36,
-          "loss": 0.5737838584179558
-        },
-        {
-          "step": 37,
-          "loss": 0.5672832197244522
-        },
-        {
-          "step": 38,
-          "loss": 0.5025062420858206
-        },
-        {
-          "step": 39,
-          "loss": 0.5009689468302209
-        },
-        {
-          "step": 40,
-          "loss": 0.5113152922263277
-        },
-        {
-          "step": 41,
-          "loss": 0.5728742877258356
-        },
-        {
-          "step": 42,
-          "loss": 0.5155370691480068
-        },
-        {
-          "step": 43,
-          "loss": 0.4917781614177634
-        },
-        {
-          "step": 44,
-          "loss": 0.4678397751604994
-        },
-        {
-          "step": 45,
-          "loss": 0.6323371459137141
-        },
-        {
-          "step": 46,
-          "loss": 0.45474139402452196
-        },
-        {
-          "step": 47,
-          "loss": 0.45694226994942333
-        },
-        {
-          "step": 48,
-          "loss": 0.46106125401857334
-        },
-        {
-          "step": 49,
-          "loss": 0.5416433893092591
-        },
-        {
-          "step": 50,
-          "loss": 0.4442066336796806
-        },
-        {
-          "step": 51,
-          "loss": 0.3597687659164427
-        },
-        {
-          "step": 52,
-          "loss": 0.4295379457898875
-        },
-        {
-          "step": 53,
-          "loss": 0.4635484609735111
-        },
-        {
-          "step": 54,
-          "loss": 0.4103754869211242
-        },
-        {
-          "step": 55,
-          "loss": 0.35011499295309595
-        },
-        {
-          "step": 56,
-          "loss": 0.35634641375052095
-        },
-        {
-          "step": 57,
-          "loss": 0.40478673091357337
-        },
-        {
-          "step": 58,
-          "loss": 0.40735616503700567
-        },
-        {
-          "step": 59,
-          "loss": 0.280718972704151
-        },
-        {
-          "step": 60,
-          "loss": 0.3352243527341083
-        },
-        {
-          "step": 61,
-          "loss": 0.4458366712278464
-        },
-        {
-          "step": 62,
-          "loss": 0.3514364360275391
-        },
-        {
-          "step": 63,
-          "loss": 0.3294738714761839
-        },
-        {
-          "step": 64,
-          "loss": 0.3187043491150006
-        },
-        {
-          "step": 65,
-          "loss": 0.3400395984596756
-        },
-        {
-          "step": 66,
-          "loss": 0.37715603000712755
-        },
-        {
-          "step": 67,
-          "loss": 0.19789897587177532
-        },
-        {
-          "step": 68,
-          "loss": 0.26685415854405425
-        },
-        {
-          "step": 69,
-          "loss": 0.33760797231474293
-        },
-        {
-          "step": 70,
-          "loss": 0.26915791160903546
-        },
-        {
-          "step": 71,
-          "loss": 0.15832666358031247
-        },
-        {
-          "step": 72,
-          "loss": 0.26557432872692666
-        },
-        {
-          "step": 73,
-          "loss": 0.25246355625556466
-        },
-        {
-          "step": 74,
-          "loss": 0.2526031666136275
-        },
-        {
-          "step": 75,
-          "loss": 0.16310305181245777
-        },
-        {
-          "step": 76,
-          "loss": 0.21872362971677065
-        },
-        {
-          "step": 77,
-          "loss": 0.17633397189053066
-        },
-        {
-          "step": 78,
-          "loss": 0.24017360625431217
-        },
-        {
-          "step": 79,
-          "loss": 0.11223467604927853
-        },
-        {
-          "step": 80,
-          "loss": 0.1654807823784536
-        },
-        {
-          "step": 81,
-          "loss": 0.14776616675299564
-        },
-        {
-          "step": 82,
-          "loss": 0.19322650161031438
-        },
-        {
-          "step": 83,
-          "loss": 0.09092921644926454
-        },
-        {
-          "step": 84,
-          "loss": 0.1431371997768636
-        },
-        {
-          "step": 85,
-          "loss": 0.12103088276389576
-        },
-        {
-          "step": 86,
-          "loss": 0.1837481503455366
-        },
-        {
-          "step": 87,
-          "loss": 0.050222746656628646
-        },
-        {
-          "step": 88,
-          "loss": 0.10449030646864527
-        },
-        {
-          "step": 89,
-          "loss": 0.12032448062640697
-        },
-        {
-          "step": 90,
-          "loss": 0.12244819012261335
-        },
-        {
-          "step": 91,
-          "loss": 0.0538659231593642
-        },
-        {
-          "step": 92,
-          "loss": 0.10520199023827544
-        },
-        {
-          "step": 93,
-          "loss": 0.08366791932546452
-        },
-        {
-          "step": 94,
-          "loss": 0.10171213042143303
-        },
-        {
-          "step": 95,
-          "loss": 0.031488664484885215
-        },
-        {
-          "step": 96,
-          "loss": 0.0888006107440148
-        },
-        {
-          "step": 97,
-          "loss": 0.07844668310652368
-        },
-        {
-          "step": 98,
-          "loss": 0.09918166489758466
-        },
-        {
-          "step": 99,
-          "loss": 0.026863194914072873
-        },
-        {
-          "step": 100,
-          "loss": 0.06169841617319241
-        },
-        {
-          "step": 101,
-          "loss": 0.05504978893278926
-        },
-        {
-          "step": 102,
-          "loss": 0.08121576361869334
-        },
-        {
-          "step": 103,
-          "loss": 0.02642317789055805
-        },
-        {
-          "step": 104,
-          "loss": 0.0470806117330197
-        },
-        {
-          "step": 105,
-          "loss": 0.04045882606607495
-        },
-        {
-          "step": 106,
-          "loss": 0.06896428907541569
-        },
-        {
-          "step": 107,
-          "loss": 0.01825228830116138
-        },
-        {
-          "step": 108,
-          "loss": 0.04059816536247405
-        },
-        {
-          "step": 109,
-          "loss": 0.03604848735614682
-        },
-        {
-          "step": 110,
-          "loss": 0.055518486334404274
-        },
-        {
-          "step": 111,
-          "loss": 0.017909914613990892
-        },
-        {
-          "step": 112,
-          "loss": 0.035447377715313685
-        },
-        {
-          "step": 113,
-          "loss": 0.024713296168426706
-        },
-        {
-          "step": 114,
-          "loss": 0.04686088050016896
-        },
-        {
-          "step": 115,
-          "loss": 0.01821238071701247
-        },
-        {
-          "step": 116,
-          "loss": 0.031913872032777096
-        },
-        {
-          "step": 117,
-          "loss": 0.02194934130307051
-        },
-        {
-          "step": 118,
-          "loss": 0.04122537855062591
-        },
-        {
-          "step": 119,
-          "loss": 0.01222712317090641
-        },
-        {
-          "step": 120,
-          "loss": 0.02462655758887937
-        },
-        {
-          "step": 121,
-          "loss": 0.022211659591736224
-        },
-        {
-          "step": 122,
-          "loss": 0.036213295264249976
-        },
-        {
-          "step": 123,
-          "loss": 0.01006814551199687
-        },
-        {
-          "step": 124,
-          "loss": 0.02136932553759546
-        },
-        {
-          "step": 125,
-          "loss": 0.0189199681517288
-        },
-        {
-          "step": 126,
-          "loss": 0.030759109083421412
-        },
-        {
-          "step": 127,
-          "loss": 0.009275520361865611
-        },
-        {
-          "step": 128,
-          "loss": 0.019982101121997508
-        },
-        {
-          "step": 129,
-          "loss": 0.016172192275016182
-        },
-        {
-          "step": 130,
-          "loss": 0.02431414061504024
-        },
-        {
-          "step": 131,
-          "loss": 0.008604328807938932
-        },
-        {
-          "step": 132,
-          "loss": 0.018555078217079485
-        },
-        {
-          "step": 133,
-          "loss": 0.014816464257717864
-        },
-        {
-          "step": 134,
-          "loss": 0.020172361591737836
-        },
-        {
-          "step": 135,
-          "loss": 0.007807980683507545
-        },
-        {
-          "step": 136,
-          "loss": 0.017309504954689994
-        },
-        {
-          "step": 137,
-          "loss": 0.013509019368875462
-        },
-        {
-          "step": 138,
-          "loss": 0.018339298993754836
-        },
-        {
-          "step": 139,
-          "loss": 0.006937489663522882
-        },
-        {
-          "step": 140,
-          "loss": 0.015270022300683136
-        },
-        {
-          "step": 141,
-          "loss": 0.012049743600477711
-        },
-        {
-          "step": 142,
-          "loss": 0.016823087523545256
-        },
-        {
-          "step": 143,
-          "loss": 0.006334348242771072
-        },
-        {
-          "step": 144,
-          "loss": 0.013881368963330063
-        },
-        {
-          "step": 145,
-          "loss": 0.011031796139295518
-        },
-        {
-          "step": 146,
-          "loss": 0.015435182008821867
-        },
-        {
-          "step": 147,
-          "loss": 0.005780182006068531
-        },
-        {
-          "step": 148,
-          "loss": 0.012785827820923497
-        },
-        {
-          "step": 149,
-          "loss": 0.010334841102258938
-        },
-        {
-          "step": 150,
-          "loss": 0.01420615768781586
-        },
-        {
-          "step": 151,
-          "loss": 0.005192250641143735
-        },
-        {
-          "step": 152,
-          "loss": 0.011808645653930118
-        },
-        {
-          "step": 153,
-          "loss": 0.00980607333189202
-        },
-        {
-          "step": 154,
-          "loss": 0.013234104415494807
-        },
-        {
-          "step": 155,
-          "loss": 0.004635022471913107
-        },
-        {
-          "step": 156,
-          "loss": 0.010701459463791169
-        },
-        {
-          "step": 157,
-          "loss": 0.00953193399549181
-        },
-        {
-          "step": 158,
-          "loss": 0.012283764968850842
-        },
-        {
-          "step": 159,
-          "loss": 0.0042330801063249855
-        },
-        {
-          "step": 160,
-          "loss": 0.00992782906934547
-        },
-        {
-          "step": 161,
-          "loss": 0.00867489848637963
-        },
-        {
-          "step": 162,
-          "loss": 0.011329186614567437
-        },
-        {
-          "step": 163,
-          "loss": 0.004002942929964437
-        },
-        {
-          "step": 164,
-          "loss": 0.009452876026861196
-        },
-        {
-          "step": 165,
-          "loss": 0.007973580026925133
-        },
-        {
-          "step": 166,
-          "loss": 0.010582634550334282
-        },
-        {
-          "step": 167,
-          "loss": 0.0038112044243286077
-        },
-        {
-          "step": 168,
-          "loss": 0.008754051876782675
-        },
-        {
-          "step": 169,
-          "loss": 0.007606377656181095
-        },
-        {
-          "step": 170,
-          "loss": 0.009960056508167064
-        },
-        {
-          "step": 171,
-          "loss": 0.003603328596066548
-        },
-        {
-          "step": 172,
-          "loss": 0.008129261946318835
-        },
-        {
-          "step": 173,
-          "loss": 0.0072991128723345865
-        },
-        {
-          "step": 174,
-          "loss": 0.009370218274617644
-        },
-        {
-          "step": 175,
-          "loss": 0.00339706805396847
-        },
-        {
-          "step": 176,
-          "loss": 0.007584914523059714
-        },
-        {
-          "step": 177,
-          "loss": 0.006974996148235308
-        },
-        {
-          "step": 178,
-          "loss": 0.00879026235619483
-        },
-        {
-          "step": 179,
-          "loss": 0.0032140686371162136
-        },
-        {
-          "step": 180,
-          "loss": 0.007106163504962731
-        },
-        {
-          "step": 181,
-          "loss": 0.006696012048622164
-        },
-        {
-          "step": 182,
-          "loss": 0.008244828596591354
-        },
-        {
-          "step": 183,
-          "loss": 0.0030656286907759112
-        },
-        {
-          "step": 184,
-          "loss": 0.006655940651560801
-        },
-        {
-          "step": 185,
-          "loss": 0.00644186050954527
-        },
-        {
-          "step": 186,
-          "loss": 0.007537095259737685
-        },
-        {
-          "step": 187,
-          "loss": 0.002951341524574583
-        },
-        {
-          "step": 188,
-          "loss": 0.006276225796413921
-        },
-        {
-          "step": 189,
-          "loss": 0.006144914231959234
-        },
-        {
-          "step": 190,
-          "loss": 0.006836799591616215
-        },
-        {
-          "step": 191,
-          "loss": 0.0028578912153801894
-        },
-        {
-          "step": 192,
-          "loss": 0.005972956082563297
-        },
-        {
-          "step": 193,
-          "loss": 0.005840699866977726
-        },
-        {
-          "step": 194,
-          "loss": 0.00654018713660339
-        },
-        {
-          "step": 195,
-          "loss": 0.0027546797056214965
-        },
-        {
-          "step": 196,
-          "loss": 0.005649244164195783
-        },
-        {
-          "step": 197,
-          "loss": 0.005597934609675222
-        },
-        {
-          "step": 198,
-          "loss": 0.006285346579154021
-        },
-        {
-          "step": 199,
-          "loss": 0.0026279684371374413
-        }
-      ],
-      "checkpoints": [
-        {
-          "step": 49,
-          "path": "runs/20260704T190035Z-memorization-local/checkpoints/step-00049.npz",
-          "sampler_ready": true
-        },
-        {
-          "step": 99,
-          "path": "runs/20260704T190035Z-memorization-local/checkpoints/step-00099.npz",
-          "sampler_ready": true
-        },
-        {
-          "step": 149,
-          "path": "runs/20260704T190035Z-memorization-local/checkpoints/step-00149.npz",
-          "sampler_ready": true
-        },
-        {
-          "step": 199,
-          "path": "runs/20260704T190035Z-memorization-local/checkpoints/step-00199.npz",
-          "sampler_ready": true
-        }
-      ],
-      "evals": [
-        {
-          "step": 49,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 0.0,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 49,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.7031,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 99,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 0.9375,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 99,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.9844,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 149,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 1.0,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 149,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 1.0,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 199,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 1.0,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 199,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 1.0,
-          "num_examples": 16,
-          "sample_tokens": 256
-        }
-      ],
-      "probe": {
-        "checkpoint_path": "runs/20260704T190035Z-memorization-local/checkpoints/step-00199.npz",
-        "step": 199,
-        "sampler_ready": true,
-        "adapter_applied": true,
-        "native_sampling_ok": true,
-        "openai_compatible_sampling_ok": null,
-        "latency_ms": null,
-        "eval_samples_at_step": 2,
-        "error": null
-      }
-    },
-    "20260704T185937Z-failure-divergence-local": {
-      "run_id": "20260704T185937Z-failure-divergence-local",
-      "run_dir": "runs/20260704T185937Z-failure-divergence-local",
-      "status": "completed",
-      "failure_reason": null,
-      "backend": "local",
-      "method": "sft",
-      "steps_completed": 60,
-      "steps_planned": 60,
-      "final_loss": 12.253346455234256,
-      "tokens": {
-        "train": 4320,
-        "sample": 768
-      },
-      "plan": {
-        "name": "failure-divergence-local",
-        "mode": "local",
-        "method": "sft",
-        "model": {
-          "base_model": "meta-llama/Llama-3.2-1B",
-          "lora_rank": 32
-        },
-        "data": {
-          "source": "builtin:memorization",
-          "train_examples": 32,
-          "eval_examples": 16
-        },
-        "schedule": {
-          "steps": 60,
-          "batch_size": 8,
-          "learning_rate": 5.0,
-          "lr_schedule": "constant",
-          "seed": 7
-        },
-        "evals": [
-          "bits_recovered"
-        ],
-        "budget": {
-          "planned_train_tokens": 23040,
-          "planned_sample_tokens": 768,
-          "planned_total_tokens": 23808,
-          "max_train_tokens": 0,
-          "max_sample_tokens": 0,
-          "checkpoints": 3,
-          "checkpoint_storage_gb": 0.003,
-          "estimated_usd": null,
-          "max_usd": null
-        },
-        "risks": []
-      },
-      "budget": {
-        "planned_train_tokens": 23040,
-        "planned_sample_tokens": 768,
-        "planned_total_tokens": 23808,
-        "max_train_tokens": 0,
-        "max_sample_tokens": 0,
-        "checkpoints": 3,
-        "checkpoint_storage_gb": 0.003,
-        "estimated_usd": null,
-        "max_usd": null
-      },
-      "findings": [
-        {
-          "severity": "critical",
-          "code": "loss_divergence",
-          "message": "Loss is diverging: best 3.4861 around step 0, but the final window averages 11.9723.",
-          "suggestion": "Lower training.learning_rate or switch lr_schedule to cosine/linear decay, and restart (or resume) from the checkpoint nearest step 0."
-        },
-        {
-          "severity": "warning",
-          "code": "eval_regression",
-          "message": "Eval 'bits_recovered' peaked at 0.5391 (step 19) but ended at 0.4609 (step 59).",
-          "suggestion": "Prefer the step-19 checkpoint over the final one; this often accompanies overfitting or LR instability late in training."
-        }
-      ],
-      "metrics": [
-        {
-          "step": 0,
-          "loss": 3.4861211167557755
-        },
-        {
-          "step": 1,
-          "loss": 21.863140089909333
-        },
-        {
-          "step": 2,
-          "loss": 24.560907658603043
-        },
-        {
-          "step": 3,
-          "loss": 26.096037278556196
-        },
-        {
-          "step": 4,
-          "loss": 13.431746375798086
-        },
-        {
-          "step": 5,
-          "loss": 12.029195247640107
-        },
-        {
-          "step": 6,
-          "loss": 11.335710932749635
-        },
-        {
-          "step": 7,
-          "loss": 10.680801383683068
-        },
-        {
-          "step": 8,
-          "loss": 17.26938819745497
-        },
-        {
-          "step": 9,
-          "loss": 13.815510557963774
-        },
-        {
-          "step": 10,
-          "loss": 14.199274740129463
-        },
-        {
-          "step": 11,
-          "loss": 14.583038922295152
-        },
-        {
-          "step": 12,
-          "loss": 10.497446768904162
-        },
-        {
-          "step": 13,
-          "loss": 13.815510557963774
-        },
-        {
-          "step": 14,
-          "loss": 15.734332575568393
-        },
-        {
-          "step": 15,
-          "loss": 15.616055290771758
-        },
-        {
-          "step": 16,
-          "loss": 14.072440406901656
-        },
-        {
-          "step": 17,
-          "loss": 16.885624015293793
-        },
-        {
-          "step": 18,
-          "loss": 13.814264119876004
-        },
-        {
-          "step": 19,
-          "loss": 11.896689647135341
-        },
-        {
-          "step": 20,
-          "loss": 12.709598046881165
-        },
-        {
-          "step": 21,
-          "loss": 14.738741145251531
-        },
-        {
-          "step": 22,
-          "loss": 16.118095650957905
-        },
-        {
-          "step": 23,
-          "loss": 16.118095650957905
-        },
-        {
-          "step": 24,
-          "loss": 17.269388197454955
-        },
-        {
-          "step": 25,
-          "loss": 10.699681181739937
-        },
-        {
-          "step": 26,
-          "loss": 13.408988218082088
-        },
-        {
-          "step": 27,
-          "loss": 12.664719192275939
-        },
-        {
-          "step": 28,
-          "loss": 10.74539710082967
-        },
-        {
-          "step": 29,
-          "loss": 13.80565965759651
-        },
-        {
-          "step": 30,
-          "loss": 13.431746367116286
-        },
-        {
-          "step": 31,
-          "loss": 14.583038922295145
-        },
-        {
-          "step": 32,
-          "loss": 13.963415011740812
-        },
-        {
-          "step": 33,
-          "loss": 13.434992900719767
-        },
-        {
-          "step": 34,
-          "loss": 11.12875571879551
-        },
-        {
-          "step": 35,
-          "loss": 10.791841379727629
-        },
-        {
-          "step": 36,
-          "loss": 8.231962507067221
-        },
-        {
-          "step": 37,
-          "loss": 10.40720703569248
-        },
-        {
-          "step": 38,
-          "loss": 13.148504866763322
-        },
-        {
-          "step": 39,
-          "loss": 11.027585155357794
-        },
-        {
-          "step": 40,
-          "loss": 12.458955119370708
-        },
-        {
-          "step": 41,
-          "loss": 11.24274729304171
-        },
-        {
-          "step": 42,
-          "loss": 14.69482723128396
-        },
-        {
-          "step": 43,
-          "loss": 13.866032196990032
-        },
-        {
-          "step": 44,
-          "loss": 11.818420415052149
-        },
-        {
-          "step": 45,
-          "loss": 13.817292665438499
-        },
-        {
-          "step": 46,
-          "loss": 9.235667388821899
-        },
-        {
-          "step": 47,
-          "loss": 11.265009491966818
-        },
-        {
-          "step": 48,
-          "loss": 13.160446284978116
-        },
-        {
-          "step": 49,
-          "loss": 7.176705859935085
-        },
-        {
-          "step": 50,
-          "loss": 11.512924988861675
-        },
-        {
-          "step": 51,
-          "loss": 11.896681275591643
-        },
-        {
-          "step": 52,
-          "loss": 10.543414918285142
-        },
-        {
-          "step": 53,
-          "loss": 10.785759224383746
-        },
-        {
-          "step": 54,
-          "loss": 13.435981962105306
-        },
-        {
-          "step": 55,
-          "loss": 11.129160335465816
-        },
-        {
-          "step": 56,
-          "loss": 11.42173655428452
-        },
-        {
-          "step": 57,
-          "loss": 13.815510557964053
-        },
-        {
-          "step": 58,
-          "loss": 9.848003051977253
-        },
-        {
-          "step": 59,
-          "loss": 12.253346455234256
-        }
-      ],
-      "checkpoints": [
-        {
-          "step": 19,
-          "path": "runs/20260704T185937Z-failure-divergence-local/checkpoints/step-00019.npz",
-          "sampler_ready": true
-        },
-        {
-          "step": 39,
-          "path": "runs/20260704T185937Z-failure-divergence-local/checkpoints/step-00039.npz",
-          "sampler_ready": true
-        },
-        {
-          "step": 59,
-          "path": "runs/20260704T185937Z-failure-divergence-local/checkpoints/step-00059.npz",
-          "sampler_ready": true
-        }
-      ],
-      "evals": [
-        {
-          "step": 19,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.5391,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 39,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.5312,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 59,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.4609,
-          "num_examples": 16,
-          "sample_tokens": 256
-        }
-      ],
-      "probe": {
-        "checkpoint_path": "runs/20260704T185937Z-failure-divergence-local/checkpoints/step-00059.npz",
-        "step": 59,
-        "sampler_ready": true,
-        "adapter_applied": true,
-        "native_sampling_ok": true,
-        "openai_compatible_sampling_ok": null,
-        "latency_ms": null,
-        "eval_samples_at_step": 1,
-        "error": null
-      }
-    },
-    "20260704T185936Z-memorization-local": {
-      "run_id": "20260704T185936Z-memorization-local",
-      "run_dir": "runs/20260704T185936Z-memorization-local",
-      "status": "completed",
-      "failure_reason": null,
-      "backend": "local",
-      "method": "sft",
-      "steps_completed": 200,
-      "steps_planned": 200,
-      "final_loss": 0.0026279684371374413,
-      "tokens": {
-        "train": 14400,
-        "sample": 2048
-      },
-      "plan": {
-        "name": "memorization-local",
-        "mode": "local",
-        "method": "sft",
-        "model": {
-          "base_model": "meta-llama/Llama-3.2-1B",
-          "lora_rank": 32
-        },
-        "data": {
-          "source": "builtin:memorization",
-          "train_examples": 32,
-          "eval_examples": 16
-        },
-        "schedule": {
-          "steps": 200,
-          "batch_size": 8,
-          "learning_rate": 0.03,
-          "lr_schedule": "constant",
-          "seed": 7
-        },
-        "evals": [
-          "exact_match",
-          "bits_recovered"
-        ],
-        "budget": {
-          "planned_train_tokens": 76800,
-          "planned_sample_tokens": 2048,
-          "planned_total_tokens": 78848,
-          "max_train_tokens": 0,
-          "max_sample_tokens": 0,
-          "checkpoints": 4,
-          "checkpoint_storage_gb": 0.004,
-          "estimated_usd": null,
-          "max_usd": null
-        },
-        "risks": []
-      },
-      "budget": {
-        "planned_train_tokens": 76800,
-        "planned_sample_tokens": 2048,
-        "planned_total_tokens": 78848,
-        "max_train_tokens": 0,
-        "max_sample_tokens": 0,
-        "checkpoints": 4,
-        "checkpoint_storage_gb": 0.004,
-        "estimated_usd": null,
-        "max_usd": null
-      },
-      "findings": [],
-      "metrics": [
-        {
-          "step": 0,
-          "loss": 3.4861211167557755
-        },
-        {
-          "step": 1,
-          "loss": 1.5635752669857967
-        },
-        {
-          "step": 2,
-          "loss": 0.7877535779889514
-        },
-        {
-          "step": 3,
-          "loss": 1.0163920153709067
-        },
-        {
-          "step": 4,
-          "loss": 1.0034904892920098
-        },
-        {
-          "step": 5,
-          "loss": 0.6677715841152092
-        },
-        {
-          "step": 6,
-          "loss": 0.6243544795848166
-        },
-        {
-          "step": 7,
-          "loss": 0.65491758460724
-        },
-        {
-          "step": 8,
-          "loss": 0.6403998589380853
-        },
-        {
-          "step": 9,
-          "loss": 0.5901133179300407
-        },
-        {
-          "step": 10,
-          "loss": 0.618619840663187
-        },
-        {
-          "step": 11,
-          "loss": 0.6108710760130672
-        },
-        {
-          "step": 12,
-          "loss": 0.6280822531682928
-        },
-        {
-          "step": 13,
-          "loss": 0.6127341439134809
-        },
-        {
-          "step": 14,
-          "loss": 0.7570803667455243
-        },
-        {
-          "step": 15,
-          "loss": 0.6294540839148666
-        },
-        {
-          "step": 16,
-          "loss": 0.6660876619979315
-        },
-        {
-          "step": 17,
-          "loss": 0.8655757146824065
-        },
-        {
-          "step": 18,
-          "loss": 0.5883750302796441
-        },
-        {
-          "step": 19,
-          "loss": 0.7586507420047514
-        },
-        {
-          "step": 20,
-          "loss": 0.683020716271963
-        },
-        {
-          "step": 21,
-          "loss": 0.7119124355958258
-        },
-        {
-          "step": 22,
-          "loss": 0.6170315675288313
-        },
-        {
-          "step": 23,
-          "loss": 0.5865136002227258
-        },
-        {
-          "step": 24,
-          "loss": 0.6353117879252852
-        },
-        {
-          "step": 25,
-          "loss": 0.5823016609423614
-        },
-        {
-          "step": 26,
-          "loss": 0.5796984184380997
-        },
-        {
-          "step": 27,
-          "loss": 0.5710076976906047
-        },
-        {
-          "step": 28,
-          "loss": 0.598147768019156
-        },
-        {
-          "step": 29,
-          "loss": 0.6613577599225223
-        },
-        {
-          "step": 30,
-          "loss": 0.5682455400674503
-        },
-        {
-          "step": 31,
-          "loss": 0.6396256160042617
-        },
-        {
-          "step": 32,
-          "loss": 0.572114062400225
-        },
-        {
-          "step": 33,
-          "loss": 0.7054008944745015
-        },
-        {
-          "step": 34,
-          "loss": 0.5240567207694307
-        },
-        {
-          "step": 35,
-          "loss": 0.5480878775250493
-        },
-        {
-          "step": 36,
-          "loss": 0.5737838584179558
-        },
-        {
-          "step": 37,
-          "loss": 0.5672832197244522
-        },
-        {
-          "step": 38,
-          "loss": 0.5025062420858206
-        },
-        {
-          "step": 39,
-          "loss": 0.5009689468302209
-        },
-        {
-          "step": 40,
-          "loss": 0.5113152922263277
-        },
-        {
-          "step": 41,
-          "loss": 0.5728742877258356
-        },
-        {
-          "step": 42,
-          "loss": 0.5155370691480068
-        },
-        {
-          "step": 43,
-          "loss": 0.4917781614177634
-        },
-        {
-          "step": 44,
-          "loss": 0.4678397751604994
-        },
-        {
-          "step": 45,
-          "loss": 0.6323371459137141
-        },
-        {
-          "step": 46,
-          "loss": 0.45474139402452196
-        },
-        {
-          "step": 47,
-          "loss": 0.45694226994942333
-        },
-        {
-          "step": 48,
-          "loss": 0.46106125401857334
-        },
-        {
-          "step": 49,
-          "loss": 0.5416433893092591
-        },
-        {
-          "step": 50,
-          "loss": 0.4442066336796806
-        },
-        {
-          "step": 51,
-          "loss": 0.3597687659164427
-        },
-        {
-          "step": 52,
-          "loss": 0.4295379457898875
-        },
-        {
-          "step": 53,
-          "loss": 0.4635484609735111
-        },
-        {
-          "step": 54,
-          "loss": 0.4103754869211242
-        },
-        {
-          "step": 55,
-          "loss": 0.35011499295309595
-        },
-        {
-          "step": 56,
-          "loss": 0.35634641375052095
-        },
-        {
-          "step": 57,
-          "loss": 0.40478673091357337
-        },
-        {
-          "step": 58,
-          "loss": 0.40735616503700567
-        },
-        {
-          "step": 59,
-          "loss": 0.280718972704151
-        },
-        {
-          "step": 60,
-          "loss": 0.3352243527341083
-        },
-        {
-          "step": 61,
-          "loss": 0.4458366712278464
-        },
-        {
-          "step": 62,
-          "loss": 0.3514364360275391
-        },
-        {
-          "step": 63,
-          "loss": 0.3294738714761839
-        },
-        {
-          "step": 64,
-          "loss": 0.3187043491150006
-        },
-        {
-          "step": 65,
-          "loss": 0.3400395984596756
-        },
-        {
-          "step": 66,
-          "loss": 0.37715603000712755
-        },
-        {
-          "step": 67,
-          "loss": 0.19789897587177532
-        },
-        {
-          "step": 68,
-          "loss": 0.26685415854405425
-        },
-        {
-          "step": 69,
-          "loss": 0.33760797231474293
-        },
-        {
-          "step": 70,
-          "loss": 0.26915791160903546
-        },
-        {
-          "step": 71,
-          "loss": 0.15832666358031247
-        },
-        {
-          "step": 72,
-          "loss": 0.26557432872692666
-        },
-        {
-          "step": 73,
-          "loss": 0.25246355625556466
-        },
-        {
-          "step": 74,
-          "loss": 0.2526031666136275
-        },
-        {
-          "step": 75,
-          "loss": 0.16310305181245777
-        },
-        {
-          "step": 76,
-          "loss": 0.21872362971677065
-        },
-        {
-          "step": 77,
-          "loss": 0.17633397189053066
-        },
-        {
-          "step": 78,
-          "loss": 0.24017360625431217
-        },
-        {
-          "step": 79,
-          "loss": 0.11223467604927853
-        },
-        {
-          "step": 80,
-          "loss": 0.1654807823784536
-        },
-        {
-          "step": 81,
-          "loss": 0.14776616675299564
-        },
-        {
-          "step": 82,
-          "loss": 0.19322650161031438
-        },
-        {
-          "step": 83,
-          "loss": 0.09092921644926454
-        },
-        {
-          "step": 84,
-          "loss": 0.1431371997768636
-        },
-        {
-          "step": 85,
-          "loss": 0.12103088276389576
-        },
-        {
-          "step": 86,
-          "loss": 0.1837481503455366
-        },
-        {
-          "step": 87,
-          "loss": 0.050222746656628646
-        },
-        {
-          "step": 88,
-          "loss": 0.10449030646864527
-        },
-        {
-          "step": 89,
-          "loss": 0.12032448062640697
-        },
-        {
-          "step": 90,
-          "loss": 0.12244819012261335
-        },
-        {
-          "step": 91,
-          "loss": 0.0538659231593642
-        },
-        {
-          "step": 92,
-          "loss": 0.10520199023827544
-        },
-        {
-          "step": 93,
-          "loss": 0.08366791932546452
-        },
-        {
-          "step": 94,
-          "loss": 0.10171213042143303
-        },
-        {
-          "step": 95,
-          "loss": 0.031488664484885215
-        },
-        {
-          "step": 96,
-          "loss": 0.0888006107440148
-        },
-        {
-          "step": 97,
-          "loss": 0.07844668310652368
-        },
-        {
-          "step": 98,
-          "loss": 0.09918166489758466
-        },
-        {
-          "step": 99,
-          "loss": 0.026863194914072873
-        },
-        {
-          "step": 100,
-          "loss": 0.06169841617319241
-        },
-        {
-          "step": 101,
-          "loss": 0.05504978893278926
-        },
-        {
-          "step": 102,
-          "loss": 0.08121576361869334
-        },
-        {
-          "step": 103,
-          "loss": 0.02642317789055805
-        },
-        {
-          "step": 104,
-          "loss": 0.0470806117330197
-        },
-        {
-          "step": 105,
-          "loss": 0.04045882606607495
-        },
-        {
-          "step": 106,
-          "loss": 0.06896428907541569
-        },
-        {
-          "step": 107,
-          "loss": 0.01825228830116138
-        },
-        {
-          "step": 108,
-          "loss": 0.04059816536247405
-        },
-        {
-          "step": 109,
-          "loss": 0.03604848735614682
-        },
-        {
-          "step": 110,
-          "loss": 0.055518486334404274
-        },
-        {
-          "step": 111,
-          "loss": 0.017909914613990892
-        },
-        {
-          "step": 112,
-          "loss": 0.035447377715313685
-        },
-        {
-          "step": 113,
-          "loss": 0.024713296168426706
-        },
-        {
-          "step": 114,
-          "loss": 0.04686088050016896
-        },
-        {
-          "step": 115,
-          "loss": 0.01821238071701247
-        },
-        {
-          "step": 116,
-          "loss": 0.031913872032777096
-        },
-        {
-          "step": 117,
-          "loss": 0.02194934130307051
-        },
-        {
-          "step": 118,
-          "loss": 0.04122537855062591
-        },
-        {
-          "step": 119,
-          "loss": 0.01222712317090641
-        },
-        {
-          "step": 120,
-          "loss": 0.02462655758887937
-        },
-        {
-          "step": 121,
-          "loss": 0.022211659591736224
-        },
-        {
-          "step": 122,
-          "loss": 0.036213295264249976
-        },
-        {
-          "step": 123,
-          "loss": 0.01006814551199687
-        },
-        {
-          "step": 124,
-          "loss": 0.02136932553759546
-        },
-        {
-          "step": 125,
-          "loss": 0.0189199681517288
-        },
-        {
-          "step": 126,
-          "loss": 0.030759109083421412
-        },
-        {
-          "step": 127,
-          "loss": 0.009275520361865611
-        },
-        {
-          "step": 128,
-          "loss": 0.019982101121997508
-        },
-        {
-          "step": 129,
-          "loss": 0.016172192275016182
-        },
-        {
-          "step": 130,
-          "loss": 0.02431414061504024
-        },
-        {
-          "step": 131,
-          "loss": 0.008604328807938932
-        },
-        {
-          "step": 132,
-          "loss": 0.018555078217079485
-        },
-        {
-          "step": 133,
-          "loss": 0.014816464257717864
-        },
-        {
-          "step": 134,
-          "loss": 0.020172361591737836
-        },
-        {
-          "step": 135,
-          "loss": 0.007807980683507545
-        },
-        {
-          "step": 136,
-          "loss": 0.017309504954689994
-        },
-        {
-          "step": 137,
-          "loss": 0.013509019368875462
-        },
-        {
-          "step": 138,
-          "loss": 0.018339298993754836
-        },
-        {
-          "step": 139,
-          "loss": 0.006937489663522882
-        },
-        {
-          "step": 140,
-          "loss": 0.015270022300683136
-        },
-        {
-          "step": 141,
-          "loss": 0.012049743600477711
-        },
-        {
-          "step": 142,
-          "loss": 0.016823087523545256
-        },
-        {
-          "step": 143,
-          "loss": 0.006334348242771072
-        },
-        {
-          "step": 144,
-          "loss": 0.013881368963330063
-        },
-        {
-          "step": 145,
-          "loss": 0.011031796139295518
-        },
-        {
-          "step": 146,
-          "loss": 0.015435182008821867
-        },
-        {
-          "step": 147,
-          "loss": 0.005780182006068531
-        },
-        {
-          "step": 148,
-          "loss": 0.012785827820923497
-        },
-        {
-          "step": 149,
-          "loss": 0.010334841102258938
-        },
-        {
-          "step": 150,
-          "loss": 0.01420615768781586
-        },
-        {
-          "step": 151,
-          "loss": 0.005192250641143735
-        },
-        {
-          "step": 152,
-          "loss": 0.011808645653930118
-        },
-        {
-          "step": 153,
-          "loss": 0.00980607333189202
-        },
-        {
-          "step": 154,
-          "loss": 0.013234104415494807
-        },
-        {
-          "step": 155,
-          "loss": 0.004635022471913107
-        },
-        {
-          "step": 156,
-          "loss": 0.010701459463791169
-        },
-        {
-          "step": 157,
-          "loss": 0.00953193399549181
-        },
-        {
-          "step": 158,
-          "loss": 0.012283764968850842
-        },
-        {
-          "step": 159,
-          "loss": 0.0042330801063249855
-        },
-        {
-          "step": 160,
-          "loss": 0.00992782906934547
-        },
-        {
-          "step": 161,
-          "loss": 0.00867489848637963
-        },
-        {
-          "step": 162,
-          "loss": 0.011329186614567437
-        },
-        {
-          "step": 163,
-          "loss": 0.004002942929964437
-        },
-        {
-          "step": 164,
-          "loss": 0.009452876026861196
-        },
-        {
-          "step": 165,
-          "loss": 0.007973580026925133
-        },
-        {
-          "step": 166,
-          "loss": 0.010582634550334282
-        },
-        {
-          "step": 167,
-          "loss": 0.0038112044243286077
-        },
-        {
-          "step": 168,
-          "loss": 0.008754051876782675
-        },
-        {
-          "step": 169,
-          "loss": 0.007606377656181095
-        },
-        {
-          "step": 170,
-          "loss": 0.009960056508167064
-        },
-        {
-          "step": 171,
-          "loss": 0.003603328596066548
-        },
-        {
-          "step": 172,
-          "loss": 0.008129261946318835
-        },
-        {
-          "step": 173,
-          "loss": 0.0072991128723345865
-        },
-        {
-          "step": 174,
-          "loss": 0.009370218274617644
-        },
-        {
-          "step": 175,
-          "loss": 0.00339706805396847
-        },
-        {
-          "step": 176,
-          "loss": 0.007584914523059714
-        },
-        {
-          "step": 177,
-          "loss": 0.006974996148235308
-        },
-        {
-          "step": 178,
-          "loss": 0.00879026235619483
-        },
-        {
-          "step": 179,
-          "loss": 0.0032140686371162136
-        },
-        {
-          "step": 180,
-          "loss": 0.007106163504962731
-        },
-        {
-          "step": 181,
-          "loss": 0.006696012048622164
-        },
-        {
-          "step": 182,
-          "loss": 0.008244828596591354
-        },
-        {
-          "step": 183,
-          "loss": 0.0030656286907759112
-        },
-        {
-          "step": 184,
-          "loss": 0.006655940651560801
-        },
-        {
-          "step": 185,
-          "loss": 0.00644186050954527
-        },
-        {
-          "step": 186,
-          "loss": 0.007537095259737685
-        },
-        {
-          "step": 187,
-          "loss": 0.002951341524574583
-        },
-        {
-          "step": 188,
-          "loss": 0.006276225796413921
-        },
-        {
-          "step": 189,
-          "loss": 0.006144914231959234
-        },
-        {
-          "step": 190,
-          "loss": 0.006836799591616215
-        },
-        {
-          "step": 191,
-          "loss": 0.0028578912153801894
-        },
-        {
-          "step": 192,
-          "loss": 0.005972956082563297
-        },
-        {
-          "step": 193,
-          "loss": 0.005840699866977726
-        },
-        {
-          "step": 194,
-          "loss": 0.00654018713660339
-        },
-        {
-          "step": 195,
-          "loss": 0.0027546797056214965
-        },
-        {
-          "step": 196,
-          "loss": 0.005649244164195783
-        },
-        {
-          "step": 197,
-          "loss": 0.005597934609675222
-        },
-        {
-          "step": 198,
-          "loss": 0.006285346579154021
-        },
-        {
-          "step": 199,
-          "loss": 0.0026279684371374413
-        }
-      ],
-      "checkpoints": [
-        {
-          "step": 49,
-          "path": "runs/20260704T185936Z-memorization-local/checkpoints/step-00049.npz",
-          "sampler_ready": true
-        },
-        {
-          "step": 99,
-          "path": "runs/20260704T185936Z-memorization-local/checkpoints/step-00099.npz",
-          "sampler_ready": true
-        },
-        {
-          "step": 149,
-          "path": "runs/20260704T185936Z-memorization-local/checkpoints/step-00149.npz",
-          "sampler_ready": true
-        },
-        {
-          "step": 199,
-          "path": "runs/20260704T185936Z-memorization-local/checkpoints/step-00199.npz",
-          "sampler_ready": true
-        }
-      ],
-      "evals": [
-        {
-          "step": 49,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 0.0,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 49,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.7031,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 99,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 0.9375,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 99,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.9844,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 149,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 1.0,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 149,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 1.0,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 199,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 1.0,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 199,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 1.0,
-          "num_examples": 16,
-          "sample_tokens": 256
-        }
-      ],
-      "probe": {
-        "checkpoint_path": "runs/20260704T185936Z-memorization-local/checkpoints/step-00199.npz",
-        "step": 199,
-        "sampler_ready": true,
-        "adapter_applied": true,
-        "native_sampling_ok": true,
-        "openai_compatible_sampling_ok": null,
-        "latency_ms": null,
-        "eval_samples_at_step": 2,
-        "error": null
-      }
-    },
-    "20260704T184226Z-memorization-rl-terminal": {
-      "run_id": "20260704T184226Z-memorization-rl-terminal",
-      "run_dir": "runs/20260704T184226Z-memorization-rl-terminal",
-      "status": "completed",
-      "failure_reason": null,
-      "backend": "mock",
-      "method": "rl_terminal_reward",
-      "steps_completed": 40,
-      "steps_planned": 40,
-      "final_loss": 1.2701750926592044,
-      "tokens": {
-        "train": 15360,
-        "sample": 4096
-      },
-      "plan": {
-        "name": "memorization-rl-terminal",
-        "mode": "mock",
-        "method": "rl_terminal_reward",
-        "model": {
-          "base_model": "meta-llama/Llama-3.2-1B",
-          "lora_rank": 32
-        },
-        "data": {
-          "source": "builtin:memorization",
-          "train_examples": 128,
-          "eval_examples": 64
-        },
-        "schedule": {
-          "steps": 40,
-          "batch_size": 8,
-          "learning_rate": 0.0001,
-          "lr_schedule": "constant",
-          "seed": 7
-        },
-        "evals": [
-          "exact_match",
-          "bits_recovered"
-        ],
-        "budget": {
-          "planned_train_tokens": 15360,
-          "planned_sample_tokens": 4096,
-          "planned_total_tokens": 19456,
-          "max_train_tokens": 250000,
-          "max_sample_tokens": 50000,
-          "checkpoints": 4,
-          "checkpoint_storage_gb": 2.0,
-          "estimated_usd": null,
-          "max_usd": null
-        },
-        "risks": []
-      },
-      "budget": {
-        "planned_train_tokens": 15360,
-        "planned_sample_tokens": 4096,
-        "planned_total_tokens": 19456,
-        "max_train_tokens": 250000,
-        "max_sample_tokens": 50000,
-        "checkpoints": 4,
-        "checkpoint_storage_gb": 2.0,
-        "estimated_usd": null,
-        "max_usd": null
-      },
-      "findings": [],
-      "metrics": [
-        {
-          "step": 0,
-          "loss": 4.010744694509854
-        },
-        {
-          "step": 1,
-          "loss": 3.848758352768945
-        },
-        {
-          "step": 2,
-          "loss": 3.7510932790998663
-        },
-        {
-          "step": 3,
-          "loss": 3.6071003341269634
-        },
-        {
-          "step": 4,
-          "loss": 3.510915325731384
-        },
-        {
-          "step": 5,
-          "loss": 3.450324380536634
-        },
-        {
-          "step": 6,
-          "loss": 3.3095279349352467
-        },
-        {
-          "step": 7,
-          "loss": 3.1627777617490023
-        },
-        {
-          "step": 8,
-          "loss": 3.1137301420725048
-        },
-        {
-          "step": 9,
-          "loss": 3.0189447244938252
-        },
-        {
-          "step": 10,
-          "loss": 2.8886244459783614
-        },
-        {
-          "step": 11,
-          "loss": 2.7600015100909796
-        },
-        {
-          "step": 12,
-          "loss": 2.763412237542064
-        },
-        {
-          "step": 13,
-          "loss": 2.6555821943840408
-        },
-        {
-          "step": 14,
-          "loss": 2.54397881630777
-        },
-        {
-          "step": 15,
-          "loss": 2.5570177429786285
-        },
-        {
-          "step": 16,
-          "loss": 2.428955375460851
-        },
-        {
-          "step": 17,
-          "loss": 2.3300040325668396
-        },
-        {
-          "step": 18,
-          "loss": 2.2585067397648233
-        },
-        {
-          "step": 19,
-          "loss": 2.242859140698112
-        },
-        {
-          "step": 20,
-          "loss": 2.2153195175304434
-        },
-        {
-          "step": 21,
-          "loss": 2.074222761058012
-        },
-        {
-          "step": 22,
-          "loss": 2.035831984053839
-        },
-        {
-          "step": 23,
-          "loss": 1.9509185689986073
-        },
-        {
-          "step": 24,
-          "loss": 1.9189675805286046
-        },
-        {
-          "step": 25,
-          "loss": 1.8880259700022684
-        },
-        {
-          "step": 26,
-          "loss": 1.7697190600505195
-        },
-        {
-          "step": 27,
-          "loss": 1.7705168486819272
-        },
-        {
-          "step": 28,
-          "loss": 1.6587117212693885
-        },
-        {
-          "step": 29,
-          "loss": 1.6522278167609872
-        },
-        {
-          "step": 30,
-          "loss": 1.5678781985676533
-        },
-        {
-          "step": 31,
-          "loss": 1.6249326142158522
-        },
-        {
-          "step": 32,
-          "loss": 1.4705365465715998
-        },
-        {
-          "step": 33,
-          "loss": 1.4375380677574425
-        },
-        {
-          "step": 34,
-          "loss": 1.4003684735783835
-        },
-        {
-          "step": 35,
-          "loss": 1.407146462514839
-        },
-        {
-          "step": 36,
-          "loss": 1.316009787664885
-        },
-        {
-          "step": 37,
-          "loss": 1.3410867470587502
-        },
-        {
-          "step": 38,
-          "loss": 1.2399546528436642
-        },
-        {
-          "step": 39,
-          "loss": 1.2701750926592044
-        }
-      ],
-      "checkpoints": [
-        {
-          "step": 9,
-          "path": "mock://20260704T184226Z-memorization-rl-terminal/checkpoint-00009",
-          "sampler_ready": true
-        },
-        {
-          "step": 19,
-          "path": "mock://20260704T184226Z-memorization-rl-terminal/checkpoint-00019",
-          "sampler_ready": true
-        },
-        {
-          "step": 29,
-          "path": "mock://20260704T184226Z-memorization-rl-terminal/checkpoint-00029",
-          "sampler_ready": true
-        },
-        {
-          "step": 39,
-          "path": "mock://20260704T184226Z-memorization-rl-terminal/checkpoint-00039",
-          "sampler_ready": true
-        }
-      ],
-      "evals": [
-        {
-          "step": 9,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 0.0,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 9,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.6469,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 19,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 0.0312,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 19,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.7344,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 29,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 0.0938,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 29,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.8063,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 39,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 0.2812,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 39,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.8719,
-          "num_examples": 32,
-          "sample_tokens": 512
-        }
-      ],
-      "probe": {
-        "checkpoint_path": "mock://20260704T184226Z-memorization-rl-terminal/checkpoint-00039",
-        "step": 39,
-        "sampler_ready": true,
-        "adapter_applied": true,
-        "native_sampling_ok": true,
-        "openai_compatible_sampling_ok": null,
-        "latency_ms": null,
-        "eval_samples_at_step": 2,
-        "error": null
-      }
-    },
-    "20260704T184226Z-memorization-rl-dense": {
-      "run_id": "20260704T184226Z-memorization-rl-dense",
-      "run_dir": "runs/20260704T184226Z-memorization-rl-dense",
-      "status": "completed",
-      "failure_reason": null,
-      "backend": "mock",
-      "method": "rl_dense_reward",
-      "steps_completed": 40,
-      "steps_planned": 40,
-      "final_loss": 0.7330058055086952,
-      "tokens": {
-        "train": 15360,
-        "sample": 4096
-      },
-      "plan": {
-        "name": "memorization-rl-dense",
-        "mode": "mock",
-        "method": "rl_dense_reward",
-        "model": {
-          "base_model": "meta-llama/Llama-3.2-1B",
-          "lora_rank": 32
-        },
-        "data": {
-          "source": "builtin:memorization",
-          "train_examples": 128,
-          "eval_examples": 64
-        },
-        "schedule": {
-          "steps": 40,
-          "batch_size": 8,
-          "learning_rate": 0.0001,
-          "lr_schedule": "constant",
-          "seed": 7
-        },
-        "evals": [
-          "exact_match",
-          "bits_recovered"
-        ],
-        "budget": {
-          "planned_train_tokens": 15360,
-          "planned_sample_tokens": 4096,
-          "planned_total_tokens": 19456,
-          "max_train_tokens": 250000,
-          "max_sample_tokens": 50000,
-          "checkpoints": 4,
-          "checkpoint_storage_gb": 2.0,
-          "estimated_usd": null,
-          "max_usd": null
-        },
-        "risks": []
-      },
-      "budget": {
-        "planned_train_tokens": 15360,
-        "planned_sample_tokens": 4096,
-        "planned_total_tokens": 19456,
-        "max_train_tokens": 250000,
-        "max_sample_tokens": 50000,
-        "checkpoints": 4,
-        "checkpoint_storage_gb": 2.0,
-        "estimated_usd": null,
-        "max_usd": null
-      },
-      "findings": [],
-      "metrics": [
-        {
-          "step": 0,
-          "loss": 4.010744694509854
-        },
-        {
-          "step": 1,
-          "loss": 3.780486256657988
-        },
-        {
-          "step": 2,
-          "loss": 3.6202521377206227
-        },
-        {
-          "step": 3,
-          "loss": 3.4190303893585225
-        },
-        {
-          "step": 4,
-          "loss": 3.2706148287405963
-        },
-        {
-          "step": 5,
-          "loss": 3.1624692746329415
-        },
-        {
-          "step": 6,
-          "loss": 2.9784904632361546
-        },
-        {
-          "step": 7,
-          "loss": 2.7926440567230615
-        },
-        {
-          "step": 8,
-          "loss": 2.7083168510485263
-        },
-        {
-          "step": 9,
-          "loss": 2.5818147224007437
-        },
-        {
-          "step": 10,
-          "loss": 2.4231016839017756
-        },
-        {
-          "step": 11,
-          "loss": 2.2691850456924723
-        },
-        {
-          "step": 12,
-          "loss": 2.2501894909787974
-        },
-        {
-          "step": 13,
-          "loss": 2.122641471082117
-        },
-        {
-          "step": 14,
-          "loss": 1.9938211357770144
-        },
-        {
-          "step": 15,
-          "loss": 1.9919680108027558
-        },
-        {
-          "step": 16,
-          "loss": 1.8511729336496274
-        },
-        {
-          "step": 17,
-          "loss": 1.7414926216103712
-        },
-        {
-          "step": 18,
-          "loss": 1.6611239039793593
-        },
-        {
-          "step": 19,
-          "loss": 1.638325106792743
-        },
-        {
-          "step": 20,
-          "loss": 1.6052255747502195
-        },
-        {
-          "step": 21,
-          "loss": 1.4600391697667763
-        },
-        {
-          "step": 22,
-          "loss": 1.4189154382053624
-        },
-        {
-          "step": 23,
-          "loss": 1.3325192366033496
-        },
-        {
-          "step": 24,
-          "loss": 1.300235744951885
-        },
-        {
-          "step": 25,
-          "loss": 1.2700182937241913
-        },
-        {
-          "step": 26,
-          "loss": 1.1534044913752486
-        },
-        {
-          "step": 27,
-          "loss": 1.1567821908006493
-        },
-        {
-          "step": 28,
-          "loss": 1.0483668820544276
-        },
-        {
-          "step": 29,
-          "loss": 1.0460107566951646
-        },
-        {
-          "step": 30,
-          "loss": 0.9664595932903444
-        },
-        {
-          "step": 31,
-          "loss": 1.0289202472926762
-        },
-        {
-          "step": 32,
-          "loss": 0.8804794472657681
-        },
-        {
-          "step": 33,
-          "loss": 0.8539304077951917
-        },
-        {
-          "step": 34,
-          "loss": 0.8236532361563235
-        },
-        {
-          "step": 35,
-          "loss": 0.8377188960913966
-        },
-        {
-          "step": 36,
-          "loss": 0.7542206564092453
-        },
-        {
-          "step": 37,
-          "loss": 0.7872453891969673
-        },
-        {
-          "step": 38,
-          "loss": 0.6943318575410029
-        },
-        {
-          "step": 39,
-          "loss": 0.7330058055086952
-        }
-      ],
-      "checkpoints": [
-        {
-          "step": 9,
-          "path": "mock://20260704T184226Z-memorization-rl-dense/checkpoint-00009",
-          "sampler_ready": true
-        },
-        {
-          "step": 19,
-          "path": "mock://20260704T184226Z-memorization-rl-dense/checkpoint-00019",
-          "sampler_ready": true
-        },
-        {
-          "step": 29,
-          "path": "mock://20260704T184226Z-memorization-rl-dense/checkpoint-00029",
-          "sampler_ready": true
-        },
-        {
-          "step": 39,
-          "path": "mock://20260704T184226Z-memorization-rl-dense/checkpoint-00039",
-          "sampler_ready": true
-        }
-      ],
-      "evals": [
-        {
-          "step": 9,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 0.0,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 9,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.7094,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 19,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 0.1562,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 19,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.8125,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 29,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 0.375,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 29,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.9,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 39,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 0.5,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 39,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.9281,
-          "num_examples": 32,
-          "sample_tokens": 512
-        }
-      ],
-      "probe": {
-        "checkpoint_path": "mock://20260704T184226Z-memorization-rl-dense/checkpoint-00039",
-        "step": 39,
-        "sampler_ready": true,
-        "adapter_applied": true,
-        "native_sampling_ok": true,
-        "openai_compatible_sampling_ok": null,
-        "latency_ms": null,
-        "eval_samples_at_step": 2,
-        "error": null
-      }
-    },
-    "20260704T184225Z-memorization-sft": {
-      "run_id": "20260704T184225Z-memorization-sft",
-      "run_dir": "runs/20260704T184225Z-memorization-sft",
-      "status": "completed",
-      "failure_reason": null,
-      "backend": "mock",
-      "method": "sft",
-      "steps_completed": 40,
-      "steps_planned": 40,
-      "final_loss": 0.38189626889050066,
-      "tokens": {
-        "train": 15360,
-        "sample": 4096
-      },
-      "plan": {
-        "name": "memorization-sft",
-        "mode": "mock",
-        "method": "sft",
-        "model": {
-          "base_model": "meta-llama/Llama-3.2-1B",
-          "lora_rank": 32
-        },
-        "data": {
-          "source": "builtin:memorization",
-          "train_examples": 128,
-          "eval_examples": 64
-        },
-        "schedule": {
-          "steps": 40,
-          "batch_size": 8,
-          "learning_rate": 0.0001,
-          "lr_schedule": "constant",
-          "seed": 7
-        },
-        "evals": [
-          "exact_match",
-          "bits_recovered"
-        ],
-        "budget": {
-          "planned_train_tokens": 15360,
-          "planned_sample_tokens": 4096,
-          "planned_total_tokens": 19456,
-          "max_train_tokens": 250000,
-          "max_sample_tokens": 50000,
-          "checkpoints": 4,
-          "checkpoint_storage_gb": 2.0,
-          "estimated_usd": null,
-          "max_usd": null
-        },
-        "risks": []
-      },
-      "budget": {
-        "planned_train_tokens": 15360,
-        "planned_sample_tokens": 4096,
-        "planned_total_tokens": 19456,
-        "max_train_tokens": 250000,
-        "max_sample_tokens": 50000,
-        "checkpoints": 4,
-        "checkpoint_storage_gb": 2.0,
-        "estimated_usd": null,
-        "max_usd": null
-      },
-      "findings": [],
-      "metrics": [
-        {
-          "step": 0,
-          "loss": 4.010744694509854
-        },
-        {
-          "step": 1,
-          "loss": 3.669505946528751
-        },
-        {
-          "step": 2,
-          "loss": 3.4127972905640522
-        },
-        {
-          "step": 3,
-          "loss": 3.128161121261656
-        },
-        {
-          "step": 4,
-          "loss": 2.9080756935485828
-        },
-        {
-          "step": 5,
-          "loss": 2.7388082207139868
-        },
-        {
-          "step": 6,
-          "loss": 2.503167580146923
-        },
-        {
-          "step": 7,
-          "loss": 2.274130963595411
-        },
-        {
-          "step": 8,
-          "loss": 2.1541875086106894
-        },
-        {
-          "step": 9,
-          "loss": 1.998828386319153
-        },
-        {
-          "step": 10,
-          "loss": 1.817278658124859
-        },
-        {
-          "step": 11,
-          "loss": 1.6458758402729214
-        },
-        {
-          "step": 12,
-          "loss": 1.614137939058115
-        },
-        {
-          "step": 13,
-          "loss": 1.478042313983924
-        },
-        {
-          "step": 14,
-          "loss": 1.3443725431456277
-        },
-        {
-          "step": 15,
-          "loss": 1.3409194641393436
-        },
-        {
-          "step": 16,
-          "loss": 1.2013688661624915
-        },
-        {
-          "step": 17,
-          "loss": 1.0954121747536893
-        },
-        {
-          "step": 18,
-          "loss": 1.0209171311715561
-        },
-        {
-          "step": 19,
-          "loss": 1.005845927366114
-        },
-        {
-          "step": 20,
-          "loss": 0.9820617559893285
-        },
-        {
-          "step": 21,
-          "loss": 0.8475395917623472
-        },
-        {
-          "step": 22,
-          "loss": 0.818214875015438
-        },
-        {
-          "step": 23,
-          "loss": 0.7445608677204555
-        },
-        {
-          "step": 24,
-          "loss": 0.7257915931822909
-        },
-        {
-          "step": 25,
-          "loss": 0.7097077691630388
-        },
-        {
-          "step": 26,
-          "loss": 0.6077112060897415
-        },
-        {
-          "step": 27,
-          "loss": 0.6260691950027353
-        },
-        {
-          "step": 28,
-          "loss": 0.532890459853455
-        },
-        {
-          "step": 29,
-          "loss": 0.5459329078769937
-        },
-        {
-          "step": 30,
-          "loss": 0.48185931688698813
-        },
-        {
-          "step": 31,
-          "loss": 0.5598037329072931
-        },
-        {
-          "step": 32,
-          "loss": 0.4267892711296788
-        },
-        {
-          "step": 33,
-          "loss": 0.4155538222902293
-        },
-        {
-          "step": 34,
-          "loss": 0.40042963397644854
-        },
-        {
-          "step": 35,
-          "loss": 0.4294465232860904
-        },
-        {
-          "step": 36,
-          "loss": 0.3606626421963998
-        },
-        {
-          "step": 37,
-          "loss": 0.4081351546075222
-        },
-        {
-          "step": 38,
-          "loss": 0.3293779596180727
-        },
-        {
-          "step": 39,
-          "loss": 0.38189626889050066
-        }
-      ],
-      "checkpoints": [
-        {
-          "step": 9,
-          "path": "mock://20260704T184225Z-memorization-sft/checkpoint-00009",
-          "sampler_ready": true
-        },
-        {
-          "step": 19,
-          "path": "mock://20260704T184225Z-memorization-sft/checkpoint-00019",
-          "sampler_ready": true
-        },
-        {
-          "step": 29,
-          "path": "mock://20260704T184225Z-memorization-sft/checkpoint-00029",
-          "sampler_ready": true
-        },
-        {
-          "step": 39,
-          "path": "mock://20260704T184225Z-memorization-sft/checkpoint-00039",
-          "sampler_ready": true
-        }
-      ],
-      "evals": [
-        {
-          "step": 9,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 0.1875,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 9,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.7844,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 19,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 0.375,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 19,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.8938,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 29,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 0.7188,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 29,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.9688,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 39,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 0.8438,
-          "num_examples": 32,
-          "sample_tokens": 512
-        },
-        {
-          "step": 39,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.9812,
-          "num_examples": 32,
-          "sample_tokens": 512
-        }
-      ],
-      "probe": {
-        "checkpoint_path": "mock://20260704T184225Z-memorization-sft/checkpoint-00039",
-        "step": 39,
-        "sampler_ready": true,
-        "adapter_applied": true,
-        "native_sampling_ok": true,
-        "openai_compatible_sampling_ok": null,
-        "latency_ms": null,
-        "eval_samples_at_step": 2,
-        "error": null
-      }
-    },
-    "20260704T184217Z-memorization-local": {
-      "run_id": "20260704T184217Z-memorization-local",
-      "run_dir": "runs/20260704T184217Z-memorization-local",
-      "status": "completed",
-      "failure_reason": null,
-      "backend": "local",
-      "method": "sft",
-      "steps_completed": 200,
-      "steps_planned": 200,
-      "final_loss": 0.0026279684371374413,
-      "tokens": {
-        "train": 14400,
-        "sample": 2048
-      },
-      "plan": {
-        "name": "memorization-local",
-        "mode": "local",
-        "method": "sft",
-        "model": {
-          "base_model": "meta-llama/Llama-3.2-1B",
-          "lora_rank": 32
-        },
-        "data": {
-          "source": "builtin:memorization",
-          "train_examples": 32,
-          "eval_examples": 16
-        },
-        "schedule": {
-          "steps": 200,
-          "batch_size": 8,
-          "learning_rate": 0.03,
-          "lr_schedule": "constant",
-          "seed": 7
-        },
-        "evals": [
-          "exact_match",
-          "bits_recovered"
-        ],
-        "budget": {
-          "planned_train_tokens": 76800,
-          "planned_sample_tokens": 2048,
-          "planned_total_tokens": 78848,
-          "max_train_tokens": 0,
-          "max_sample_tokens": 0,
-          "checkpoints": 4,
-          "checkpoint_storage_gb": 0.004,
-          "estimated_usd": null,
-          "max_usd": null
-        },
-        "risks": []
-      },
-      "budget": {
-        "planned_train_tokens": 76800,
-        "planned_sample_tokens": 2048,
-        "planned_total_tokens": 78848,
-        "max_train_tokens": 0,
-        "max_sample_tokens": 0,
-        "checkpoints": 4,
-        "checkpoint_storage_gb": 0.004,
-        "estimated_usd": null,
-        "max_usd": null
-      },
-      "findings": [],
-      "metrics": [
-        {
-          "step": 0,
-          "loss": 3.4861211167557755
-        },
-        {
-          "step": 1,
-          "loss": 1.5635752669857967
-        },
-        {
-          "step": 2,
-          "loss": 0.7877535779889514
-        },
-        {
-          "step": 3,
-          "loss": 1.0163920153709067
-        },
-        {
-          "step": 4,
-          "loss": 1.0034904892920098
-        },
-        {
-          "step": 5,
-          "loss": 0.6677715841152092
-        },
-        {
-          "step": 6,
-          "loss": 0.6243544795848166
-        },
-        {
-          "step": 7,
-          "loss": 0.65491758460724
-        },
-        {
-          "step": 8,
-          "loss": 0.6403998589380853
-        },
-        {
-          "step": 9,
-          "loss": 0.5901133179300407
-        },
-        {
-          "step": 10,
-          "loss": 0.618619840663187
-        },
-        {
-          "step": 11,
-          "loss": 0.6108710760130672
-        },
-        {
-          "step": 12,
-          "loss": 0.6280822531682928
-        },
-        {
-          "step": 13,
-          "loss": 0.6127341439134809
-        },
-        {
-          "step": 14,
-          "loss": 0.7570803667455243
-        },
-        {
-          "step": 15,
-          "loss": 0.6294540839148666
-        },
-        {
-          "step": 16,
-          "loss": 0.6660876619979315
-        },
-        {
-          "step": 17,
-          "loss": 0.8655757146824065
-        },
-        {
-          "step": 18,
-          "loss": 0.5883750302796441
-        },
-        {
-          "step": 19,
-          "loss": 0.7586507420047514
-        },
-        {
-          "step": 20,
-          "loss": 0.683020716271963
-        },
-        {
-          "step": 21,
-          "loss": 0.7119124355958258
-        },
-        {
-          "step": 22,
-          "loss": 0.6170315675288313
-        },
-        {
-          "step": 23,
-          "loss": 0.5865136002227258
-        },
-        {
-          "step": 24,
-          "loss": 0.6353117879252852
-        },
-        {
-          "step": 25,
-          "loss": 0.5823016609423614
-        },
-        {
-          "step": 26,
-          "loss": 0.5796984184380997
-        },
-        {
-          "step": 27,
-          "loss": 0.5710076976906047
-        },
-        {
-          "step": 28,
-          "loss": 0.598147768019156
-        },
-        {
-          "step": 29,
-          "loss": 0.6613577599225223
-        },
-        {
-          "step": 30,
-          "loss": 0.5682455400674503
-        },
-        {
-          "step": 31,
-          "loss": 0.6396256160042617
-        },
-        {
-          "step": 32,
-          "loss": 0.572114062400225
-        },
-        {
-          "step": 33,
-          "loss": 0.7054008944745015
-        },
-        {
-          "step": 34,
-          "loss": 0.5240567207694307
-        },
-        {
-          "step": 35,
-          "loss": 0.5480878775250493
-        },
-        {
-          "step": 36,
-          "loss": 0.5737838584179558
-        },
-        {
-          "step": 37,
-          "loss": 0.5672832197244522
-        },
-        {
-          "step": 38,
-          "loss": 0.5025062420858206
-        },
-        {
-          "step": 39,
-          "loss": 0.5009689468302209
-        },
-        {
-          "step": 40,
-          "loss": 0.5113152922263277
-        },
-        {
-          "step": 41,
-          "loss": 0.5728742877258356
-        },
-        {
-          "step": 42,
-          "loss": 0.5155370691480068
-        },
-        {
-          "step": 43,
-          "loss": 0.4917781614177634
-        },
-        {
-          "step": 44,
-          "loss": 0.4678397751604994
-        },
-        {
-          "step": 45,
-          "loss": 0.6323371459137141
-        },
-        {
-          "step": 46,
-          "loss": 0.45474139402452196
-        },
-        {
-          "step": 47,
-          "loss": 0.45694226994942333
-        },
-        {
-          "step": 48,
-          "loss": 0.46106125401857334
-        },
-        {
-          "step": 49,
-          "loss": 0.5416433893092591
-        },
-        {
-          "step": 50,
-          "loss": 0.4442066336796806
-        },
-        {
-          "step": 51,
-          "loss": 0.3597687659164427
-        },
-        {
-          "step": 52,
-          "loss": 0.4295379457898875
-        },
-        {
-          "step": 53,
-          "loss": 0.4635484609735111
-        },
-        {
-          "step": 54,
-          "loss": 0.4103754869211242
-        },
-        {
-          "step": 55,
-          "loss": 0.35011499295309595
-        },
-        {
-          "step": 56,
-          "loss": 0.35634641375052095
-        },
-        {
-          "step": 57,
-          "loss": 0.40478673091357337
-        },
-        {
-          "step": 58,
-          "loss": 0.40735616503700567
-        },
-        {
-          "step": 59,
-          "loss": 0.280718972704151
-        },
-        {
-          "step": 60,
-          "loss": 0.3352243527341083
-        },
-        {
-          "step": 61,
-          "loss": 0.4458366712278464
-        },
-        {
-          "step": 62,
-          "loss": 0.3514364360275391
-        },
-        {
-          "step": 63,
-          "loss": 0.3294738714761839
-        },
-        {
-          "step": 64,
-          "loss": 0.3187043491150006
-        },
-        {
-          "step": 65,
-          "loss": 0.3400395984596756
-        },
-        {
-          "step": 66,
-          "loss": 0.37715603000712755
-        },
-        {
-          "step": 67,
-          "loss": 0.19789897587177532
-        },
-        {
-          "step": 68,
-          "loss": 0.26685415854405425
-        },
-        {
-          "step": 69,
-          "loss": 0.33760797231474293
-        },
-        {
-          "step": 70,
-          "loss": 0.26915791160903546
-        },
-        {
-          "step": 71,
-          "loss": 0.15832666358031247
-        },
-        {
-          "step": 72,
-          "loss": 0.26557432872692666
-        },
-        {
-          "step": 73,
-          "loss": 0.25246355625556466
-        },
-        {
-          "step": 74,
-          "loss": 0.2526031666136275
-        },
-        {
-          "step": 75,
-          "loss": 0.16310305181245777
-        },
-        {
-          "step": 76,
-          "loss": 0.21872362971677065
-        },
-        {
-          "step": 77,
-          "loss": 0.17633397189053066
-        },
-        {
-          "step": 78,
-          "loss": 0.24017360625431217
-        },
-        {
-          "step": 79,
-          "loss": 0.11223467604927853
-        },
-        {
-          "step": 80,
-          "loss": 0.1654807823784536
-        },
-        {
-          "step": 81,
-          "loss": 0.14776616675299564
-        },
-        {
-          "step": 82,
-          "loss": 0.19322650161031438
-        },
-        {
-          "step": 83,
-          "loss": 0.09092921644926454
-        },
-        {
-          "step": 84,
-          "loss": 0.1431371997768636
-        },
-        {
-          "step": 85,
-          "loss": 0.12103088276389576
-        },
-        {
-          "step": 86,
-          "loss": 0.1837481503455366
-        },
-        {
-          "step": 87,
-          "loss": 0.050222746656628646
-        },
-        {
-          "step": 88,
-          "loss": 0.10449030646864527
-        },
-        {
-          "step": 89,
-          "loss": 0.12032448062640697
-        },
-        {
-          "step": 90,
-          "loss": 0.12244819012261335
-        },
-        {
-          "step": 91,
-          "loss": 0.0538659231593642
-        },
-        {
-          "step": 92,
-          "loss": 0.10520199023827544
-        },
-        {
-          "step": 93,
-          "loss": 0.08366791932546452
-        },
-        {
-          "step": 94,
-          "loss": 0.10171213042143303
-        },
-        {
-          "step": 95,
-          "loss": 0.031488664484885215
-        },
-        {
-          "step": 96,
-          "loss": 0.0888006107440148
-        },
-        {
-          "step": 97,
-          "loss": 0.07844668310652368
-        },
-        {
-          "step": 98,
-          "loss": 0.09918166489758466
-        },
-        {
-          "step": 99,
-          "loss": 0.026863194914072873
-        },
-        {
-          "step": 100,
-          "loss": 0.06169841617319241
-        },
-        {
-          "step": 101,
-          "loss": 0.05504978893278926
-        },
-        {
-          "step": 102,
-          "loss": 0.08121576361869334
-        },
-        {
-          "step": 103,
-          "loss": 0.02642317789055805
-        },
-        {
-          "step": 104,
-          "loss": 0.0470806117330197
-        },
-        {
-          "step": 105,
-          "loss": 0.04045882606607495
-        },
-        {
-          "step": 106,
-          "loss": 0.06896428907541569
-        },
-        {
-          "step": 107,
-          "loss": 0.01825228830116138
-        },
-        {
-          "step": 108,
-          "loss": 0.04059816536247405
-        },
-        {
-          "step": 109,
-          "loss": 0.03604848735614682
-        },
-        {
-          "step": 110,
-          "loss": 0.055518486334404274
-        },
-        {
-          "step": 111,
-          "loss": 0.017909914613990892
-        },
-        {
-          "step": 112,
-          "loss": 0.035447377715313685
-        },
-        {
-          "step": 113,
-          "loss": 0.024713296168426706
-        },
-        {
-          "step": 114,
-          "loss": 0.04686088050016896
-        },
-        {
-          "step": 115,
-          "loss": 0.01821238071701247
-        },
-        {
-          "step": 116,
-          "loss": 0.031913872032777096
-        },
-        {
-          "step": 117,
-          "loss": 0.02194934130307051
-        },
-        {
-          "step": 118,
-          "loss": 0.04122537855062591
-        },
-        {
-          "step": 119,
-          "loss": 0.01222712317090641
-        },
-        {
-          "step": 120,
-          "loss": 0.02462655758887937
-        },
-        {
-          "step": 121,
-          "loss": 0.022211659591736224
-        },
-        {
-          "step": 122,
-          "loss": 0.036213295264249976
-        },
-        {
-          "step": 123,
-          "loss": 0.01006814551199687
-        },
-        {
-          "step": 124,
-          "loss": 0.02136932553759546
-        },
-        {
-          "step": 125,
-          "loss": 0.0189199681517288
-        },
-        {
-          "step": 126,
-          "loss": 0.030759109083421412
-        },
-        {
-          "step": 127,
-          "loss": 0.009275520361865611
-        },
-        {
-          "step": 128,
-          "loss": 0.019982101121997508
-        },
-        {
-          "step": 129,
-          "loss": 0.016172192275016182
-        },
-        {
-          "step": 130,
-          "loss": 0.02431414061504024
-        },
-        {
-          "step": 131,
-          "loss": 0.008604328807938932
-        },
-        {
-          "step": 132,
-          "loss": 0.018555078217079485
-        },
-        {
-          "step": 133,
-          "loss": 0.014816464257717864
-        },
-        {
-          "step": 134,
-          "loss": 0.020172361591737836
-        },
-        {
-          "step": 135,
-          "loss": 0.007807980683507545
-        },
-        {
-          "step": 136,
-          "loss": 0.017309504954689994
-        },
-        {
-          "step": 137,
-          "loss": 0.013509019368875462
-        },
-        {
-          "step": 138,
-          "loss": 0.018339298993754836
-        },
-        {
-          "step": 139,
-          "loss": 0.006937489663522882
-        },
-        {
-          "step": 140,
-          "loss": 0.015270022300683136
-        },
-        {
-          "step": 141,
-          "loss": 0.012049743600477711
-        },
-        {
-          "step": 142,
-          "loss": 0.016823087523545256
-        },
-        {
-          "step": 143,
-          "loss": 0.006334348242771072
-        },
-        {
-          "step": 144,
-          "loss": 0.013881368963330063
-        },
-        {
-          "step": 145,
-          "loss": 0.011031796139295518
-        },
-        {
-          "step": 146,
-          "loss": 0.015435182008821867
-        },
-        {
-          "step": 147,
-          "loss": 0.005780182006068531
-        },
-        {
-          "step": 148,
-          "loss": 0.012785827820923497
-        },
-        {
-          "step": 149,
-          "loss": 0.010334841102258938
-        },
-        {
-          "step": 150,
-          "loss": 0.01420615768781586
-        },
-        {
-          "step": 151,
-          "loss": 0.005192250641143735
-        },
-        {
-          "step": 152,
-          "loss": 0.011808645653930118
-        },
-        {
-          "step": 153,
-          "loss": 0.00980607333189202
-        },
-        {
-          "step": 154,
-          "loss": 0.013234104415494807
-        },
-        {
-          "step": 155,
-          "loss": 0.004635022471913107
-        },
-        {
-          "step": 156,
-          "loss": 0.010701459463791169
-        },
-        {
-          "step": 157,
-          "loss": 0.00953193399549181
-        },
-        {
-          "step": 158,
-          "loss": 0.012283764968850842
-        },
-        {
-          "step": 159,
-          "loss": 0.0042330801063249855
-        },
-        {
-          "step": 160,
-          "loss": 0.00992782906934547
-        },
-        {
-          "step": 161,
-          "loss": 0.00867489848637963
-        },
-        {
-          "step": 162,
-          "loss": 0.011329186614567437
-        },
-        {
-          "step": 163,
-          "loss": 0.004002942929964437
-        },
-        {
-          "step": 164,
-          "loss": 0.009452876026861196
-        },
-        {
-          "step": 165,
-          "loss": 0.007973580026925133
-        },
-        {
-          "step": 166,
-          "loss": 0.010582634550334282
-        },
-        {
-          "step": 167,
-          "loss": 0.0038112044243286077
-        },
-        {
-          "step": 168,
-          "loss": 0.008754051876782675
-        },
-        {
-          "step": 169,
-          "loss": 0.007606377656181095
-        },
-        {
-          "step": 170,
-          "loss": 0.009960056508167064
-        },
-        {
-          "step": 171,
-          "loss": 0.003603328596066548
-        },
-        {
-          "step": 172,
-          "loss": 0.008129261946318835
-        },
-        {
-          "step": 173,
-          "loss": 0.0072991128723345865
-        },
-        {
-          "step": 174,
-          "loss": 0.009370218274617644
-        },
-        {
-          "step": 175,
-          "loss": 0.00339706805396847
-        },
-        {
-          "step": 176,
-          "loss": 0.007584914523059714
-        },
-        {
-          "step": 177,
-          "loss": 0.006974996148235308
-        },
-        {
-          "step": 178,
-          "loss": 0.00879026235619483
-        },
-        {
-          "step": 179,
-          "loss": 0.0032140686371162136
-        },
-        {
-          "step": 180,
-          "loss": 0.007106163504962731
-        },
-        {
-          "step": 181,
-          "loss": 0.006696012048622164
-        },
-        {
-          "step": 182,
-          "loss": 0.008244828596591354
-        },
-        {
-          "step": 183,
-          "loss": 0.0030656286907759112
-        },
-        {
-          "step": 184,
-          "loss": 0.006655940651560801
-        },
-        {
-          "step": 185,
-          "loss": 0.00644186050954527
-        },
-        {
-          "step": 186,
-          "loss": 0.007537095259737685
-        },
-        {
-          "step": 187,
-          "loss": 0.002951341524574583
-        },
-        {
-          "step": 188,
-          "loss": 0.006276225796413921
-        },
-        {
-          "step": 189,
-          "loss": 0.006144914231959234
-        },
-        {
-          "step": 190,
-          "loss": 0.006836799591616215
-        },
-        {
-          "step": 191,
-          "loss": 0.0028578912153801894
-        },
-        {
-          "step": 192,
-          "loss": 0.005972956082563297
-        },
-        {
-          "step": 193,
-          "loss": 0.005840699866977726
-        },
-        {
-          "step": 194,
-          "loss": 0.00654018713660339
-        },
-        {
-          "step": 195,
-          "loss": 0.0027546797056214965
-        },
-        {
-          "step": 196,
-          "loss": 0.005649244164195783
-        },
-        {
-          "step": 197,
-          "loss": 0.005597934609675222
-        },
-        {
-          "step": 198,
-          "loss": 0.006285346579154021
-        },
-        {
-          "step": 199,
-          "loss": 0.0026279684371374413
-        }
-      ],
-      "checkpoints": [
-        {
-          "step": 49,
-          "path": "runs/20260704T184217Z-memorization-local/checkpoints/step-00049.npz",
-          "sampler_ready": true
-        },
-        {
-          "step": 99,
-          "path": "runs/20260704T184217Z-memorization-local/checkpoints/step-00099.npz",
-          "sampler_ready": true
-        },
-        {
-          "step": 149,
-          "path": "runs/20260704T184217Z-memorization-local/checkpoints/step-00149.npz",
-          "sampler_ready": true
-        },
-        {
-          "step": 199,
-          "path": "runs/20260704T184217Z-memorization-local/checkpoints/step-00199.npz",
-          "sampler_ready": true
-        }
-      ],
-      "evals": [
-        {
-          "step": 49,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 0.0,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 49,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.7031,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 99,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 0.9375,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 99,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 0.9844,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 149,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 1.0,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 149,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 1.0,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 199,
-          "name": "exact_match",
-          "grader": "exact_match",
-          "score": 1.0,
-          "num_examples": 16,
-          "sample_tokens": 256
-        },
-        {
-          "step": 199,
-          "name": "bits_recovered",
-          "grader": "bits_recovered",
-          "score": 1.0,
-          "num_examples": 16,
-          "sample_tokens": 256
-        }
-      ],
-      "probe": {
-        "checkpoint_path": "runs/20260704T184217Z-memorization-local/checkpoints/step-00199.npz",
-        "step": 199,
         "sampler_ready": true,
         "adapter_applied": true,
         "native_sampling_ok": true,
