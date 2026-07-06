@@ -21,6 +21,7 @@ const CHECK_INTERVAL_MIN = 10;
 
 let platformData = null;
 let runData = null;
+let platformLoading = true;
 let activeWindow = "24h";
 
 function pctStr(p) {
@@ -78,13 +79,14 @@ async function fetchRunData() {
 }
 
 function platformOverall() {
-  if (!platformData) return { text: "Platform status unavailable", cls: "degraded" };
+  if (platformLoading) return { text: "Loading tinker status…", cls: "degraded" };
+  if (!platformData) return { text: "Tinker status unavailable", cls: "degraded" };
   const sts = PLATFORM_SVCS.map((s) => platformData.latest[s.key]?.status);
   const allUp = sts.every((s) => s === "up");
   const allDown = sts.every((s) => s === "down" || !s);
-  if (allUp) return { text: "Platform operational", cls: "" };
-  if (allDown) return { text: "Platform outage", cls: "down" };
-  return { text: "Platform degraded", cls: "degraded" };
+  if (allUp) return { text: "Tinker API operational", cls: "" };
+  if (allDown) return { text: "Tinker API outage", cls: "down" };
+  return { text: "Tinker API degraded", cls: "degraded" };
 }
 
 function runOverall(run) {
@@ -102,15 +104,15 @@ function runOverall(run) {
 }
 
 function combinedOverall(platform, run) {
-  if (platform.cls === "down") return { text: "Platform down — not your code", cls: "down" };
+  if (platform.cls === "down") return { text: "Tinker down — not your code", cls: "down" };
   if (run.cls === "down" && platform.cls === "") {
-    return { text: "Platform up — run needs attention", cls: "degraded" };
+    return { text: "Tinker up — run needs attention", cls: "degraded" };
   }
   if (platform.cls === "degraded" && run.cls === "") {
-    return { text: "Platform degraded — run looks fine", cls: "degraded" };
+    return { text: "Tinker degraded — run looks fine", cls: "degraded" };
   }
   if (platform.cls === "" && run.cls === "") {
-    return { text: "Platform up · run healthy", cls: "" };
+    return { text: "Tinker up · run healthy", cls: "" };
   }
   return { text: `${platform.text} · ${run.text}`, cls: run.cls || platform.cls };
 }
@@ -149,14 +151,25 @@ function lossSparkline(metrics) {
 }
 
 function renderPlatformSection() {
+  if (platformLoading) {
+    return `
+      <section class="section-block" id="tinker-status">
+        <div class="section-head">
+          <div class="section-title">Tinker Status</div>
+          <div class="section-sub">live from tinker-status</div>
+        </div>
+        <div class="no-items">Loading tinker status from Shrinav's uptime monitor…</div>
+      </section>`;
+  }
+
   if (!platformData) {
     return `
-      <section class="section-block">
+      <section class="section-block" id="tinker-status">
         <div class="section-head">
-          <div class="section-title">Platform</div>
+          <div class="section-title">Tinker Status</div>
           <div class="section-sub">tinker-status</div>
         </div>
-        <div class="no-items">Could not load platform status.</div>
+        <div class="no-items">Could not load tinker status. <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">Open tinker-status directly</a>.</div>
       </section>`;
   }
 
@@ -165,14 +178,14 @@ function renderPlatformSection() {
   const lastCheck = latest[PLATFORM_SVCS[0].key]?.checked_at;
 
   return `
-    <section class="section-block" id="platform">
+    <section class="section-block" id="tinker-status">
       <div class="section-head">
-        <div class="section-title">Platform</div>
+        <div class="section-title">Tinker Status</div>
         <div class="section-sub">
-          via <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">tinker-status</a>
+          live via <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">tinker-status</a>
         </div>
       </div>
-      <p class="section-note">Independent uptime checks every ${CHECK_INTERVAL_MIN} min. Last check ${fmtTime(lastCheck)}.</p>
+      <p class="section-note">Same checks as <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">lokashrinav.github.io/tinker-status</a> — API, inference, OpenAI-compatible, training — every ${CHECK_INTERVAL_MIN} min. Last check ${fmtTime(lastCheck)}.</p>
       <div class="services">
         ${PLATFORM_SVCS.map((s) => {
           const d = latest[s.key];
@@ -338,6 +351,10 @@ function render() {
 
   document.getElementById("app").innerHTML = `
     <nav class="top-nav">
+      <a href="#tinker-status">Status</a>
+      <a href="#run">Run</a>
+      <a href="#budget">Budget</a>
+      <a href="#checkpoint">Checkpoint</a>
       <a href="./about.html">About</a>
       <a href="https://github.com/Abhishek21g/tinker-workbench" target="_blank" rel="noopener">GitHub</a>
     </nav>
@@ -355,7 +372,7 @@ function render() {
     ${run ? renderCheckpointSection(run) : ""}
     ${renderRunsList(runData?.runs, run?.run_id)}
     <footer>
-      Platform uptime by <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">tinker-status</a> (Shrinav).<br>
+      Tinker Status uptime by <a href="https://lokashrinav.github.io/tinker-status/" target="_blank" rel="noopener">tinker-status</a> (Shrinav).<br>
       Run health, budget, and checkpoint data from <a href="https://github.com/Abhishek21g/tinker-workbench" target="_blank" rel="noopener">Tinker Workbench</a>.
     </footer>`;
 
@@ -371,15 +388,22 @@ function render() {
 
 async function load() {
   try {
-    const [platform, runs] = await Promise.all([
-      fetchPlatformSummary().catch(() => null),
-      fetchRunData(),
-    ]);
-    platformData = platform;
-    runData = runs;
+    runData = await fetchRunData();
     render();
+    fetchPlatformSummary()
+      .then((data) => {
+        platformData = data;
+        platformLoading = false;
+        render();
+      })
+      .catch(() => {
+        platformData = null;
+        platformLoading = false;
+        render();
+      });
   } catch (e) {
-    document.getElementById("app").innerHTML = `<div class="loading" style="color:var(--red)">Failed to load: ${e.message}</div>`;
+    document.getElementById("app").innerHTML =
+      `<div class="loading" style="color:var(--red)">Failed to load: ${e.message}</div>`;
   }
 }
 

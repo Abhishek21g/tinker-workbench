@@ -75,7 +75,8 @@ body {
 .top-nav {
   display: flex;
   justify-content: flex-end;
-  gap: 16px;
+  flex-wrap: wrap;
+  gap: 12px 16px;
   margin-bottom: 32px;
   font-family: var(--mono);
   font-size: 0.72rem;

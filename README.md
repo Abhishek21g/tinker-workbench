@@ -73,8 +73,17 @@ evals at every checkpoint and `compare` as the study readout.
 
 ## Docs
 
-- [site/index.html](site/index.html) — live DX dashboard (platform + run health + budget + checkpoint)
+- [site/index.html](site/index.html) — live DX dashboard (tinker-status + run health + budget + checkpoint)
 - [site/about.html](site/about.html) — product overview and research context
+
+### Publish to enaguthi.com
+
+`enaguthi.com/tinker-workbench/` is served from `Abhishek21g.github.io` (gh-pages), not this repo directly:
+
+```bash
+tinker-workbench export-dashboard latest   # refresh run data
+./scripts/publish-site.sh                # sync site/ and push gh-pages
+```
 - [docs/commands.md](docs/commands.md) — full command reference
 - [docs/architecture.md](docs/architecture.md) — design and rationale
 - [docs/upstream-collab.md](docs/upstream-collab.md) — Tinker upstream collaboration targets
